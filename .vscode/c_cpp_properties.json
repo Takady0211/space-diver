@@ -1,0 +1,22 @@
+{
+  "configurations": [
+    {
+      "name": "Linux",
+      "includePath": [
+        "${workspaceFolder}/**",
+        "/usr/include/**",
+        "/usr/local/include/**",
+        "/opt/ros/humble/include/**",
+        "/opt/ros/humble/share/**",
+        "${workspaceFolder}/../../../work/spacediver_ws/install/floating_robot_controller/include/floating_robot_controller",
+        "${workspaceFolder}/../../../work/spacediver_ws/install/floating_robot_interfaces/include/floating_robot_interfaces"
+      ],
+      "defines": [],
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "c17",
+      "cppStandard": "gnu++17",
+      "intelliSenseMode": "linux-gcc-x64"
+    }
+  ],
+  "version": 4
+}
