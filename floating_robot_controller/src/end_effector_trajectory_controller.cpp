@@ -51,7 +51,6 @@ EndEffectorTrajectoryController::EndEffectorTrajectoryController(
 
   // Basic functions
   // // Create timer
-  ros_clock_ = rclcpp::Clock(RCL_ROS_TIME);
   executing_ = false;
   timer_ = this->create_wall_timer(
       std::chrono::milliseconds(dt_millisec_),
@@ -115,9 +114,9 @@ EndEffectorTrajectoryController::EndEffectorTrajectoryController(
   // update robot before calculate end effector current point
   update_robot();
   traj_point_active_ptr_ = std::make_shared<Trajectory>(
-      ros_clock_.now(), get_current_end_effector_point(END_EFFECTOR_ID));
+      this->now(), get_current_end_effector_point(END_EFFECTOR_ID));
 
-  controller_start_time_ = ros_clock_.now();
+  controller_start_time_ = this->now();
 }
 
 rclcpp_action::GoalResponse EndEffectorTrajectoryController::handle_goal(
@@ -189,9 +188,9 @@ void EndEffectorTrajectoryController::execute(
     update_robot();
 
     // Calculate desired point by interpolate
-    traj_point_active_ptr_->sample(
-        ros_clock_.now(), sec_to_point, state_desired_, goal_state_,
-        start_segment_left_itr, end_segment_left_itr);
+    traj_point_active_ptr_->sample(this->now(), sec_to_point, state_desired_,
+                                   goal_state_, start_segment_left_itr,
+                                   end_segment_left_itr);
 
     // If both goal completed, break loop
     if (end_segment_left_itr == traj_point_active_ptr_->end()) {
@@ -241,8 +240,7 @@ void EndEffectorTrajectoryController::end_effect_point_callback(
 }
 
 rclcpp::Time EndEffectorTrajectoryController::get_current_time() {
-  rclcpp::Duration timer_from_start_ =
-      ros_clock_.now() - controller_start_time_;
+  rclcpp::Duration timer_from_start_ = this->now() - controller_start_time_;
   rclcpp::Time zero_time(0, 0, RCL_ROS_TIME);
   return zero_time + timer_from_start_;
 }

@@ -32,15 +32,14 @@ public:
 
 private:
   // Basic functions
-  //
-  // To get a current time, use ros_clock
+
   // To compare with msg stamp, ros_clock has to use ros time, not system time
   int dt_millisec_;
   rclcpp::Time controller_start_time_;
-  rclcpp::Clock ros_clock_;
   rclcpp::TimerBase::SharedPtr timer_;
   rclcpp::Time get_current_time();
   void timer_callback();
+
   // // Command interface
   rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr
       command_effort_publisher_;
