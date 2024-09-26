@@ -9,7 +9,8 @@
         "/opt/ros/humble/include/**",
         "/opt/ros/humble/share/**",
         "${workspaceFolder}/../../../work/spacediver_ws/install/floating_robot_controller/include/floating_robot_controller",
-        "${workspaceFolder}/../../../work/spacediver_ws/install/floating_robot_interfaces/include/floating_robot_interfaces"
+        "${workspaceFolder}/../../../work/spacediver_ws/install/floating_robot_interfaces/include/floating_robot_interfaces",
+        "${workspaceFolder}/../../../work/spacediver_ws/install/spacedyn_ros/include"
       ],
       "defines": [],
       "compilerPath": "/usr/bin/gcc",
