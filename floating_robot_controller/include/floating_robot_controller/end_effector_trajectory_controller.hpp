@@ -42,8 +42,6 @@ private:
   void timer_callback();
 
   // // Command interface
-  rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr
-      command_effort_publisher_;
   rclcpp::Publisher<trajectory_msgs::msg::JointTrajectory>::SharedPtr
       joint_trajectory_publisher_;
   void publish_command(std_msgs::msg::Float64MultiArray msg);

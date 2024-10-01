@@ -3,14 +3,10 @@
     {
       "name": "Linux",
       "includePath": [
-        "${workspaceFolder}/**",
+        "${workspaceFolder}/../../../work/spacediver_ws/install/**",
         "/usr/include/**",
         "/usr/local/include/**",
-        "/opt/ros/humble/include/**",
-        "/opt/ros/humble/share/**",
-        "${workspaceFolder}/../../../work/spacediver_ws/install/floating_robot_controller/include/floating_robot_controller",
-        "${workspaceFolder}/../../../work/spacediver_ws/install/floating_robot_interfaces/include/floating_robot_interfaces",
-        "${workspaceFolder}/../../../work/spacediver_ws/install/spacedyn_ros/include"
+        "/opt/ros/humble/include/**"
       ],
       "defines": [],
       "compilerPath": "/usr/bin/gcc",

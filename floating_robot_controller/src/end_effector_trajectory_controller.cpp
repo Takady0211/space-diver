@@ -57,9 +57,6 @@ EndEffectorTrajectoryController::EndEffectorTrajectoryController(
       std::chrono::milliseconds(dt_millisec_),
       std::bind(&EndEffectorTrajectoryController::timer_callback, this));
   // // Command interface
-  command_effort_publisher_ =
-      this->create_publisher<std_msgs::msg::Float64MultiArray>(
-          "forward_effort_controller/commands", 10);
   joint_trajectory_publisher_ =
       this->create_publisher<trajectory_msgs::msg::JointTrajectory>(
           "feedback_effort_controller/joint_trajectory", 10);
@@ -302,7 +299,6 @@ EndEffectorTrajectoryController::compute_joint_effort(
 
 void EndEffectorTrajectoryController::publish_command(
     std_msgs::msg::Float64MultiArray command) {
-  // command_effort_publisher_->publish(command);
 
   trajectory_msgs::msg::JointTrajectory joint_trajectory;
   joint_trajectory.header.stamp = joint_state_.header.stamp;

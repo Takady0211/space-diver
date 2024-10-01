@@ -46,8 +46,7 @@ endif()
 # Add executables
 add_executable(end_effector_trajectory_controller
   src/trajectory.cpp
-  src/end_effector_trajectory_controller.cpp
-  src/main_controller.cpp)
+  src/end_effector_trajectory_controller.cpp)
 target_link_libraries(end_effector_trajectory_controller spacedyn_ros::spacedyn_ros)
 ament_target_dependencies(end_effector_trajectory_controller ${THIS_PACKAGE_INCLUDE_DEPENDS} )
 
@@ -58,6 +57,11 @@ target_include_directories(end_effector_trajectory_controller
     $<INSTALL_INTERFACE:include>
 )
 
+# Install include directories
+install(DIRECTORY include/
+  DESTINATION include)
+
+# Install executables
 install(TARGETS
   end_effector_trajectory_controller
   ARCHIVE DESTINATION lib
