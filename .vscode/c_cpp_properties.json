@@ -6,7 +6,8 @@
         "${workspaceFolder}/../../../work/spacediver_ws/install/**",
         "/usr/include/**",
         "/usr/local/include/**",
-        "/opt/ros/humble/include/**"
+        "/opt/ros/humble/include/**",
+        "/opt/ros/humble/include"
       ],
       "defines": [],
       "compilerPath": "/usr/bin/gcc",

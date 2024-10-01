@@ -22,13 +22,12 @@
 namespace floating_robot_controller {
 std::string package_share_directory =
     ament_index_cpp::get_package_share_directory("floating_robot_controller");
-std::string model_path =
-    package_share_directory.append("/description/space_dyn/sar_testbed.def");
 
 EndEffectorTrajectoryController::EndEffectorTrajectoryController(
     const char *node_name = "end_effector_trajectory_controller",
-    const char *action_name = "end_effector_trajectory_control")
-    : Node(node_name) {
+    const char *action_name = "end_effector_trajectory_control",
+    const char *path_to_robot_model = "")
+    : Node(node_name), robot_(path_to_robot_model) {
   using namespace std::placeholders;
 
   // Parameter setting
@@ -72,10 +71,6 @@ EndEffectorTrajectoryController::EndEffectorTrajectoryController(
   odm_base_subscriber_ = this->create_subscription<nav_msgs::msg::Odometry>(
       "odm/base", 10,
       std::bind(&EndEffectorTrajectoryController::odm_base_callback, this, _1));
-  odm_target_subscriber_ = this->create_subscription<nav_msgs::msg::Odometry>(
-      "odm/target", 10,
-      std::bind(&EndEffectorTrajectoryController::odm_target_callback, this,
-                _1));
 
   // Action server
   this->action_server_ = rclcpp_action::create_server<FollowTraject>(
@@ -85,7 +80,6 @@ EndEffectorTrajectoryController::EndEffectorTrajectoryController(
       std::bind(&EndEffectorTrajectoryController::handle_accepted, this, _1));
   RCLCPP_INFO(this->get_logger(),
               "End effector trajectory controller started!");
-  // RCLCPP_INFO(this->get_logger(), "is floating %d", is_floating_);
 
   // Topic server
   end_effect_point_subscriber_ = this->create_subscription<
@@ -120,9 +114,6 @@ EndEffectorTrajectoryController::EndEffectorTrajectoryController(
 rclcpp_action::GoalResponse EndEffectorTrajectoryController::handle_goal(
     const rclcpp_action::GoalUUID &uuid,
     std::shared_ptr<const FollowTraject::Goal> goal) {
-  // Initialize trajectory when received goal
-  // auto current_external_msg =
-  // traj_point_active_ptr_->get_trajectory_msg();
   RCLCPP_INFO(this->get_logger(), "Received goal request");
   update_robot();
 
@@ -316,20 +307,12 @@ void EndEffectorTrajectoryController::joint_state_callback(
     const sensor_msgs::msg::JointState::SharedPtr msg) {
   // Update robot state information
   joint_state_ = *msg;
-  // joint_state_.velocity.resize(JOINT_NUM);
-  // joint_state_.velocity[0] = 100.0;
 }
 
 void EndEffectorTrajectoryController::odm_base_callback(
     const nav_msgs::msg::Odometry::SharedPtr msg) {
   // Update robot state information
   odm_base_ = *msg;
-}
-
-void EndEffectorTrajectoryController::odm_target_callback(
-    const nav_msgs::msg::Odometry::SharedPtr msg) {
-  // Update robot state information
-  odm_target_ = *msg;
 }
 
 void EndEffectorTrajectoryController::update_robot() {
@@ -478,10 +461,6 @@ void EndEffectorTrajectoryController::publish_tfs() {
   trs = odm_to_tf(odm_base_, "base_link");
   tf_broadcaster_->sendTransform(trs);
 
-  // Publish target odometry
-  trs = odm_to_tf(odm_target_, "target");
-  tf_broadcaster_->sendTransform(trs);
-
   // Publish end effector: space_dyn
   trs = point_to_tf(get_current_end_effector_point(END_EFFECTOR_ID),
                     "end_effector_current");
@@ -502,7 +481,8 @@ int main(int argc, char *argv[]) {
   rclcpp::init(argc, argv);
   rclcpp::spin(std::make_shared<
                floating_robot_controller::EndEffectorTrajectoryController>(
-      "end_effector_trajectory_controller", "follow_end_effector_trajectory"));
+      "end_effector_trajectory_controller", "follow_end_effector_trajectory",
+      argv[1]));
   rclcpp::shutdown();
   return 0;
 } // main()

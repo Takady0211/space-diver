@@ -29,7 +29,8 @@ public:
       rclcpp_action::ServerGoalHandle<FollowTraject>;
 
   EndEffectorTrajectoryController(const char *node_name,
-                                  const char *action_name);
+                                  const char *action_name,
+                                  const char *path_to_robot_model);
 
 private:
   // Basic functions
@@ -54,15 +55,16 @@ private:
   void joint_state_callback(const sensor_msgs::msg::JointState::SharedPtr msg);
   // // // Base state
   nav_msgs::msg::Odometry odm_base_;
-  nav_msgs::msg::Odometry odm_target_;
   rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odm_base_subscriber_;
-  rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr
-      odm_target_subscriber_;
   void odm_base_callback(const nav_msgs::msg::Odometry::SharedPtr msg);
   void odm_target_callback(const nav_msgs::msg::Odometry::SharedPtr msg);
 
   // For control
   //
+  // // Robot model
+  // // // SpaceDyn
+  spacedyn_ros::Robot robot_;
+
   geometry_msgs::msg::Twist desired_twist_;
   void initialize_joint_position(int duration_millisec);
   std_msgs::msg::Float64MultiArray
