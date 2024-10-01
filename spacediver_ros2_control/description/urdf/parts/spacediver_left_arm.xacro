@@ -1,9 +1,6 @@
 <?xml version="1.0"?>
 <!-- import xacro reffering here https://gbiggs.github.io/rosjp_urdf_tutorial_text/manipulator_urdf.html -->
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
-  <xacro:include filename="$(find spacediver_ros2_control)/description/urdf/macros/inertial_macros.xacro"/>
-  <xacro:include filename="$(find spacediver_ros2_control)/description/urdf/macros/properties.xacro"/>
-
   <xacro:macro name="left_arm" params="base_name *origin">
     <!-- Active joint 1 -->
     <joint name="active_joint_la" type="revolute">
@@ -40,7 +37,7 @@
       <parent link="link_1"/>
       <child link="link_2"/>
       <origin xyz="0 0 ${LINK_1_Z}" rpy="0 0 0"/>
-      <axis xyz="0 1 0"/>
+      <axis xyz="0 0 1"/>
       <limit lower="${ACTIVE_JOINT_LB_LOWER}" upper="${ACTIVE_JOINT_LB_UPPER}"
         effort="${ACTIVE_JOINT_LB_EFFORT}" velocity="${ACTIVE_JOINT_LB_VELOCITY}"/>
     </joint>
@@ -70,7 +67,7 @@
       <parent link="link_2"/>
       <child link="link_3"/>
       <origin xyz="${LINK_2_X} 0 0" rpy="0 0 0"/>
-      <axis xyz="0 1 0"/>
+      <axis xyz="0 0 1"/>
       <limit lower="${ACTIVE_JOINT_LC_LOWER}" upper="${ACTIVE_JOINT_LC_UPPER}"
         effort="${ACTIVE_JOINT_LC_EFFORT}" velocity="${ACTIVE_JOINT_LC_VELOCITY}"/>
     </joint>
