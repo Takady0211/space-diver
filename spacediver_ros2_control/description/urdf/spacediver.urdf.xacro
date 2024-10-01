@@ -1,0 +1,21 @@
+<robot name="single_arm_robot" xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:include filename="$(find spacediver_ros2_control)/description/urdf/macros/inertial_macros.xacro"/>
+  <xacro:include filename="$(find spacediver_ros2_control)/description/urdf/macros/properties.xacro"/>
+
+  <!-- robot shape and phisics -->
+  <!-- Base Link -->
+  <xacro:include filename="$(find spacediver_ros2_control)/description/urdf/parts/spacediver_base.xacro" />
+
+  <!-- Left Arm -->
+  <xacro:include filename="$(find spacediver_ros2_control)/description/urdf/parts/spacediver_left_arm.xacro" />
+  <xacro:left_arm base_name="${BASE_LINK_NAME}">
+    <origin xyz="0 0 ${BASE_Z}" rpy="0 0 0"/>
+  </xacro:left_arm>
+
+  <!-- gazebo pulgin -->
+  <xacro:include filename="$(find spacediver_ros2_control)/description/gazebo/spacediver_gazebo.xacro" />
+
+  <!-- ros2 control plugin -->
+  <!-- <xacro:include filename="$(find spacediver_ros2_control)/description/ros2_control/spacediver_ros2_control.xacro" /> -->
+
+</robot>

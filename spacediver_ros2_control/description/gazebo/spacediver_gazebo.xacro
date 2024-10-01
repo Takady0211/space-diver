@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<!--
+Copied and modified from ROS1 example -
+https://github.com/ros-simulation/gazebo_ros_demos/blob/kinetic-devel/rrbot_description/urdf/rrbot.gazebo
+-->
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <gazebo>
+    <!-- ros_control plugin -->
+    <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
+      <parameters>$(find spacediver_ros2_control)/bringup/config/sar_controllers.yaml</parameters>
+    </plugin>
+
+    <!-- get true robot position plugin -->
+    <plugin filename="libgazebo_ros_p3d.so" name="base_truth" >
+      <ros>
+        <namespace>odm</namespace>
+        <remapping>odom:=base</remapping>
+      </ros>
+      <frame_name>world</frame_name>
+      <body_name>base_link</body_name>
+      <update_rate>50.0</update_rate>
+      <always_on>true</always_on>
+    </plugin>
+  </gazebo>
+
+  <!-- Base link -->
+  <gazebo reference="base_link">
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <material>Gazebo/White</material>
+  </gazebo>
+
+  <!-- Link 1 -->
+  <gazebo reference="link_1">
+    <mu1>0.8</mu1>
+    <mu2>0.8</mu2>
+    <material>Gazebo/White</material>
+  </gazebo>
+
+  <!-- Link 2 -->
+  <gazebo reference="link_2">
+    <mu1>0.8</mu1>
+    <mu2>0.8</mu2>
+    <material>Gazebo/White</material>
+  </gazebo>
+
+  <!-- Link 3 -->
+  <gazebo reference="link_3">
+    <material>Gazebo/White</material>
+  </gazebo>
+
+  <!-- Link 4 -->
+  <gazebo reference="link_4">
+    <mu1>0.8</mu1>
+    <mu2>0.8</mu2>
+    <material>Gazebo/White</material>
+  </gazebo>
+
+  <!-- Link 5 -->
+  <gazebo reference="link_5">
+    <mu1>0.8</mu1>
+    <mu2>0.8</mu2>
+    <material>Gazebo/White</material>
+  </gazebo>
+
+  <!-- Link 6 -->
+  <gazebo reference="link_6">
+    <mu1>0.6</mu1>
+    <mu2>0.6</mu2>
+    <kp>1000.0</kp>
+    <kd>1.0</kd>
+    <material>Gazebo/White</material>
+    <provideFeedback>true</provideFeedback>
+  </gazebo>
+
+  <!-- Joint for FT sensor -->
+  <gazebo reference="joint_f">
+    <provideFeedback>true</provideFeedback>
+    <turnGravityOff>false</turnGravityOff>
+  </gazebo>
+  
+  <!-- FT Sensor -->
+  <gazebo>
+    <plugin name="ft_sensor" filename="libgazebo_ros_ft_sensor.so">
+      <updateRate>10.0</updateRate>
+      <body_name>link_6</body_name>
+      <joint_name>joint_f</joint_name>
+    </plugin>
+  </gazebo>
+
+</robot>

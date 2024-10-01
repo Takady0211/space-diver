@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <world name="default">
+    <!-- World properties -->
+    <gravity>0 0 0</gravity> <!-- 重力を0に設定 -->
+
+    <!-- Include the ground plane model -->
+    <include>
+      <!-- <uri>model://ground_plane</uri> -->
+    </include>
+
+    <!-- Include other models or define your robot model here -->
+
+  </world>
+</sdf>

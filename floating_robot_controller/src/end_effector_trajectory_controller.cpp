@@ -16,9 +16,6 @@
 #include <thread>
 #include <visualization_msgs/msg/marker_array.hpp>
 
-#define END_EFFECTOR_ID 1
-#define JOINT_NUM 6
-
 namespace floating_robot_controller {
 std::string package_share_directory =
     ament_index_cpp::get_package_share_directory("floating_robot_controller");
@@ -34,7 +31,7 @@ EndEffectorTrajectoryController::EndEffectorTrajectoryController(
   declare_parameter("update_rate", 1000);
   declare_parameter("joint_initialize_duration", 5000);
   declare_parameter("initial_joint_positions",
-                    std::vector<double>(JOINT_NUM, 0.0));
+                    std::vector<double>(robot_.getJointNumber(), 0.0));
   declare_parameter("use_closed_loop_pid_adapter", false);
   declare_parameter("point_follow_gain_ff", 1.0);
   declare_parameter("point_follow_gain_p", 0.0);
@@ -60,9 +57,9 @@ EndEffectorTrajectoryController::EndEffectorTrajectoryController(
       this->create_publisher<trajectory_msgs::msg::JointTrajectory>(
           "feedback_effort_controller/joint_trajectory", 10);
   // // State interface
-  joint_state_.effort.resize(JOINT_NUM);
-  joint_state_.position.resize(JOINT_NUM);
-  joint_state_.velocity.resize(JOINT_NUM);
+  joint_state_.effort.resize(robot_.getJointNumber());
+  joint_state_.position.resize(robot_.getJointNumber());
+  joint_state_.velocity.resize(robot_.getJointNumber());
   joint_state_subscriber_ =
       this->create_subscription<sensor_msgs::msg::JointState>(
           "joint_states", 10,
@@ -80,6 +77,15 @@ EndEffectorTrajectoryController::EndEffectorTrajectoryController(
       std::bind(&EndEffectorTrajectoryController::handle_accepted, this, _1));
   RCLCPP_INFO(this->get_logger(),
               "End effector trajectory controller started!");
+  RCLCPP_INFO(this->get_logger(), "Action server name : %s \n", action_name);
+  RCLCPP_INFO(this->get_logger(), " -----SpaceDyn model------ ");
+  RCLCPP_INFO(this->get_logger(), "| Joint number        : %d |",
+              robot_.getJointNumber());
+  RCLCPP_INFO(this->get_logger(), "| Link number         : %d |",
+              robot_.getLinkNumber());
+  RCLCPP_INFO(this->get_logger(), "| End effector number : %d |",
+              robot_.getModel().getLinkage().getEndEffectorNumber());
+  RCLCPP_INFO(this->get_logger(), " ------------------------- ");
 
   // Topic server
   end_effect_point_subscriber_ = this->create_subscription<
@@ -106,7 +112,7 @@ EndEffectorTrajectoryController::EndEffectorTrajectoryController(
   // update robot before calculate end effector current point
   update_robot();
   traj_point_active_ptr_ = std::make_shared<Trajectory>(
-      this->now(), get_current_end_effector_point(END_EFFECTOR_ID));
+      this->now(), get_current_end_effector_point(-1));
 
   controller_start_time_ = this->now();
 }
@@ -124,7 +130,7 @@ rclcpp_action::GoalResponse EndEffectorTrajectoryController::handle_goal(
   // Initialize pid controller
   init_pids(pids_);
 
-  auto current_point = get_current_end_effector_point(END_EFFECTOR_ID);
+  auto current_point = get_current_end_effector_point(-1);
 
   traj_point_active_ptr_->update(goal->trajectories[0], current_point);
 
@@ -201,7 +207,7 @@ void EndEffectorTrajectoryController::execute(
     // Calculate commanding end effector twist
     if (use_closed_loop_pid_adapter_) {
       // With feedback
-      state_current_ = get_current_end_effector_point(END_EFFECTOR_ID);
+      state_current_ = get_current_end_effector_point(-1);
       desired_twist_ =
           compute_pids_command(pids_, state_desired_, state_current_);
     } else {
@@ -241,7 +247,7 @@ void EndEffectorTrajectoryController ::timer_callback() {
     publish_command(compute_joint_velocity(desired_twist_)); // velocity
   } else {
     std_msgs::msg::Float64MultiArray zero;
-    zero.data = std::vector<double>(JOINT_NUM, 0.0);
+    zero.data = std::vector<double>(robot_.getJointNumber(), 0.0);
     publish_command(zero); // effort
   }
 }
@@ -250,7 +256,8 @@ std_msgs::msg::Float64MultiArray
 EndEffectorTrajectoryController::compute_joint_velocity(
     geometry_msgs::msg::Twist end_effector_velocity) {
   // Compute joint velocity
-  // auto GJ = robot_.computeGeneralizedJacobianForEndEffector(END_EFFECTOR_ID);
+  // auto GJ = robot_.computeGeneralizedJacobianForEndEffector(-1);
+  auto GJ = robot_.computeGeneralizedJacobianForEndEffector(-1);
   // Eigen::VectorXd end_effector_velocity_vec(6);
   // end_effector_velocity_vec << end_effector_velocity.linear.x,
   //     end_effector_velocity.linear.y, end_effector_velocity.linear.z,
@@ -260,7 +267,7 @@ EndEffectorTrajectoryController::compute_joint_velocity(
   // Eigen::FullPivLU<Eigen::MatrixXd> LU(GJ);
   // Eigen::VectorXd des_joint_vel = LU.solve(end_effector_velocity_vec);
   std_msgs::msg::Float64MultiArray joint_velocity;
-  // for (int i = 0; i < JOINT_NUM; i++) {
+  // for (int i = 0; i < robot_.getJointNumber(); i++) {
   //   joint_velocity.data.push_back(des_joint_vel(i));
   // }
   return joint_velocity;
@@ -270,7 +277,7 @@ std_msgs::msg::Float64MultiArray
 EndEffectorTrajectoryController::compute_joint_effort(
     geometry_msgs::msg::Twist end_effector_velocity) {
   // Compute joint effort
-  // auto GJ = robot_.computeGeneralizedJacobianForEndEffector(END_EFFECTOR_ID);
+  // auto GJ = robot_.computeGeneralizedJacobianForEndEffector(-1);
   // Eigen::VectorXd end_effector_velocity_vec(6);
   // end_effector_velocity_vec << end_effector_velocity.linear.x,
   //     end_effector_velocity.linear.y, end_effector_velocity.linear.z,
@@ -282,7 +289,7 @@ EndEffectorTrajectoryController::compute_joint_effort(
   // Eigen::VectorXd current_joint_vel = robot_.getJointVelocity();
   // Eigen::VectorXd des_joint_acc =
   //     (des_joint_vel - current_joint_vel) / dt_millisec_ * 1000;
-  // des_joint_acc = Eigen::VectorXd::Zero(JOINT_NUM);
+  // des_joint_acc = Eigen::VectorXd::Zero(robot_.getJointNumber());
   // des_joint_acc(0) = 0.001;
   std_msgs::msg::Float64MultiArray joint_effort;
   return joint_effort;
@@ -462,9 +469,9 @@ void EndEffectorTrajectoryController::publish_tfs() {
   tf_broadcaster_->sendTransform(trs);
 
   // Publish end effector: space_dyn
-  trs = point_to_tf(get_current_end_effector_point(END_EFFECTOR_ID),
-                    "end_effector_current");
-  tf_broadcaster_->sendTransform(trs);
+  // trs = point_to_tf(get_current_end_effector_point(-1),
+  //                   "end_effector_current");
+  // tf_broadcaster_->sendTransform(trs);
 
   // Publish end effector: goal
   trs = point_to_tf(goal_state_, "end_effector_goal");
