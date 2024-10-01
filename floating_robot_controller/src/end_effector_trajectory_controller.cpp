@@ -1,19 +1,20 @@
 #include "floating_robot_controller/end_effector_trajectory_controller.hpp"
-#include "ament_index_cpp/get_package_share_directory.hpp"
-#include "control_toolbox/pid.hpp"
+
 #include "floating_robot_controller/trajectory.hpp"
 #include "floating_robot_interfaces/action/follow_end_effector_trajectory.hpp"
-#include "nav_msgs/msg/odometry.hpp"
-#include "rclcpp/rclcpp.hpp"
-#include "rclcpp_action/rclcpp_action.hpp"
-#include "sensor_msgs/msg/joint_state.hpp"
-#include "tf2_eigen/tf2_eigen.hpp"
-#include "visualization_msgs/msg/marker_array.hpp"
+#include <ament_index_cpp/get_package_share_directory.hpp>
 #include <chrono>
+#include <control_toolbox/pid.hpp>
 #include <functional>
 #include <math.h>
 #include <memory>
+#include <nav_msgs/msg/odometry.hpp>
+#include <rclcpp/rclcpp.hpp>
+#include <rclcpp_action/rclcpp_action.hpp>
+#include <sensor_msgs/msg/joint_state.hpp>
+#include <tf2_eigen/tf2_eigen.hpp>
 #include <thread>
+#include <visualization_msgs/msg/marker_array.hpp>
 
 #define END_EFFECTOR_ID 1
 #define JOINT_NUM 6
@@ -499,3 +500,13 @@ void EndEffectorTrajectoryController::publish_tfs() {
   tf_broadcaster_->sendTransform(trs);
 }
 } // namespace floating_robot_controller
+
+int main(int argc, char *argv[]) {
+
+  rclcpp::init(argc, argv);
+  rclcpp::spin(std::make_shared<
+               floating_robot_controller::EndEffectorTrajectoryController>(
+      "end_effector_trajectory_controller", "follow_end_effector_trajectory"));
+  rclcpp::shutdown();
+  return 0;
+} // main()
