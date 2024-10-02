@@ -10,6 +10,9 @@
     </include>
 
     <!-- Include other models or define your robot model here -->
+    <include>
+      <uri>model://sun</uri>
+    </include>
 
   </world>
 </sdf>

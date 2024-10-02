@@ -13,7 +13,7 @@ import xacro
 # User settings
 use_sim_time = LaunchConfiguration('use_sim_time', default='true')
 use_gazebo = LaunchConfiguration('use_gazebo', default='false') # TODO: Implement this feature
-single_arm_test = False                                         # TODO: Implement this feature
+single_arm_test = True
 
 # Path setting for xacro, urdf, rviz, and world files
 pkg_dir = get_package_share_directory("spacediver_ros2_control")
@@ -22,7 +22,7 @@ spacediver_xacro_path = os.path.join(
 spacediver_urdf_path = os.path.join(
     pkg_dir, "description", "urdf", "spacediver.urdf")
 rviz_path = os.path.join(pkg_dir, "description", "rviz", "spacediver_config.rviz")
-world_path = os.path.join(pkg_dir, "bringup", "worlds", "underwater.world")
+world_path = os.path.join(pkg_dir, "description", "gazebo", "worlds", "underwater.world")
 
 
 def create_urdf_from_xacro(xacro_path, urdf_path):
@@ -34,6 +34,7 @@ def create_urdf_from_xacro(xacro_path, urdf_path):
 
 
 def generate_launch_description():
+    ld = LaunchDescription()
     create_urdf_from_xacro(spacediver_xacro_path, spacediver_urdf_path)
 
     joint_state_broadcaster_spawner = Node(
@@ -120,12 +121,25 @@ def generate_launch_description():
         arguments=["-topic", "/robot_description", "-entity", "sar_simple"]
     )
 
-    return LaunchDescription([
-        joint_state_broadcaster_spawner,
-        # feedback_effort_controller_single_arm,
-        forward_effort_controller_single_arm,
-        rviz2,
-        gazebo,
-        robot_state_publisher_node,
-        robot_spawner
-    ])
+    # Add actions to launch description
+    if single_arm_test:
+        ld.add_action(joint_state_broadcaster_spawner)
+        ld.add_action(forward_position_controller_single_arm)
+        ld.add_action(forward_effort_controller_single_arm)
+        ld.add_action(feedback_effort_controller_single_arm)
+        ld.add_action(rviz2)
+        ld.add_action(gazebo)
+        ld.add_action(robot_state_publisher_node)
+        ld.add_action(robot_spawner)
+
+    else:
+        ld.add_action(joint_state_broadcaster_spawner)
+        ld.add_action(forward_position_controller)
+        ld.add_action(forward_effort_controller)
+        ld.add_action(feedback_effort_controller)
+        ld.add_action(rviz2)
+        ld.add_action(gazebo)
+        ld.add_action(robot_state_publisher_node)
+        ld.add_action(robot_spawner)
+
+    return ld
