@@ -9,6 +9,9 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 import xacro
 
+# Select 
+
+# Path setting for xacro, urdf, rviz, and world files
 pkg_dir = get_package_share_directory("spacediver_ros2_control")
 spacediver_xacro_path = os.path.join(
     pkg_dir, "description", "urdf", "spacediver.urdf.xacro")
@@ -36,41 +39,52 @@ def generate_launch_description():
                    "/controller_manager"]
     )
 
-    joint_state_command_publisher_gui = Node(
-        package="joint_state_publisher_gui",
-        executable="joint_state_publisher_gui",
-        name="joint_state_publisher_gui",
-        remappings=[
-            ('/joint_states', '/joint_states')],
-        arguments=[spacediver_urdf_path]
-    )
-
-    joint_state_to_trajectory_node = Node(
-        package="spacediver_ros2_control",
-        executable="joint_state_to_trajectory_node"
-    )
-
-    joint_effort_controller_spawner = Node(
-        package="controller_manager",
-        executable="spawner",
-        arguments=["forward_effort_controller", "--controller-manager",
-                   "/controller_manager"]
-    )
-
-    joint_position_controller_spawner = Node( 
+    # Full body controllers
+    forward_position_controller = Node( 
         package="controller_manager",
         executable="spawner",
         arguments=["forward_position_controller", "--controller-manager",
                      "/controller_manager"]
     )
 
-    joint_trajectory_controller_spawner = Node(
+
+    forward_effort_controller = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=["forward_effort_controller", "--controller-manager",
+                   "/controller_manager"]
+    )
+
+    feedback_effort_controller = Node(
         package="controller_manager",
         executable="spawner",
         arguments=["feedback_effort_controller", "--controller-manager",
                     "/controller_manager"]
     )
 
+    # Single arm controllers
+    forward_position_controller_single_arm = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=["forward_position_controller_single_arm", "--controller-manager",
+                    "/controller_manager"]
+    )
+
+    forward_effort_controller_single_arm = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=["forward_effort_controller_single_arm", "--controller-manager",
+                    "/controller_manager"]
+    )
+
+    feedback_effort_controller_single_arm = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=["feedback_effort_controller_single_arm", "--controller-manager",
+                    "/controller_manager"]
+    )
+
+    # Robot state publisher
     robot_state_publisher_node = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
@@ -102,12 +116,10 @@ def generate_launch_description():
 
     return LaunchDescription([
         joint_state_broadcaster_spawner,
-        # joint_trajectory_controller_spawner,
-        # joint_effort_controller_spawner,
+        feedback_effort_controller_single_arm,
+        # forward_effort_controller,
         rviz2,
         gazebo,
-        # joint_state_command_publisher_gui,
-        # joint_state_to_trajectory_node,
         robot_state_publisher_node,
         robot_spawner
     ])
