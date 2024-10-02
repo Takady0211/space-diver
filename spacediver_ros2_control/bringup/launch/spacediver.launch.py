@@ -7,9 +7,13 @@ from launch_ros.actions import Node
 from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
+from launch.actions import DeclareLaunchArgument
 import xacro
 
-# Select 
+# User settings
+use_sim_time = LaunchConfiguration('use_sim_time', default='true')
+use_gazebo = LaunchConfiguration('use_gazebo', default='false') # TODO: Implement this feature
+single_arm_test = False                                         # TODO: Implement this feature
 
 # Path setting for xacro, urdf, rviz, and world files
 pkg_dir = get_package_share_directory("spacediver_ros2_control")
@@ -19,7 +23,7 @@ spacediver_urdf_path = os.path.join(
     pkg_dir, "description", "urdf", "spacediver.urdf")
 rviz_path = os.path.join(pkg_dir, "description", "rviz", "spacediver_config.rviz")
 world_path = os.path.join(pkg_dir, "bringup", "worlds", "underwater.world")
-use_sim_time = LaunchConfiguration('use_sim_time', default='true')
+
 
 def create_urdf_from_xacro(xacro_path, urdf_path):
     doc = xacro.process_file(xacro_path)
@@ -89,6 +93,8 @@ def generate_launch_description():
         package='robot_state_publisher',
         executable='robot_state_publisher',
         name='robot_state_publisher',
+        output='screen',
+        parameters=[{'use_sim_time': use_sim_time}],
         arguments=[spacediver_urdf_path]
     )
 
@@ -116,8 +122,8 @@ def generate_launch_description():
 
     return LaunchDescription([
         joint_state_broadcaster_spawner,
-        feedback_effort_controller_single_arm,
-        # forward_effort_controller,
+        # feedback_effort_controller_single_arm,
+        forward_effort_controller_single_arm,
         rviz2,
         gazebo,
         robot_state_publisher_node,
