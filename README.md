@@ -1,6 +1,10 @@
 # space-diver
 
 ## Setup
+```bash
+git clone --recursive git@github.com:Space-Robotics-Laboratory/space-diver.git
+git submodule update --init --recursive
+```
 
 <https://www.theconstruct.ai/gazebo-5-minutes-004-create-gazebo-model-using-sdf/>
 
