@@ -1,4 +1,5 @@
 <robot name="single_arm_robot" xmlns:xacro="http://ros.org/wiki/xacro">
+  <!-- Include macros -->
   <xacro:include filename="$(find spacediver_ros2_control)/description/urdf/macros/inertial_macros.xacro"/>
   <xacro:include filename="$(find spacediver_ros2_control)/description/urdf/macros/properties.xacro"/>
   <xacro:include filename="$(find spacediver_ros2_control)/description/urdf/macros/materials.xacro"/>
@@ -17,6 +18,6 @@
   <xacro:include filename="$(find spacediver_ros2_control)/description/gazebo/spacediver_gazebo.xacro" />
 
   <!-- ros2 control plugin -->
-  <!-- <xacro:include filename="$(find spacediver_ros2_control)/description/ros2_control/spacediver_ros2_control.xacro" /> -->
-
+  <xacro:include filename="$(find spacediver_ros2_control)/description/ros2_control/spacediver_ros2_control.xacro" />
+  <xacro:ros2_control_hardware use_gazebo="true" />
 </robot>

@@ -1,0 +1,131 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:macro name="ros2_control_hardware" params="use_gazebo">
+    <ros2_control name="spacediver" type="system">
+      <xacro:if value="${use_gazebo}">
+        <hardware>
+          <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+        </hardware>
+      </xacro:if>
+      <xacro:unless value="${use_gazebo}">
+        <hardware>
+          <plugin>spacediver_ros2_control/SpacediverSystem</plugin>
+        </hardware>
+      </xacro:unless>
+
+      <!-- Joint 1 -->
+      <joint name="active_joint_la">
+        <command_interface name="position">
+          <param name="min">"${ACTIVE_JOINT_LA_LOWER}"</param>
+          <param name="max">"${ACTIVE_JOINT_LA_UPPER}"</param>
+        </command_interface>
+        <command_interface name="velocity">
+          <param name="min">"-${ACTIVE_JOINT_LA_VELOCITY}"</param>
+          <param name="max">" ${ACTIVE_JOINT_LA_VELOCITY}"</param>
+        </command_interface>
+        <command_interface name="effort">
+          <param name="min">"-${ACTIVE_JOINT_LA_EFFORT}"</param>
+          <param name="max">" ${ACTIVE_JOINT_LA_EFFORT}"</param>
+        </command_interface>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
+      </joint>
+
+      <!-- Joint 2 -->
+      <joint name="active_joint_lb">
+        <command_interface name="position">
+          <param name="min">"${ACTIVE_JOINT_LB_LOWER}"</param>
+          <param name="max">"${ACTIVE_JOINT_LB_UPPER}"</param>
+        </command_interface>
+        <command_interface name="velocity">
+          <param name="min">"-${ACTIVE_JOINT_LB_VELOCITY}"</param>
+          <param name="max">" ${ACTIVE_JOINT_LB_VELOCITY}"</param>
+        </command_interface>
+        <command_interface name="effort">
+          <param name="min">"-${ACTIVE_JOINT_LB_EFFORT}"</param>
+          <param name="max">" ${ACTIVE_JOINT_LB_EFFORT}"</param>
+        </command_interface>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
+      </joint>
+
+      <!-- Joint 3 -->
+      <joint name="active_joint_lc">
+        <command_interface name="position">
+          <param name="min">"${ACTIVE_JOINT_LC_LOWER}"</param>
+          <param name="max">"${ACTIVE_JOINT_LC_UPPER}"</param>
+        </command_interface>
+        <command_interface name="velocity">
+          <param name="min">"-${ACTIVE_JOINT_LC_VELOCITY}"</param>
+          <param name="max">" ${ACTIVE_JOINT_LC_VELOCITY}"</param>
+        </command_interface>
+        <command_interface name="effort">
+          <param name="min">"-${ACTIVE_JOINT_LC_EFFORT}"</param>
+          <param name="max">" ${ACTIVE_JOINT_LC_EFFORT}"</param>
+        </command_interface>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
+      </joint>
+
+      <!-- Joint 4 -->
+      <joint name="active_joint_ra">
+        <command_interface name="position">
+          <param name="min">"-${ACTIVE_JOINT_RA_UPPER}"</param>
+          <param name="max">"-${ACTIVE_JOINT_RA_LOWER}"</param>
+        </command_interface>
+        <command_interface name="velocity">
+          <param name="min">"-${ACTIVE_JOINT_RA_VELOCITY}"</param>
+          <param name="max">" ${ACTIVE_JOINT_RA_VELOCITY}"</param>
+        </command_interface>
+        <command_interface name="effort">
+          <param name="min">"-${ACTIVE_JOINT_RA_EFFORT}"</param>
+          <param name="max">" ${ACTIVE_JOINT_RA_EFFORT}"</param>
+        </command_interface>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
+      </joint>
+
+      <!-- Joint 5 -->
+      <joint name="active_joint_rb">
+        <command_interface name="position">
+          <param name="min">"-${ACTIVE_JOINT_RB_UPPER}"</param>
+          <param name="max">"-${ACTIVE_JOINT_RB_LOWER}"</param>
+        </command_interface>
+        <command_interface name="velocity">
+          <param name="min">"-${ACTIVE_JOINT_RB_VELOCITY}"</param>
+          <param name="max">" ${ACTIVE_JOINT_RB_VELOCITY}"</param>
+        </command_interface>
+        <command_interface name="effort">
+          <param name="min">"-${ACTIVE_JOINT_RB_EFFORT}"</param>
+          <param name="max">" ${ACTIVE_JOINT_RB_EFFORT}"</param>
+        </command_interface>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
+      </joint>
+
+      <!-- Joint 6 -->
+      <joint name="active_joint_rc">
+        <command_interface name="position">
+          <param name="min">"-${ACTIVE_JOINT_RC_UPPER}"</param>
+          <param name="max">"-${ACTIVE_JOINT_RC_LOWER}"</param>
+        </command_interface>
+        <command_interface name="velocity">
+          <param name="min">"-${ACTIVE_JOINT_RC_VELOCITY}"</param>
+          <param name="max">" ${ACTIVE_JOINT_RC_VELOCITY}"</param>
+        </command_interface>
+        <command_interface name="effort">
+          <param name="min">"-${ACTIVE_JOINT_RC_EFFORT}"</param>
+          <param name="max">" ${ACTIVE_JOINT_RC_EFFORT}"</param>
+        </command_interface>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
+      </joint>
+    </ros2_control>
+  </xacro:macro>
+</robot>

@@ -6,7 +6,7 @@
 
   <xacro:macro name="right_arm" params="base_name *origin">
     <!-- Joint 4 -->
-    <joint name="joint_d" type="revolute">
+    <joint name="active_joint_ra" type="revolute">
       <parent link="right_arm"/>
       <child link="link_4"/>
       <origin xyz="${LINK_3_X} 0 0" rpy="0 0 0"/>
@@ -36,7 +36,7 @@
     </link>
 
     <!-- Joint 5 -->
-    <joint name="joint_e" type="revolute">
+    <joint name="active_joint_rb" type="revolute">
       <parent link="link_4"/>
       <child link="link_5"/>
       <origin xyz="${LINK_4_X} 0 0" rpy="0 0 0"/>
@@ -66,7 +66,7 @@
     </link>
 
     <!-- Joint 6 -->
-    <joint name="joint_f" type="revolute">
+    <joint name="active_joint_rc" type="revolute">
       <parent link="link_5"/>
       <child link="link_6"/>
       <origin xyz="${LINK_5_X} 0 0" rpy="0 0 0"/>

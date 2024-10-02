@@ -8,7 +8,7 @@ https://github.com/ros-simulation/gazebo_ros_demos/blob/kinetic-devel/rrbot_desc
   <gazebo>
     <!-- ros_control plugin -->
     <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
-      <parameters>$(find spacediver_ros2_control)/bringup/config/sar_controllers.yaml</parameters>
+      <parameters>$(find spacediver_ros2_control)/bringup/config/spacediver_controllers.yaml</parameters>
     </plugin>
 
     <!-- get true robot position plugin -->
@@ -72,21 +72,6 @@ https://github.com/ros-simulation/gazebo_ros_demos/blob/kinetic-devel/rrbot_desc
     <kd>1.0</kd>
     <material>Gazebo/White</material>
     <provideFeedback>true</provideFeedback>
-  </gazebo>
-
-  <!-- Joint for FT sensor -->
-  <gazebo reference="joint_f">
-    <provideFeedback>true</provideFeedback>
-    <turnGravityOff>false</turnGravityOff>
-  </gazebo>
-  
-  <!-- FT Sensor -->
-  <gazebo>
-    <plugin name="ft_sensor" filename="libgazebo_ros_ft_sensor.so">
-      <updateRate>10.0</updateRate>
-      <body_name>link_6</body_name>
-      <joint_name>joint_f</joint_name>
-    </plugin>
   </gazebo>
 
 </robot>

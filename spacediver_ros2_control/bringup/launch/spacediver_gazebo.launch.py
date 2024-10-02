@@ -15,7 +15,7 @@ spacediver_xacro_path = os.path.join(
 spacediver_urdf_path = os.path.join(
     pkg_dir, "description", "urdf", "spacediver.urdf")
 rviz_path = os.path.join(pkg_dir, "description", "rviz", "spacediver_config.rviz")
-world_path = os.path.join(pkg_dir, "bringup", "worlds", "underwater_orbit.world")
+world_path = os.path.join(pkg_dir, "bringup", "worlds", "underwater.world")
 use_sim_time = LaunchConfiguration('use_sim_time', default='true')
 
 def create_urdf_from_xacro(xacro_path, urdf_path):
@@ -101,12 +101,12 @@ def generate_launch_description():
     )
 
     return LaunchDescription([
-        # joint_state_broadcaster_spawner,
+        joint_state_broadcaster_spawner,
         # joint_trajectory_controller_spawner,
         # joint_effort_controller_spawner,
         rviz2,
         gazebo,
-        joint_state_command_publisher_gui,
+        # joint_state_command_publisher_gui,
         # joint_state_to_trajectory_node,
         robot_state_publisher_node,
         robot_spawner

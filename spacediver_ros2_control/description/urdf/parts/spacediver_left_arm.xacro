@@ -63,7 +63,7 @@
     </link>
 
     <!-- Joint 3 -->
-    <joint name="active_joint_c" type="revolute">
+    <joint name="active_joint_lc" type="revolute">
       <parent link="link_2"/>
       <child link="link_3"/>
       <origin xyz="${LINK_2_X} 0 0" rpy="0 0 0"/>
