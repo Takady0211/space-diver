@@ -5,9 +5,9 @@
     <gravity>0 0 0</gravity>
 
     <!-- Include the ground plane model -->
-    <include>
+    <!-- <include> -->
       <!-- <uri>model://ground_plane</uri> -->
-    </include>
+    <!-- </include> -->
 
     <!-- Include other models or define your robot model here -->
     <include>

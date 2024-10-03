@@ -17,25 +17,31 @@ single_arm_test = True
 
 # Path setting for xacro, urdf, rviz, and world files
 pkg_dir = get_package_share_directory("spacediver_ros2_control")
-spacediver_xacro_path = os.path.join(
+spacediver_urdf_xacro_path = os.path.join(
     pkg_dir, "description", "urdf", "spacediver.urdf.xacro")
 spacediver_urdf_path = os.path.join(
     pkg_dir, "description", "urdf", "spacediver.urdf")
+spacediver_sdf_xacro_path = os.path.join(
+    pkg_dir, "description", "gazebo", "models", "spacediver.sdf.xacro")
 spacediver_sdf_path = os.path.join(
     pkg_dir, "description", "gazebo", "models", "spacediver.sdf")
 rviz_path = os.path.join(pkg_dir, "description", "rviz", "spacediver_config.rviz")
 world_path = os.path.join(pkg_dir, "description", "gazebo", "worlds", "underwater.world")
 
-def create_urdf_from_xacro(xacro_path, urdf_path):
+def parse_xacro(xacro_path, xml_path):
     doc = xacro.process_file(xacro_path)
     robot_desc = doc.toprettyxml(indent=' ')
-    f = open(urdf_path, 'w')
+    f = open(xml_path, 'w')
     f.write(robot_desc)
     f.close()
 
 
 def generate_launch_description():
-    create_urdf_from_xacro(spacediver_xacro_path, spacediver_urdf_path)
+    # Parse xacro file to urdf
+    parse_xacro(spacediver_urdf_xacro_path, spacediver_urdf_path)
+
+    # Parse urdf file to sdf
+    parse_xacro(spacediver_sdf_xacro_path, spacediver_sdf_path)
 
     # Launch configurations
     sdf_model = LaunchConfiguration('sdf_model')
@@ -152,6 +158,6 @@ def generate_launch_description():
     ld.add_action(rviz2)
     ld.add_action(gazebo)
     ld.add_action(robot_state_publisher_node)
-    # ld.add_action(robot_spawner)
+    ld.add_action(robot_spawner)
 
     return ld

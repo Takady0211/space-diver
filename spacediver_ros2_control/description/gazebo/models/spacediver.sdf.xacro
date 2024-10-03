@@ -1,5 +1,6 @@
 <?xml version="1.0" ?>
-<sdf version="1.5">
+
+<sdf version="1.5" xmlns:xacro="http://ros.org/wiki/xacro">
   <model name="my1stmodel">
     <static>false</static>
     <link name="link">
@@ -7,7 +8,7 @@
         <geometry>
           <box>
             <size>3 2 5</size>
-          </gox>
+          </box>
         </geometry>
         <surface>
           <friction>
@@ -22,7 +23,7 @@
         <geometry>
           <box>
             <size>3 2 5</size>
-          </gox>
+          </box>
         </geometry>
         <material>
           <script>
@@ -32,5 +33,21 @@
         </material>
       </visual>
     </link>
+    <!-- ros_control plugin -->
+    <!-- <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
+      <parameters>$(find spacediver_ros2_control)/bringup/config/spacediver_controllers.yaml</parameters>
+    </plugin> -->
+
+    <!-- get true robot position plugin -->
+    <!-- <plugin filename="libgazebo_ros_p3d.so" name="base_truth" >
+      <ros>
+        <namespace>odm</namespace>
+        <remapping>odom:=base</remapping>
+      </ros>
+      <frame_name>world</frame_name>
+      <body_name>base_link</body_name>
+      <update_rate>50.0</update_rate>
+      <always_on>true</always_on>
+    </plugin> -->
   </model>
 </sdf>
