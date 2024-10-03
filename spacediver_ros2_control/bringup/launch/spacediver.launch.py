@@ -10,10 +10,13 @@ from launch.substitutions import LaunchConfiguration
 from launch.actions import DeclareLaunchArgument
 import xacro
 
+controller_list = ['forward_position_controller', 'forward_effort_controller', 'feedback_effort_controller',
+                   'forward_position_controller_single_arm', 'forward_effort_controller_single_arm', 'feedback_effort_controller_single_arm']
+
 # User settings
 use_sim_time = LaunchConfiguration('use_sim_time', default='true')
 use_gazebo = LaunchConfiguration('use_gazebo', default='false') # TODO: Implement this feature
-single_arm_test = True
+controller_name = controller_list[1] # Select controller from controller_list
 
 # Path setting for xacro, urdf, rviz, and world files
 pkg_dir = get_package_share_directory("spacediver_ros2_control")
@@ -60,46 +63,11 @@ def generate_launch_description():
                    "/controller_manager"]
     )
 
-    forward_position_controller = Node( 
+    controller_spawner = Node( 
         package="controller_manager",
         executable="spawner",
-        arguments=["forward_position_controller", "--controller-manager",
+        arguments=[controller_name, "--controller-manager",
                      "/controller_manager"]
-    )
-
-    forward_effort_controller = Node(
-        package="controller_manager",
-        executable="spawner",
-        arguments=["forward_effort_controller", "--controller-manager",
-                   "/controller_manager"]
-    )
-
-    feedback_effort_controller = Node(
-        package="controller_manager",
-        executable="spawner",
-        arguments=["feedback_effort_controller", "--controller-manager",
-                    "/controller_manager"]
-    )
-
-    forward_position_controller_single_arm = Node(
-        package="controller_manager",
-        executable="spawner",
-        arguments=["forward_position_controller_single_arm", "--controller-manager",
-                    "/controller_manager"]
-    )
-
-    forward_effort_controller_single_arm = Node(
-        package="controller_manager",
-        executable="spawner",
-        arguments=["forward_effort_controller_single_arm", "--controller-manager",
-                    "/controller_manager"]
-    )
-
-    feedback_effort_controller_single_arm = Node(
-        package="controller_manager",
-        executable="spawner",
-        arguments=["feedback_effort_controller_single_arm", "--controller-manager",
-                    "/controller_manager"]
     )
 
     # Robot state publisher
@@ -139,17 +107,8 @@ def generate_launch_description():
     ld = LaunchDescription()
 
     # Add controllers 
-    if single_arm_test:
-        ld.add_action(joint_state_broadcaster_spawner)
-        ld.add_action(forward_position_controller_single_arm)
-        ld.add_action(forward_effort_controller_single_arm)
-        ld.add_action(feedback_effort_controller_single_arm)
-
-    else:
-        ld.add_action(joint_state_broadcaster_spawner)
-        ld.add_action(forward_position_controller)
-        ld.add_action(forward_effort_controller)
-        ld.add_action(feedback_effort_controller)
+    ld.add_action(joint_state_broadcaster_spawner)
+    ld.add_action(controller_spawner)
 
     # Declare the launch arguments
     ld.add_action(declare_sdf_model_path_cmd)
