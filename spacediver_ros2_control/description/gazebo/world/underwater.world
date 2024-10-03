@@ -3,16 +3,13 @@
   <world name="default">
     <!-- World properties -->
     <gravity>0 0 0</gravity>
-
     <!-- Include the ground plane model -->
     <!-- <include> -->
-      <!-- <uri>model://ground_plane</uri> -->
+    <!-- <uri>model://ground_plane</uri> -->
     <!-- </include> -->
-
     <!-- Include other models or define your robot model here -->
     <include>
       <uri>model://sun</uri>
     </include>
-
   </world>
 </sdf>
