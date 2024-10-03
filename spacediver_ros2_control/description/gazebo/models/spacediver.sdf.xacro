@@ -34,8 +34,9 @@
         </material>
       </visual>
     </link>
-    <!-- <link name=link1>
-      <pose>0 0 3 0 0 0</pose>
+    
+    <link name="link_1">
+      <pose>0 0 ${BASE_Z}</pose>
       <collision name="collision">
         <geometry>
           <box>
@@ -60,28 +61,25 @@
         <material>
           <script>
             <uri>file://media/materials/scripts/gazebo.material</uri>
-            <name>Gazebo/Red</name>
+            <name>Gazebo/Grey</name>
           </script>
         </material>
       </visual>
-    </link> -->
+    </link>
 
-    <!-- <joint name="active_joint_la" type="revolute">
+    <joint name="active_joint_la" type="revolute">
       <parent>base_link</parent>
-      <child>link1</child>
+      <child>link_1</child>
       <axis>
         <xyz>0 0 1</xyz>
-        <limit>
-          <lower>${ACTIVE_JOINT_LA_LOWER}</lower>
-          <upper>${ACTIVE_JOINT_LA_UPPER}</upper>
-          <effort>${ACTIVE_JOINT_LA_EFFORT}</effort>
-          <velocity>${ACTIVE_JOINT_LA_VELOCITY}</velocity>
-        </limit>
       </axis>
-      <dynamics>
-        <damping>0.7</damping>
-      </dynamics>
-    </joint> -->
+      <limit>
+        <lower>${ACTIVE_JOINT_LA_LOWER}</lower>
+        <upper>${ACTIVE_JOINT_LA_UPPER}</upper>
+        <effort>${ACTIVE_JOINT_LA_EFFORT}</effort>
+        <velocity>${ACTIVE_JOINT_LA_VELOCITY}</velocity>
+      </limit>
+    </joint>
     <!-- ros_control plugin -->
     <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
       <parameters>$(find spacediver_ros2_control)/bringup/config/spacediver_controllers.yaml</parameters>
