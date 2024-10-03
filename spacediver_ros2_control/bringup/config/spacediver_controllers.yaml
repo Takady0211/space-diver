@@ -46,11 +46,11 @@ forward_effort_controller:
   ros__parameters:
     joints:
       - active_joint_la
-      - active_joint_lb
-      - active_joint_lc
-      - active_joint_ra
-      - active_joint_rb
-      - active_joint_rc
+      # - active_joint_lb
+      # - active_joint_lc
+      # - active_joint_ra
+      # - active_joint_rb
+      # - active_joint_rc
     interface_name: effort
 
 forward_position_controller:

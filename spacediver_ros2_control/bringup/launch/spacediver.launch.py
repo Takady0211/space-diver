@@ -19,6 +19,7 @@ use_gazebo = LaunchConfiguration('use_gazebo', default='false') # TODO: Implemen
 controller_name = controller_list[1] # Select controller from controller_list
 
 # Path setting for xacro, urdf, rviz, and world files
+# Pay attention to the pkg_dir is ".../spacediver_ws/install/spacediver_ros2_control/share/spacediver_ros2_control" not under this repository.
 pkg_dir = get_package_share_directory("spacediver_ros2_control")
 spacediver_urdf_xacro_path = os.path.join(
     pkg_dir, "description", "urdf", "spacediver.urdf.xacro")
