@@ -1,13 +1,14 @@
 <?xml version="1.0" ?>
-
 <sdf version="1.5" xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:include filename="$(find spacediver_ros2_control)/description/urdf/macros/properties.xacro"/>
   <model name="my1stmodel">
     <static>false</static>
-    <link name="link">
+    <link name="base_link">
+      <!-- <pose>0 0 0 0 0 0</pose> -->
       <collision name="collision">
         <geometry>
           <box>
-            <size>3 2 5</size>
+            <size>${BASE_X} ${BASE_Y} ${BASE_Z}</size>
           </box>
         </geometry>
         <surface>
@@ -22,7 +23,7 @@
       <visual name="visual">
         <geometry>
           <box>
-            <size>3 2 5</size>
+            <size>${BASE_X} ${BASE_Y} ${BASE_Z}</size>
           </box>
         </geometry>
         <material>
@@ -33,11 +34,58 @@
         </material>
       </visual>
     </link>
-    <!-- ros_control plugin -->
-    <!-- <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
-      <parameters>$(find spacediver_ros2_control)/bringup/config/spacediver_controllers.yaml</parameters>
-    </plugin> -->
+    <!-- <link name=link1>
+      <pose>0 0 3 0 0 0</pose>
+      <collision name="collision">
+        <geometry>
+          <box>
+            <size>${LINK_1_X} ${LINK_1_Y} ${LINK_1_Z}</size>
+          </box>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>100</mu>
+              <mu2>50</mu2>
+            </ode>
+          </friction>
+        </surface>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>${LINK_1_X} ${LINK_1_Y} ${LINK_1_Z}</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/Red</name>
+          </script>
+        </material>
+      </visual>
+    </link> -->
 
+    <!-- <joint name="active_joint_la" type="revolute">
+      <parent>base_link</parent>
+      <child>link1</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>${ACTIVE_JOINT_LA_LOWER}</lower>
+          <upper>${ACTIVE_JOINT_LA_UPPER}</upper>
+          <effort>${ACTIVE_JOINT_LA_EFFORT}</effort>
+          <velocity>${ACTIVE_JOINT_LA_VELOCITY}</velocity>
+        </limit>
+      </axis>
+      <dynamics>
+        <damping>0.7</damping>
+      </dynamics>
+    </joint> -->
+    <!-- ros_control plugin -->
+    <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
+      <parameters>$(find spacediver_ros2_control)/bringup/config/spacediver_controllers.yaml</parameters>
+    </plugin>
     <!-- get true robot position plugin -->
     <!-- <plugin filename="libgazebo_ros_p3d.so" name="base_truth" >
       <ros>

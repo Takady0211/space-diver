@@ -1,9 +1,7 @@
 <?xml version="1.0"?>
 <!-- import xacro reffering here https://gbiggs.github.io/rosjp_urdf_tutorial_text/manipulator_urdf.html -->
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
-  <xacro:property name="BASE_LINK_NAME" value="base_link" />
-
-  <link name="${BASE_LINK_NAME}">
+  <link name="base_link">
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
@@ -21,5 +19,4 @@
       <origin xyz="0 0 0" rpy="0 0 0"/>
     </xacro:inertial_box>
   </link>
-
 </robot>
