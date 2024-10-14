@@ -11,9 +11,10 @@
     "hash_map": "cpp",
     "hash_set": "cpp",
     "valarray": "cpp",
-    "algorithm": "cpp"
+    "algorithm": "cpp",
+    "core": "cpp"
   },
-  "C_Cpp.errorSquiggles": "disabled",
+  "C_Cpp.errorSquiggles": "enabled",
   "cSpell.words": [
     "bringup",
     "feedforward",

@@ -307,7 +307,22 @@ void EndEffectorTrajectoryController::odm_base_callback(
 void EndEffectorTrajectoryController::update_robot() {
   // Update robot state information
   // robot_.update(joint_state_, odm_base_.pose.pose, odm_base_.twist.twist);
+  Eigen::Isometry3d pose =
+      Eigen::Translation3d(odm_base_.pose.pose.position.x,
+                           odm_base_.pose.pose.position.y,
+                           odm_base_.pose.pose.position.z) *
+      Eigen::Quaterniond(
+          odm_base_.pose.pose.orientation.w, odm_base_.pose.pose.orientation.x,
+          odm_base_.pose.pose.orientation.y, odm_base_.pose.pose.orientation.z);
+  Eigen::VectorXd twist(6);
+  twist << odm_base_.twist.twist.linear.x, odm_base_.twist.twist.linear.y,
+      odm_base_.twist.twist.linear.z, odm_base_.twist.twist.angular.x,
+      odm_base_.twist.twist.angular.y, odm_base_.twist.twist.angular.z;
+  robot_.overwriteBasePoseInWorldFrame(pose);
+  robot_.overwriteBaseTwistInWorldFrame(twist);
   robot_.overWriteJointState(joint_state_);
+  robot_.setStateVariable(
+      spacedyn_ros::Kinematics::computeForward(robot_, true, true, false));
 }
 
 floating_robot_interfaces::msg::EndEffectorTrajectoryPoint
