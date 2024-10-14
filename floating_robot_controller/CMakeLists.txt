@@ -47,11 +47,19 @@ endif()
 add_executable(end_effector_trajectory_controller
   src/trajectory.cpp
   src/end_effector_trajectory_controller.cpp)
+add_executable(client_example
+  src/client_example.cpp)
 target_link_libraries(end_effector_trajectory_controller spacedyn_ros::spacedyn_ros)
 ament_target_dependencies(end_effector_trajectory_controller ${THIS_PACKAGE_INCLUDE_DEPENDS} )
+ament_target_dependencies(client_example ${THIS_PACKAGE_INCLUDE_DEPENDS} )
 
 #include directories
 target_include_directories(end_effector_trajectory_controller
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+)
+target_include_directories(client_example
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
@@ -61,9 +69,15 @@ target_include_directories(end_effector_trajectory_controller
 install(DIRECTORY include/
   DESTINATION include)
 
+install(DIRECTORY 
+  model
+  DESTINATION share/${PROJECT_NAME}/
+)
+
 # Install executables
 install(TARGETS
   end_effector_trajectory_controller
+  client_example
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION lib/${PROJECT_NAME})

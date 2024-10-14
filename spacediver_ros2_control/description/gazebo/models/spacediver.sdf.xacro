@@ -44,7 +44,7 @@
     </link>
     
     <link name="link_1">
-      <pose>0 0 ${BASE_Z/2*}</pose>
+      <pose>0 0 ${BASE_Z/2}</pose>
       <collision name="collision">
         <geometry>
           <box>

@@ -1,11 +1,22 @@
 {
   "editor.formatOnSave": true,
   "files.associations": {
-    "functional": "cpp"
+    "functional": "cpp",
+    "*.tcc": "cpp",
+    "deque": "cpp",
+    "forward_list": "cpp",
+    "list": "cpp",
+    "string": "cpp",
+    "vector": "cpp",
+    "hash_map": "cpp",
+    "hash_set": "cpp",
+    "valarray": "cpp",
+    "algorithm": "cpp"
   },
   "C_Cpp.errorSquiggles": "disabled",
   "cSpell.words": [
     "bringup",
+    "feedforward",
     "remappings",
     "rviz",
     "spacediver",

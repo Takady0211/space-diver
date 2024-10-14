@@ -33,21 +33,25 @@ public:
                                   const char *path_to_robot_model);
 
 private:
-  // Basic functions
-
+  // -------------------------- Basic functions --------------------------
   // To compare with msg stamp, ros_clock has to use ros time, not system time
+  // --> TODO: check
   int dt_millisec_;
   rclcpp::Time controller_start_time_;
-  rclcpp::TimerBase::SharedPtr timer_;
   rclcpp::Time get_current_time();
   void timer_callback();
 
-  // // Command interface
+  // Parameters
+  int joint_number_;
+  int link_number_;
+  int end_effector_number_;
+
+  // // Command
   rclcpp::Publisher<trajectory_msgs::msg::JointTrajectory>::SharedPtr
       joint_trajectory_publisher_;
   void publish_command(std_msgs::msg::Float64MultiArray msg);
 
-  // // State interface
+  // // State
   // // // Joint state
   sensor_msgs::msg::JointState joint_state_;
   rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr
@@ -58,12 +62,10 @@ private:
   rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odm_base_subscriber_;
   void odm_base_callback(const nav_msgs::msg::Odometry::SharedPtr msg);
   void odm_target_callback(const nav_msgs::msg::Odometry::SharedPtr msg);
+  // ---------------------------------------------------------------------
 
-  // For control
-  //
-  // // Robot model
-  // // // SpaceDyn
-  spacedyn_ros::Robot robot_;
+  // ---------------------------- For control ----------------------------
+  spacedyn_ros::Robot robot_; // SpaceDyn model
 
   geometry_msgs::msg::Twist desired_twist_;
   void initialize_joint_position(int duration_millisec);
@@ -82,7 +84,7 @@ private:
   // 1.TRAJECTORY CONTROL BY ACTION INTERFACE
   // Class to calculate trajectory by interpolating
   // Arrange the trajectory in a way that it can be used for multiple arms
-  std::shared_ptr<Trajectory> traj_point_active_ptr_ = nullptr;
+  std::vector<std::shared_ptr<Trajectory>> traj_point_active_ptr_;
 
   // Preallocate variables used in the realtime execute() function
   floating_robot_interfaces::msg::EndEffectorTrajectoryPoint state_current_;
@@ -106,7 +108,8 @@ private:
   // // Used in closed loop end effector control
   /// If true, a velocity feedforward term plus corrective PID term is used
   bool use_closed_loop_pid_adapter_;
-  std::vector<control_toolbox::Pid> pids_;
+  std::vector<std::vector<control_toolbox::Pid>>
+      pids_vector_; // ee_num * joint_num
   void init_pids(std::vector<control_toolbox::Pid> &pids);
   double point_follow_gain_r_;
   double point_follow_gain_ff_;
@@ -124,27 +127,7 @@ private:
       end_effect_point_subscriber_;
   void end_effect_point_callback(const floating_robot_interfaces::msg::
                                      EndEffectorTrajectoryPoint::SharedPtr msg);
-
-  // Visualization
-  // To see the end effector pose in rviz, publish as marker
-  visualization_msgs::msg::MarkerArray current_pose_markers_;
-  rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr
-      current_pose_markers_pub_;
-  rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr
-      desired_vel_markers_pub_;
-  // To see the trajectory in rviz, publish as marker
-  visualization_msgs::msg::MarkerArray desired_pose_markers_;
-  rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr
-      desired_pose_markers_pub_;
-  void set_traject_markers(
-      floating_robot_interfaces::msg::EndEffectorTrajectoryPoint point);
-  std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
-  geometry_msgs::msg::TransformStamped
-  point_to_tf(floating_robot_interfaces::msg::EndEffectorTrajectoryPoint point,
-              std::string child_frame_id);
-  geometry_msgs::msg::TransformStamped odm_to_tf(nav_msgs::msg::Odometry odm,
-                                                 std::string child_frame_id);
-  void publish_tfs();
+  // ---------------------------------------------------------------------
 }; // EndEffectorTrajectoryController
 } // namespace floating_robot_controller
 

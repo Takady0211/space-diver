@@ -2,6 +2,7 @@
 
 #include "floating_robot_controller/trajectory.hpp"
 #include "floating_robot_interfaces/action/follow_end_effector_trajectory.hpp"
+#include "spacedyn_ros/SpaceDyn"
 #include <ament_index_cpp/get_package_share_directory.hpp>
 #include <chrono>
 #include <control_toolbox/pid.hpp>
@@ -23,15 +24,13 @@ std::string package_share_directory =
 EndEffectorTrajectoryController::EndEffectorTrajectoryController(
     const char *node_name = "end_effector_trajectory_controller",
     const char *action_name = "end_effector_trajectory_control",
-    const char *path_to_robot_model = "")
+    const char *path_to_robot_model =
+        (package_share_directory + "/model/example.urdf").c_str())
     : Node(node_name), robot_(path_to_robot_model) {
   using namespace std::placeholders;
 
   // Parameter setting
   declare_parameter("update_rate", 1000);
-  declare_parameter("joint_initialize_duration", 5000);
-  declare_parameter("initial_joint_positions",
-                    std::vector<double>(robot_.getJointNumber(), 0.0));
   declare_parameter("use_closed_loop_pid_adapter", false);
   declare_parameter("point_follow_gain_ff", 1.0);
   declare_parameter("point_follow_gain_p", 0.0);
@@ -40,26 +39,27 @@ EndEffectorTrajectoryController::EndEffectorTrajectoryController(
   declare_parameter("point_follow_gain_i_max", 0.0);
   declare_parameter("point_follow_gain_i_min", 0.0);
   declare_parameter("point_follow_gain_r", 0.0);
+
   dt_millisec_ = 1000 / get_parameter("update_rate").as_int();
   use_closed_loop_pid_adapter_ =
       get_parameter("use_closed_loop_pid_adapter").as_bool();
   point_follow_gain_ff_ = get_parameter("point_follow_gain_ff").as_double();
   point_follow_gain_r_ = get_parameter("point_follow_gain_r").as_double();
 
-  // Basic functions
-  // // Create timer
   executing_ = false;
-  timer_ = this->create_wall_timer(
-      std::chrono::milliseconds(dt_millisec_),
-      std::bind(&EndEffectorTrajectoryController::timer_callback, this));
-  // // Command interface
+
+  joint_number_ = robot_.getJointNumber();
+  link_number_ = robot_.getLinkNumber();
+  end_effector_number_ = robot_.getModel().getLinkage().getEndEffectorNumber();
+
+  // Command
   joint_trajectory_publisher_ =
       this->create_publisher<trajectory_msgs::msg::JointTrajectory>(
           "feedback_effort_controller/joint_trajectory", 10);
-  // // State interface
-  joint_state_.effort.resize(robot_.getJointNumber());
-  joint_state_.position.resize(robot_.getJointNumber());
-  joint_state_.velocity.resize(robot_.getJointNumber());
+  // State
+  joint_state_.effort.resize(joint_number_);
+  joint_state_.position.resize(joint_number_);
+  joint_state_.velocity.resize(joint_number_);
   joint_state_subscriber_ =
       this->create_subscription<sensor_msgs::msg::JointState>(
           "joint_states", 10,
@@ -75,17 +75,6 @@ EndEffectorTrajectoryController::EndEffectorTrajectoryController(
       std::bind(&EndEffectorTrajectoryController::handle_goal, this, _1, _2),
       std::bind(&EndEffectorTrajectoryController::handle_cancel, this, _1),
       std::bind(&EndEffectorTrajectoryController::handle_accepted, this, _1));
-  RCLCPP_INFO(this->get_logger(),
-              "End effector trajectory controller started!");
-  RCLCPP_INFO(this->get_logger(), "Action server name : %s \n", action_name);
-  RCLCPP_INFO(this->get_logger(), " -----SpaceDyn model------ ");
-  RCLCPP_INFO(this->get_logger(), "| Joint number        : %d |",
-              robot_.getJointNumber());
-  RCLCPP_INFO(this->get_logger(), "| Link number         : %d |",
-              robot_.getLinkNumber());
-  RCLCPP_INFO(this->get_logger(), "| End effector number : %d |",
-              robot_.getModel().getLinkage().getEndEffectorNumber());
-  RCLCPP_INFO(this->get_logger(), " ------------------------- ");
 
   // Topic server
   end_effect_point_subscriber_ = this->create_subscription<
@@ -94,25 +83,25 @@ EndEffectorTrajectoryController::EndEffectorTrajectoryController(
       std::bind(&EndEffectorTrajectoryController::end_effect_point_callback,
                 this, _1));
 
-  // Publisher for data analysis
-  current_pose_markers_.markers.resize(1);
-  current_pose_markers_pub_ =
-      this->create_publisher<visualization_msgs::msg::MarkerArray>(
-          "end_effector_current_pose", 10);
-  desired_pose_markers_.markers.resize(1);
-  // end_effect_crnt_point_pub_ = this->create_publisher<
-  //     floating_robot_interfaces::msg::EndEffectorTrajectoryPoint>(
-  //     "end_effector_current_point", 10);
-  desired_pose_markers_pub_ =
-      this->create_publisher<visualization_msgs::msg::MarkerArray>(
-          "end_effector_goal_pose", 10);
-  // Transform publisher
-  tf_broadcaster_ = std::make_unique<tf2_ros::TransformBroadcaster>(this);
-
   // update robot before calculate end effector current point
   update_robot();
-  traj_point_active_ptr_ = std::make_shared<Trajectory>(
-      this->now(), get_current_end_effector_point(-1));
+  traj_point_active_ptr_.resize(end_effector_number_);
+  for (int e; e < end_effector_number_; e++) {
+    traj_point_active_ptr_.at(e) = std::make_shared<Trajectory>(
+        this->now(), get_current_end_effector_point(e));
+  }
+
+  // Visualized state
+  RCLCPP_INFO(this->get_logger(),
+              "End effector trajectory controller started!");
+  RCLCPP_INFO(this->get_logger(), "Action server name : %s \n", action_name);
+  RCLCPP_INFO(this->get_logger(), " -----SpaceDyn model------ ");
+  RCLCPP_INFO(this->get_logger(), "| Joint number        : %d |",
+              joint_number_);
+  RCLCPP_INFO(this->get_logger(), "| Link number         : %d |", link_number_);
+  RCLCPP_INFO(this->get_logger(), "| End effector number : %d |",
+              end_effector_number_);
+  RCLCPP_INFO(this->get_logger(), " ------------------------- ");
 
   controller_start_time_ = this->now();
 }
@@ -120,21 +109,24 @@ EndEffectorTrajectoryController::EndEffectorTrajectoryController(
 rclcpp_action::GoalResponse EndEffectorTrajectoryController::handle_goal(
     const rclcpp_action::GoalUUID &uuid,
     std::shared_ptr<const FollowTraject::Goal> goal) {
-  RCLCPP_INFO(this->get_logger(), "Received goal request");
+  RCLCPP_INFO(this->get_logger(), "Cancel preexisting goal");
+  RCLCPP_INFO(this->get_logger(), "Received new goal request");
   update_robot();
 
-  if (goal->trajectories.size() != 1) {
-    RCLCPP_ERROR(this->get_logger(), "Goal must have only 1 trajectories!!");
+  if (goal->trajectories.size() != end_effector_number_) {
+    RCLCPP_ERROR(
+        this->get_logger(),
+        "Goal trajectory should have the same number as end-effectors. ");
   }
 
-  // Initialize pid controller
-  init_pids(pids_);
+  // For each end-effector
+  for (int e; e < end_effector_number_; e++) {
+    // Initialize pid controller
+    init_pids(pids_vector_[e]);
+    traj_point_active_ptr_.at(e)->update(goal->trajectories[e],
+                                         get_current_end_effector_point(e));
+  }
 
-  auto current_point = get_current_end_effector_point(-1);
-
-  traj_point_active_ptr_->update(goal->trajectories[0], current_point);
-
-  RCLCPP_INFO(this->get_logger(), "Cancel preexisting goal");
   (void)uuid;
   return rclcpp_action::GoalResponse::ACCEPT_AND_EXECUTE;
 }
@@ -156,71 +148,73 @@ void EndEffectorTrajectoryController::handle_accepted(
       .detach();
 }
 
+// This function is called every time a new goal is received
+// This is the main function where the trajectory is executed
 void EndEffectorTrajectoryController::execute(
     const std::shared_ptr<ServerGoalHandleTraject> goal_handle) {
   RCLCPP_INFO(this->get_logger(), "Executing goal");
+
+  // Initialize variables
   const auto goal = goal_handle->get_goal();
   auto feedback = std::make_shared<FollowTraject::Feedback>();
   auto result = std::make_shared<FollowTraject::Result>();
 
-  double sec_to_point;
-  TrajectoryPointConstIter start_segment_left_itr;
-  TrajectoryPointConstIter end_segment_left_itr;
-
-  int loop_count = 0;
-  int show_log_freq = 5000;
-  bool lef_trj_completed = false;
-  while (true) {
-    loop_count++;
+  bool trj_completed = false;
+  while (!trj_completed) {
     executing_ = true;
+
     // If cancel requested, cancel trajectory
     if (goal_handle->is_canceling()) {
       goal_handle->canceled(result);
       RCLCPP_INFO(this->get_logger(), "Goal canceled");
       return;
     }
+
     // update robot state information
     update_robot();
 
-    // Calculate desired point by interpolate
-    traj_point_active_ptr_->sample(this->now(), sec_to_point, state_desired_,
-                                   goal_state_, start_segment_left_itr,
-                                   end_segment_left_itr);
+    // For each arm
+    trj_completed = true;
+    std::vector<geometry_msgs::msg::Twist> commanded_twist(
+        end_effector_number_);
+    for (int e; e < end_effector_number_; e++) {
+      double sec_to_point;
+      floating_robot_interfaces::msg::EndEffectorTrajectoryPoint current_state;
+      floating_robot_interfaces::msg::EndEffectorTrajectoryPoint desired_state;
+      floating_robot_interfaces::msg::EndEffectorTrajectoryPoint goal_state;
+      TrajectoryPointConstIter start_segment_itr;
+      TrajectoryPointConstIter end_segment_itr;
 
-    // If both goal completed, break loop
-    if (end_segment_left_itr == traj_point_active_ptr_->end()) {
+      // Calculate desired point by interpolate
+      traj_point_active_ptr_.at(e)->sample(this->now(), sec_to_point,
+                                           desired_state, goal_state,
+                                           start_segment_itr, end_segment_itr);
 
-      if (!lef_trj_completed) {
-        RCLCPP_INFO(this->get_logger(), "end-effector trajectory completed!!");
+      // Calculate commanding end effector twist
+      if (use_closed_loop_pid_adapter_) {
+        // With feedback
+        current_state = get_current_end_effector_point(e);
+        commanded_twist.at(e) = compute_pids_command(
+            pids_vector_.at(e), desired_state, current_state);
+      } else {
+        // Without feedback
+        commanded_twist.at(e) = desired_state.twist;
       }
-      lef_trj_completed = true;
-      break;
+
+      feedback->desired_points.push_back(desired_state);
+      feedback->actual_points.push_back(current_state);
+
+      goal_handle->publish_feedback(feedback);
+      // Break if all trajectory is completed
+      if (end_segment_itr != traj_point_active_ptr_.at(e)->end()) {
+        trj_completed = false;
+      }
     }
-
-    std::stringstream ss;
-    ss << "sec to next point : ";
-    ss << sec_to_point << "[s]";
-    if (loop_count % show_log_freq == 0) {
-      RCLCPP_INFO(this->get_logger(), ss.str().c_str());
-    }
-
-    // Calculate commanding end effector twist
-    if (use_closed_loop_pid_adapter_) {
-      // With feedback
-      state_current_ = get_current_end_effector_point(-1);
-      desired_twist_ =
-          compute_pids_command(pids_, state_desired_, state_current_);
-    } else {
-      // Without feedback
-      desired_twist_ = state_desired_.twist;
-    }
-
-    feedback->desired_points.push_back(state_desired_);
-    feedback->actual_points.push_back(state_current_);
-
-    goal_handle->publish_feedback(feedback);
   }
+
   executing_ = false;
+  result->set__error_code(FollowTraject::Result::SUCCESSFUL);
+  goal_handle->succeed(result);
 }
 
 void EndEffectorTrajectoryController::end_effect_point_callback(
@@ -234,23 +228,7 @@ void EndEffectorTrajectoryController::end_effect_point_callback(
   return;
 }
 
-rclcpp::Time EndEffectorTrajectoryController::get_current_time() {
-  rclcpp::Duration timer_from_start_ = this->now() - controller_start_time_;
-  rclcpp::Time zero_time(0, 0, RCL_ROS_TIME);
-  return zero_time + timer_from_start_;
-}
-
-void EndEffectorTrajectoryController ::timer_callback() {
-  update_robot();
-  publish_tfs();
-  if (executing_) {
-    publish_command(compute_joint_velocity(desired_twist_)); // velocity
-  } else {
-    std_msgs::msg::Float64MultiArray zero;
-    zero.data = std::vector<double>(robot_.getJointNumber(), 0.0);
-    publish_command(zero); // effort
-  }
-}
+void EndEffectorTrajectoryController ::timer_callback() {}
 
 std_msgs::msg::Float64MultiArray
 EndEffectorTrajectoryController::compute_joint_velocity(
@@ -325,6 +303,7 @@ void EndEffectorTrajectoryController::odm_base_callback(
 void EndEffectorTrajectoryController::update_robot() {
   // Update robot state information
   // robot_.update(joint_state_, odm_base_.pose.pose, odm_base_.twist.twist);
+  robot_.overWriteJointState(joint_state_);
 }
 
 floating_robot_interfaces::msg::EndEffectorTrajectoryPoint
@@ -338,8 +317,7 @@ EndEffectorTrajectoryController::get_current_end_effector_point(int id) {
 
 void EndEffectorTrajectoryController ::init_pids(
     std::vector<control_toolbox::Pid> &pids) {
-  const int dim_lin = 3;
-  // const int dim_rot = 4;
+  const int dof_xyz = 3;
 
   pids.clear();
 
@@ -350,7 +328,7 @@ void EndEffectorTrajectoryController ::init_pids(
               get_parameter("point_follow_gain_i_max").as_double(),
               get_parameter("point_follow_gain_i_min").as_double(), false);
 
-  for (int i = 0; i < dim_lin; i++) {
+  for (int i = 0; i < dof_xyz; i++) {
     pids.push_back(pid);
   }
 }
@@ -394,102 +372,23 @@ EndEffectorTrajectoryController ::compute_pids_command(
   return twist;
 }
 
-void EndEffectorTrajectoryController ::set_traject_markers(
-    floating_robot_interfaces::msg::EndEffectorTrajectoryPoint left) {
-  // To rotate the arrow 90 deg.
-  // End effector initial orientation is heading +y
-  Eigen::Affine3d aff_in;
-  Eigen::Affine3d aff_out;
-  geometry_msgs::msg::TransformStamped trs;
-  Eigen::Affine3d aff_trs;
-  trs.transform.rotation.z = sqrt(2) * .5;
-  trs.transform.rotation.w = sqrt(2) * .5;
-  aff_trs = tf2::transformToEigen(trs);
-
-  visualization_msgs::msg::Marker marker;
-  // marker.lifetime.sec = 1e9;
-  marker.type = visualization_msgs::msg::Marker::ARROW;
-  marker.action = visualization_msgs::msg::Marker::ADD;
-  marker.header.frame_id = "world";
-
-  marker.header.stamp = joint_state_.header.stamp;
-  marker.scale.x = 0.05;
-  marker.scale.y = 0.02;
-  marker.scale.z = 0.02;
-
-  // left
-  marker.ns = "desired_trajectory_left";
-  marker.id = 0;
-  tf2::fromMsg(left.pose, aff_in);
-  aff_out = aff_in * aff_trs;
-  marker.pose = tf2::toMsg(aff_out);
-  marker.pose.position.z = 0.1;
-  marker.color.r = 1.0;
-  marker.color.g = 0.0;
-  marker.color.b = 0.0;
-  marker.color.a = 1.0;
-  desired_pose_markers_.markers[0] = marker;
-}
-
-geometry_msgs::msg::TransformStamped
-EndEffectorTrajectoryController::point_to_tf(
-    floating_robot_interfaces::msg::EndEffectorTrajectoryPoint point,
-    std::string child_frame_id) {
-  geometry_msgs::msg::TransformStamped trs;
-  trs.header.stamp = joint_state_.header.stamp;
-  trs.header.frame_id = "world";
-  trs.child_frame_id = child_frame_id;
-  trs.transform.translation.x = point.pose.position.x;
-  trs.transform.translation.y = point.pose.position.y;
-  trs.transform.translation.z = point.pose.position.z;
-  trs.transform.rotation = point.pose.orientation;
-  return trs;
-}
-
-geometry_msgs::msg::TransformStamped
-EndEffectorTrajectoryController::odm_to_tf(nav_msgs::msg::Odometry odm,
-                                           std::string child_frame_id) {
-  geometry_msgs::msg::TransformStamped trs;
-  trs.header.stamp = joint_state_.header.stamp;
-  trs.header.frame_id = "world";
-  trs.child_frame_id = child_frame_id;
-  trs.transform.translation.x = odm.pose.pose.position.x;
-  trs.transform.translation.y = odm.pose.pose.position.y;
-  trs.transform.translation.z = odm.pose.pose.position.z;
-  trs.transform.rotation = odm.pose.pose.orientation;
-  return trs;
-}
-
-void EndEffectorTrajectoryController::publish_tfs() {
-  // Publish current end effector pose
-  geometry_msgs::msg::TransformStamped trs;
-
-  // Publish base odometry
-  trs = odm_to_tf(odm_base_, "base_link");
-  tf_broadcaster_->sendTransform(trs);
-
-  // Publish end effector: space_dyn
-  // trs = point_to_tf(get_current_end_effector_point(-1),
-  //                   "end_effector_current");
-  // tf_broadcaster_->sendTransform(trs);
-
-  // Publish end effector: goal
-  trs = point_to_tf(goal_state_, "end_effector_goal");
-  tf_broadcaster_->sendTransform(trs);
-
-  // Publish end effector: goal
-  trs = point_to_tf(state_desired_, "end_effector_desired");
-  tf_broadcaster_->sendTransform(trs);
-}
 } // namespace floating_robot_controller
 
 int main(int argc, char *argv[]) {
 
   rclcpp::init(argc, argv);
-  rclcpp::spin(std::make_shared<
-               floating_robot_controller::EndEffectorTrajectoryController>(
-      "end_effector_trajectory_controller", "follow_end_effector_trajectory",
-      argv[1]));
+  if (argc == 2) {
+    rclcpp::spin(std::make_shared<
+                 floating_robot_controller::EndEffectorTrajectoryController>(
+        "end_effector_trajectory_controller", "follow_end_effector_trajectory",
+        argv[1]));
+  } else {
+    rclcpp::spin(std::make_shared<
+                 floating_robot_controller::EndEffectorTrajectoryController>(
+        "end_effector_trajectory_controller",
+        "follow_end_effector_trajectory"));
+  }
+
   rclcpp::shutdown();
   return 0;
 } // main()
