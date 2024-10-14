@@ -53,6 +53,7 @@ EndEffectorTrajectoryController::EndEffectorTrajectoryController(
   end_effector_number_ = robot_.getModel().getLinkage().getEndEffectorNumber();
 
   // Command
+  pids_vector_.resize(end_effector_number_);
   joint_trajectory_publisher_ =
       this->create_publisher<trajectory_msgs::msg::JointTrajectory>(
           "feedback_effort_controller/joint_trajectory", 10);
@@ -86,7 +87,7 @@ EndEffectorTrajectoryController::EndEffectorTrajectoryController(
   // update robot before calculate end effector current point
   update_robot();
   traj_point_active_ptr_.resize(end_effector_number_);
-  for (int e; e < end_effector_number_; e++) {
+  for (int e = 0; e < end_effector_number_; e++) {
     traj_point_active_ptr_.at(e) = std::make_shared<Trajectory>(
         this->now(), get_current_end_effector_point(e));
   }
@@ -109,8 +110,8 @@ EndEffectorTrajectoryController::EndEffectorTrajectoryController(
 rclcpp_action::GoalResponse EndEffectorTrajectoryController::handle_goal(
     const rclcpp_action::GoalUUID &uuid,
     std::shared_ptr<const FollowTraject::Goal> goal) {
-  RCLCPP_INFO(this->get_logger(), "Cancel preexisting goal");
   RCLCPP_INFO(this->get_logger(), "Received new goal request");
+  RCLCPP_INFO(this->get_logger(), "Cancel preexisting goal");
   update_robot();
 
   if (goal->trajectories.size() != end_effector_number_) {
@@ -120,9 +121,9 @@ rclcpp_action::GoalResponse EndEffectorTrajectoryController::handle_goal(
   }
 
   // For each end-effector
-  for (int e; e < end_effector_number_; e++) {
+  for (int e = 0; e < end_effector_number_; e++) {
     // Initialize pid controller
-    init_pids(pids_vector_[e]);
+    init_pids(pids_vector_.at(e));
     traj_point_active_ptr_.at(e)->update(goal->trajectories[e],
                                          get_current_end_effector_point(e));
   }
@@ -172,12 +173,13 @@ void EndEffectorTrajectoryController::execute(
 
     // update robot state information
     update_robot();
+    RCLCPP_INFO(this->get_logger(), "Robot state updated");
 
     // For each arm
     trj_completed = true;
     std::vector<geometry_msgs::msg::Twist> commanded_twist(
         end_effector_number_);
-    for (int e; e < end_effector_number_; e++) {
+    for (int e = 0; e < end_effector_number_; e++) {
       double sec_to_point;
       floating_robot_interfaces::msg::EndEffectorTrajectoryPoint current_state;
       floating_robot_interfaces::msg::EndEffectorTrajectoryPoint desired_state;
@@ -189,6 +191,8 @@ void EndEffectorTrajectoryController::execute(
       traj_point_active_ptr_.at(e)->sample(this->now(), sec_to_point,
                                            desired_state, goal_state,
                                            start_segment_itr, end_segment_itr);
+
+      RCLCPP_INFO(this->get_logger(), "Time to point: %f", sec_to_point);
 
       // Calculate commanding end effector twist
       if (use_closed_loop_pid_adapter_) {
