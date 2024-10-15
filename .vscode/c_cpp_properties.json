@@ -3,11 +3,11 @@
     {
       "name": "Linux",
       "includePath": [
-        "${workspaceFolder}/../../../work/spacediver_ws/install/**",
-        "/usr/include/**",
-        "/usr/local/include/**",
+        "${workspaceFolder}/**",
         "/opt/ros/humble/include/**",
-        "/opt/ros/humble/include"
+        "/usr/include/",
+        "/usr/local/include/",
+        "${workspaceFolder}/../../../work/spacediver_ws/install/**"
       ],
       "defines": [],
       "compilerPath": "/usr/bin/gcc",
