@@ -35,8 +35,9 @@ public:
 private:
   // -------------------------- Basic functions --------------------------
   // To compare with msg stamp, ros_clock has to use ros time, not system time
-  // --> TODO: check
   int dt_millisec_;
+  rclcpp::Clock ros_clock_;
+  rclcpp::Time now() { return ros_clock_.now(); }
   rclcpp::Time controller_start_time_;
   rclcpp::Time get_current_time();
   void timer_callback();
@@ -61,38 +62,29 @@ private:
   nav_msgs::msg::Odometry odm_base_;
   rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odm_base_subscriber_;
   void odm_base_callback(const nav_msgs::msg::Odometry::SharedPtr msg);
-  void odm_target_callback(const nav_msgs::msg::Odometry::SharedPtr msg);
   // ---------------------------------------------------------------------
 
   // ---------------------------- For control ----------------------------
   spacedyn_ros::Robot robot_; // SpaceDyn model
 
-  geometry_msgs::msg::Twist desired_twist_;
-  void initialize_joint_position(int duration_millisec);
   std_msgs::msg::Float64MultiArray
   compute_joint_effort(geometry_msgs::msg::Twist end_effector_velocity);
-  std_msgs::msg::Float64MultiArray
-  compute_joint_velocity(geometry_msgs::msg::Twist end_effector_velocity);
+  std_msgs::msg::Float64MultiArray compute_joint_velocity(
+      std::vector<geometry_msgs::msg::Twist> end_effector_velocities);
   void update_robot();
-  Eigen::VectorXd solve_constrained_least_squares(Eigen::MatrixXd A,
-                                                  Eigen::VectorXd b,
-                                                  Eigen::MatrixXd C,
-                                                  Eigen::VectorXd d);
+  //   Eigen::VectorXd solve_constrained_least_squares(Eigen::MatrixXd A,
+  //                                                   Eigen::VectorXd b,
+  //                                                   Eigen::MatrixXd C,
+  //                                                   Eigen::VectorXd d);
   floating_robot_interfaces::msg::EndEffectorTrajectoryPoint
   get_current_end_effector_point(int end_effec_num);
 
-  // 1.TRAJECTORY CONTROL BY ACTION INTERFACE
+  // TRAJECTORY CONTROL BY ACTION INTERFACE
   // Class to calculate trajectory by interpolating
   // Arrange the trajectory in a way that it can be used for multiple arms
   std::vector<std::shared_ptr<Trajectory>> traj_point_active_ptr_;
 
   // Preallocate variables used in the realtime execute() function
-  floating_robot_interfaces::msg::EndEffectorTrajectoryPoint state_current_;
-  floating_robot_interfaces::msg::EndEffectorTrajectoryPoint command_current_;
-  floating_robot_interfaces::msg::EndEffectorTrajectoryPoint state_desired_;
-  floating_robot_interfaces::msg::EndEffectorTrajectoryPoint state_error_;
-  floating_robot_interfaces::msg::EndEffectorTrajectoryPoint goal_state_;
-
   // Action handling
   rclcpp_action::Server<FollowTraject>::SharedPtr action_server_;
   rclcpp_action::GoalResponse
@@ -110,23 +102,13 @@ private:
   bool use_closed_loop_pid_adapter_;
   std::vector<std::vector<control_toolbox::Pid>>
       pids_vector_; // ee_num * joint_num
-  void init_pids(std::vector<control_toolbox::Pid> &pids);
   double point_follow_gain_r_;
   double point_follow_gain_ff_;
+  void init_pids(std::vector<control_toolbox::Pid> &pids);
   geometry_msgs::msg::Twist compute_pids_command(
       std::vector<control_toolbox::Pid> &pids,
       floating_robot_interfaces::msg::EndEffectorTrajectoryPoint des,
       floating_robot_interfaces::msg::EndEffectorTrajectoryPoint real);
-
-  // 2.VELOCITY CONTROL BY TOPIC INTERFACE
-  // // command interface
-  floating_robot_interfaces::msg::EndEffectorTrajectoryPoint
-      end_effect_subbed_point_;
-  rclcpp::Subscription<
-      floating_robot_interfaces::msg::EndEffectorTrajectoryPoint>::SharedPtr
-      end_effect_point_subscriber_;
-  void end_effect_point_callback(const floating_robot_interfaces::msg::
-                                     EndEffectorTrajectoryPoint::SharedPtr msg);
   // ---------------------------------------------------------------------
 }; // EndEffectorTrajectoryController
 } // namespace floating_robot_controller

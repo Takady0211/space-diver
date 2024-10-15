@@ -81,6 +81,17 @@ def generate_launch_description():
         arguments=[spacediver_urdf_path]
     )
 
+    # End effector trajectory controller
+    end_effector_trajectory_controller = Node(
+        package='floating_robot_controller',
+        executable='end_effector_trajectory_controller',
+        name='end_effector_trajectory_controller',
+        output='screen',
+        parameters=[{'use_sim_time': use_sim_time}],
+        arguments=[spacediver_urdf_path]
+    )
+    
+
     rviz2 = Node(
         package="rviz2",
         executable="rviz2",
@@ -110,6 +121,7 @@ def generate_launch_description():
     # Add controllers 
     ld.add_action(joint_state_broadcaster_spawner)
     ld.add_action(controller_spawner)
+    ld.add_action(end_effector_trajectory_controller)
 
     # Declare the launch arguments
     ld.add_action(declare_sdf_model_path_cmd)

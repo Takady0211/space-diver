@@ -26,7 +26,7 @@ EndEffectorTrajectoryController::EndEffectorTrajectoryController(
     const char *action_name = "end_effector_trajectory_control",
     const char *path_to_robot_model =
         (package_share_directory + "/model/example.urdf").c_str())
-    : Node(node_name), robot_(path_to_robot_model) {
+    : Node(node_name), robot_(path_to_robot_model), ros_clock_(RCL_ROS_TIME) {
   using namespace std::placeholders;
 
   // Parameter setting
@@ -76,13 +76,6 @@ EndEffectorTrajectoryController::EndEffectorTrajectoryController(
       std::bind(&EndEffectorTrajectoryController::handle_goal, this, _1, _2),
       std::bind(&EndEffectorTrajectoryController::handle_cancel, this, _1),
       std::bind(&EndEffectorTrajectoryController::handle_accepted, this, _1));
-
-  // Topic server
-  end_effect_point_subscriber_ = this->create_subscription<
-      floating_robot_interfaces::msg::EndEffectorTrajectoryPoint>(
-      "end_effector_trajectory_controller/goal", 10,
-      std::bind(&EndEffectorTrajectoryController::end_effect_point_callback,
-                this, _1));
 
   // update robot before calculate end effector current point
   update_robot();
@@ -177,8 +170,7 @@ void EndEffectorTrajectoryController::execute(
 
     // For each arm
     trj_completed = true;
-    std::vector<geometry_msgs::msg::Twist> commanded_twist(
-        end_effector_number_);
+    std::vector<geometry_msgs::msg::Twist> desired_twist(end_effector_number_);
     for (int e = 0; e < end_effector_number_; e++) {
       double sec_to_point;
       floating_robot_interfaces::msg::EndEffectorTrajectoryPoint current_state;
@@ -198,11 +190,11 @@ void EndEffectorTrajectoryController::execute(
       if (use_closed_loop_pid_adapter_) {
         // With feedback
         current_state = get_current_end_effector_point(e);
-        commanded_twist.at(e) = compute_pids_command(
+        desired_twist.at(e) = compute_pids_command(
             pids_vector_.at(e), desired_state, current_state);
       } else {
         // Without feedback
-        commanded_twist.at(e) = desired_state.twist;
+        desired_twist.at(e) = desired_state.twist;
       }
 
       feedback->desired_points.push_back(desired_state);
@@ -214,6 +206,10 @@ void EndEffectorTrajectoryController::execute(
         trj_completed = false;
       }
     }
+
+    // Calculate joint velocity
+    auto joint_velocity = compute_joint_velocity(desired_twist);
+    publish_command(joint_velocity);
   }
 
   executing_ = false;
@@ -221,58 +217,44 @@ void EndEffectorTrajectoryController::execute(
   goal_handle->succeed(result);
 }
 
-void EndEffectorTrajectoryController::end_effect_point_callback(
-    const floating_robot_interfaces::msg::EndEffectorTrajectoryPoint::SharedPtr
-        msg) {
-  // Update robot state information
-  update_robot();
-  // Calculate desired point by interpolate
-  auto joint_velocity = compute_joint_velocity(msg->twist);
-  publish_command(joint_velocity);
-  return;
-}
-
 void EndEffectorTrajectoryController ::timer_callback() {}
 
 std_msgs::msg::Float64MultiArray
 EndEffectorTrajectoryController::compute_joint_velocity(
-    geometry_msgs::msg::Twist end_effector_velocity) {
-  // Compute joint velocity
-  // auto GJ = robot_.computeGeneralizedJacobianForEndEffector(-1);
-  auto GJ = robot_.computeGeneralizedJacobianForEndEffector(-1);
-  // Eigen::VectorXd end_effector_velocity_vec(6);
-  // end_effector_velocity_vec << end_effector_velocity.linear.x,
-  //     end_effector_velocity.linear.y, end_effector_velocity.linear.z,
-  //     end_effector_velocity.angular.x, end_effector_velocity.angular.y,
-  //     end_effector_velocity.angular.z;
-  // // calc joint velocity
-  // Eigen::FullPivLU<Eigen::MatrixXd> LU(GJ);
-  // Eigen::VectorXd des_joint_vel = LU.solve(end_effector_velocity_vec);
-  std_msgs::msg::Float64MultiArray joint_velocity;
-  // for (int i = 0; i < robot_.getJointNumber(); i++) {
-  //   joint_velocity.data.push_back(des_joint_vel(i));
-  // }
-  return joint_velocity;
+    std::vector<geometry_msgs::msg::Twist> end_effector_velocities) {
+  std::vector<Eigen::MatrixXd, Eigen::aligned_allocator<Eigen::MatrixXd>>
+      gen_jacob_for(end_effector_number_);
+
+  // Solve constrained least squares TODO: Currently, just use inverse jacobian
+  Eigen::MatrixXd J = Eigen::MatrixXd::Zero(joint_number_, joint_number_);
+  Eigen::VectorXd ve = Eigen::VectorXd::Zero(joint_number_);
+
+  for (int e = 0; e < end_effector_number_; e++) {
+    gen_jacob_for.at(e) = robot_.computeGeneralizedJacobianForEndEffector(e);
+  }
+
+  // Select dimension to solve
+  // Set manually for now
+  J.row(0) = gen_jacob_for.at(0).row(0);
+  J.row(1) = gen_jacob_for.at(0).row(1);
+  J.row(2) = gen_jacob_for.at(0).row(2);
+
+  ve(0) = end_effector_velocities.at(0).linear.x;
+  ve(1) = end_effector_velocities.at(0).linear.y;
+  ve(2) = end_effector_velocities.at(0).linear.z;
+
+  Eigen::FullPivLU<Eigen::MatrixXd> LU(J);
+  Eigen::VectorXd joint_velocity = LU.solve(ve);
+  std_msgs::msg::Float64MultiArray joint_velocity_msg;
+  for (int i = 0; i < joint_number_; i++) {
+    joint_velocity_msg.data.push_back(joint_velocity(i));
+  }
+  return joint_velocity_msg;
 }
 
 std_msgs::msg::Float64MultiArray
 EndEffectorTrajectoryController::compute_joint_effort(
     geometry_msgs::msg::Twist end_effector_velocity) {
-  // Compute joint effort
-  // auto GJ = robot_.computeGeneralizedJacobianForEndEffector(-1);
-  // Eigen::VectorXd end_effector_velocity_vec(6);
-  // end_effector_velocity_vec << end_effector_velocity.linear.x,
-  //     end_effector_velocity.linear.y, end_effector_velocity.linear.z,
-  //     end_effector_velocity.angular.x, end_effector_velocity.angular.y,
-  //     end_effector_velocity.angular.z;
-  // // calc joint velocity
-  // Eigen::FullPivLU<Eigen::MatrixXd> LU(GJ);
-  // Eigen::VectorXd des_joint_vel = LU.solve(end_effector_velocity_vec);
-  // Eigen::VectorXd current_joint_vel = robot_.getJointVelocity();
-  // Eigen::VectorXd des_joint_acc =
-  //     (des_joint_vel - current_joint_vel) / dt_millisec_ * 1000;
-  // des_joint_acc = Eigen::VectorXd::Zero(robot_.getJointNumber());
-  // des_joint_acc(0) = 0.001;
   std_msgs::msg::Float64MultiArray joint_effort;
   return joint_effort;
 }
@@ -306,7 +288,6 @@ void EndEffectorTrajectoryController::odm_base_callback(
 
 void EndEffectorTrajectoryController::update_robot() {
   // Update robot state information
-  // robot_.update(joint_state_, odm_base_.pose.pose, odm_base_.twist.twist);
   Eigen::Isometry3d pose =
       Eigen::Translation3d(odm_base_.pose.pose.position.x,
                            odm_base_.pose.pose.position.y,
@@ -327,10 +308,13 @@ void EndEffectorTrajectoryController::update_robot() {
 
 floating_robot_interfaces::msg::EndEffectorTrajectoryPoint
 EndEffectorTrajectoryController::get_current_end_effector_point(int id) {
-  // Update robot state information
   floating_robot_interfaces::msg::EndEffectorTrajectoryPoint point;
-  // point.pose = tf2::toMsg(robot_.getEndEffectorPose(id));
-  // point.twist = tf2::toMsg(robot_.getEndEffectorTwist(id));
+  auto link_id = robot_.getEndEffector(id).getId();
+  point.pose =
+      tf2::toMsg(robot_.getLinkPoseInWorldFrame(link_id).getOriginPose());
+  auto twist = robot_.getLinkState(link_id).getTwistInWorldFrame();
+  point.twist.linear = tf2::toMsg2(twist.getOriginLinierVelocity());
+  point.twist.angular = tf2::toMsg2(twist.getOriginAngularVelocity());
   return point;
 }
 
@@ -396,7 +380,7 @@ EndEffectorTrajectoryController ::compute_pids_command(
 int main(int argc, char *argv[]) {
 
   rclcpp::init(argc, argv);
-  if (argc == 2) {
+  if (argc > 1) {
     rclcpp::spin(std::make_shared<
                  floating_robot_controller::EndEffectorTrajectoryController>(
         "end_effector_trajectory_controller", "follow_end_effector_trajectory",

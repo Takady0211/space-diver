@@ -75,6 +75,70 @@
       </visual>
     </link>
 
+    <link name="link_2">
+      <pose>0 0 ${BASE_Z/2}</pose>
+      <collision name="collision">
+        <geometry>
+          <box>
+            <size>${LINK_1_X} ${LINK_1_Y} ${LINK_1_Z}</size>
+          </box>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>100</mu>
+              <mu2>50</mu2>
+            </ode>
+          </friction>
+        </surface>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>${LINK_1_X} ${LINK_1_Y} ${LINK_1_Z}</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/Red</name>
+          </script>
+        </material>
+      </visual>
+    </link>
+
+    <link name="link_3">
+      <pose>0 0 ${BASE_Z/2}</pose>
+      <collision name="collision">
+        <geometry>
+          <box>
+            <size>${LINK_1_X} ${LINK_1_Y} ${LINK_1_Z}</size>
+          </box>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>100</mu>
+              <mu2>50</mu2>
+            </ode>
+          </friction>
+        </surface>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>${LINK_1_X} ${LINK_1_Y} ${LINK_1_Z}</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/Red</name>
+          </script>
+        </material>
+      </visual>
+    </link>
+
     <joint name="active_joint_la" type="revolute">
       <parent>base_link</parent>
       <child>link_1</child>
@@ -86,6 +150,34 @@
         <upper>${ACTIVE_JOINT_LA_UPPER}</upper>
         <effort>${ACTIVE_JOINT_LA_EFFORT}</effort>
         <velocity>${ACTIVE_JOINT_LA_VELOCITY}</velocity>
+      </limit>
+    </joint>
+
+    <joint name="active_joint_lb" type="revolute">
+      <parent>link_1</parent>
+      <child>link_2</child>
+      <axis>
+        <xyz>0 1 0</xyz>
+      </axis>
+      <limit>
+        <lower>${ACTIVE_JOINT_LB_LOWER}</lower>
+        <upper>${ACTIVE_JOINT_LB_UPPER}</upper>
+        <effort>${ACTIVE_JOINT_LB_EFFORT}</effort>
+        <velocity>${ACTIVE_JOINT_LB_VELOCITY}</velocity>
+      </limit>
+    </joint>
+
+    <joint name="active_joint_lc" type="revolute">
+      <parent>link_2</parent>
+      <child>link_3</child>
+      <axis>
+        <xyz>0 1 0</xyz>
+      </axis>
+      <limit>
+        <lower>${ACTIVE_JOINT_LC_LOWER}</lower>
+        <upper>${ACTIVE_JOINT_LC_UPPER}</upper>
+        <effort>${ACTIVE_JOINT_LC_EFFORT}</effort>
+        <velocity>${ACTIVE_JOINT_LC_VELOCITY}</velocity>
       </limit>
     </joint>
   </model>
