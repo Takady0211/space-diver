@@ -153,6 +153,12 @@ void EndEffectorTrajectoryController::execute(
   auto feedback = std::make_shared<FollowTraject::Feedback>();
   auto result = std::make_shared<FollowTraject::Result>();
 
+  feedback->desired_points.clear();
+  feedback->actual_points.clear();
+
+  feedback->desired_points.resize(end_effector_number_);
+  feedback->actual_points.resize(end_effector_number_);
+
   bool trj_completed = false;
   while (!trj_completed) {
     executing_ = true;
@@ -197,10 +203,9 @@ void EndEffectorTrajectoryController::execute(
         desired_twist.at(e) = desired_state.twist;
       }
 
-      feedback->desired_points.push_back(desired_state);
-      feedback->actual_points.push_back(current_state);
+      feedback->desired_points.at(e) = (desired_state);
+      feedback->actual_points.at(e) = (current_state);
 
-      goal_handle->publish_feedback(feedback);
       // Break if all trajectory is completed
       if (end_segment_itr != traj_point_active_ptr_.at(e)->end()) {
         trj_completed = false;
@@ -209,6 +214,7 @@ void EndEffectorTrajectoryController::execute(
 
     // Calculate joint velocity
     auto joint_velocity = compute_joint_velocity(desired_twist);
+    goal_handle->publish_feedback(feedback);
     publish_command(joint_velocity);
   }
 

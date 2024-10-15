@@ -76,11 +76,11 @@
     </link>
 
     <link name="link_2">
-      <pose>0 0 ${BASE_Z/2}</pose>
+      <pose>0 0 ${BASE_Z/2+LINK_1_X}</pose>
       <collision name="collision">
         <geometry>
           <box>
-            <size>${LINK_1_X} ${LINK_1_Y} ${LINK_1_Z}</size>
+            <size>${LINK_2_X} ${LINK_2_Y} ${LINK_2_Z}</size>
           </box>
         </geometry>
         <surface>
@@ -95,7 +95,7 @@
       <visual name="visual">
         <geometry>
           <box>
-            <size>${LINK_1_X} ${LINK_1_Y} ${LINK_1_Z}</size>
+            <size>${LINK_2_X} ${LINK_2_Y} ${LINK_2_Z}</size>
           </box>
         </geometry>
         <material>
@@ -108,11 +108,11 @@
     </link>
 
     <link name="link_3">
-      <pose>0 0 ${BASE_Z/2}</pose>
+      <pose>0 0 ${BASE_Z/2+LINK_1_X+LINK_2_X}</pose>
       <collision name="collision">
         <geometry>
           <box>
-            <size>${LINK_1_X} ${LINK_1_Y} ${LINK_1_Z}</size>
+            <size>${LINK_3_X} ${LINK_3_Y} ${LINK_3_Z}</size>
           </box>
         </geometry>
         <surface>
@@ -127,7 +127,7 @@
       <visual name="visual">
         <geometry>
           <box>
-            <size>${LINK_1_X} ${LINK_1_Y} ${LINK_1_Z}</size>
+            <size>${LINK_3_X} ${LINK_3_Y} ${LINK_3_Z}</size>
           </box>
         </geometry>
         <material>
@@ -157,7 +157,7 @@
       <parent>link_1</parent>
       <child>link_2</child>
       <axis>
-        <xyz>0 1 0</xyz>
+        <xyz>0 1 1</xyz>
       </axis>
       <limit>
         <lower>${ACTIVE_JOINT_LB_LOWER}</lower>
@@ -171,7 +171,7 @@
       <parent>link_2</parent>
       <child>link_3</child>
       <axis>
-        <xyz>0 1 0</xyz>
+        <xyz>1 1 0</xyz>
       </axis>
       <limit>
         <lower>${ACTIVE_JOINT_LC_LOWER}</lower>

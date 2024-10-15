@@ -16,7 +16,7 @@ controller_list = ['forward_position_controller', 'forward_effort_controller', '
 # User settings
 use_sim_time = LaunchConfiguration('use_sim_time', default='true')
 use_gazebo = LaunchConfiguration('use_gazebo', default='false') # TODO: Implement this feature
-controller_name = controller_list[1] # Select controller from controller_list
+controller_name = controller_list[5] # Select controller from controller_list
 
 # Path setting for xacro, urdf, rviz, and world files
 # Pay attention to the pkg_dir is ".../spacediver_ws/install/spacediver_ros2_control/share/spacediver_ros2_control" not under this repository.
