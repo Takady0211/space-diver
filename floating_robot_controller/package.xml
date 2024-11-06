@@ -17,7 +17,6 @@
   <depend>action_msgs</depend>
   <depend>ament_cmake</depend>
   <depend>rosidl_default_generators</depend>
-  <depend>rosidl_interface_packages</depend>
   <depend>rosidl_default_runtime</depend>
   <depend>builtin_interfaces</depend>
   <depend>geometry_msgs</depend>

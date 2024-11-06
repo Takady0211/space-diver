@@ -17,8 +17,10 @@
   "C_Cpp.errorSquiggles": "enabled",
   "cSpell.words": [
     "bringup",
+    "colcon",
     "feedforward",
     "remappings",
+    "rosdep",
     "rviz",
     "spacediver",
     "urdf",
