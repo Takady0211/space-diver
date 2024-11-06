@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!-- import xacro reffering here https://gbiggs.github.io/rosjp_urdf_tutorial_text/manipulator_urdf.html -->
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+  <link name="base_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="${BASE_X} ${BASE_Y} ${BASE_Z}"/>
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="${BASE_X} ${BASE_Y} ${BASE_Z}"/>
+      </geometry>
+    </collision>
+    <xacro:inertial_box mass="${BASE_MASS}" x="${BASE_X/2}" y="${BASE_Y/2}" z="${BASE_Z/2}">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </xacro:inertial_box>
+  </link>
+</robot>

@@ -1,0 +1,185 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 1000  # Hz
+
+    # List of controllers to start
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    forward_position_controller:
+      type: forward_command_controller/ForwardCommandController
+
+    forward_effort_controller:
+      type: forward_command_controller/ForwardCommandController
+
+    feedback_effort_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+    # Controller used for single arm control 
+    # Select the joint to control by yourself. Default is left arm
+    forward_position_controller_single_arm:
+      type: forward_command_controller/ForwardCommandController
+
+    forward_effort_controller_single_arm:
+      type: forward_command_controller/ForwardCommandController
+
+    feedback_effort_controller_single_arm:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+
+### Controllers setup
+# Full body controllers
+joint_state_broadcaster:
+  ros__parameters:
+    joints:
+      - active_joint_la
+      - active_joint_lb
+      - active_joint_lc
+      - active_joint_ra
+      - active_joint_rb
+      - active_joint_rc
+    interface_name: position
+    interface_name: velocity
+    interface_name: effort
+
+forward_effort_controller:
+  ros__parameters:
+    joints:
+      - active_joint_la
+      # - active_joint_lb
+      # - active_joint_lc
+      # - active_joint_ra
+      # - active_joint_rb
+      # - active_joint_rc
+    interface_name: effort
+
+forward_position_controller:
+  ros__parameters:
+    joints:
+      - active_joint_la
+      - active_joint_lb
+      - active_joint_lc
+      - active_joint_ra
+      - active_joint_rb
+      - active_joint_rc
+    interface_name: position
+
+feedback_effort_controller:
+  ros__parameters:
+    joints:
+      - active_joint_la
+      - active_joint_lb
+      - active_joint_lc
+      - active_joint_ra
+      - active_joint_rb
+      - active_joint_rc
+    command_interfaces:
+      - effort
+
+    state_interfaces:
+      - position
+      - velocity
+
+    action_monitor_rate: 20.0 # Defaults to 20
+
+    allow_partial_joints_goal: false # Defaults to false
+    open_loop_control: true
+    allow_integration_in_goal_trajectories: true
+    constraints:
+      stopped_velocity_tolerance: 0.001 # Defaults to 0.01
+      goal_time: 0.0 # Defaults to 0.0 (start immediately)
+
+    gains:
+      active_joint_la:
+        p: 1.0
+        i: 0.0
+        d: 1.0
+        i_clamp: 1e+3
+
+      active_joint_lb:
+        p: 1.0
+        i: 0.0
+        d: 1.0
+        i_clamp: 1e+3
+
+      active_joint_lc:
+        p: 1.0
+        i: 0.0
+        d: 1.0
+        i_clamp: 1e+3
+
+      active_joint_ra:
+        p: 1.0
+        i: 0.0
+        d: 1.0
+        i_clamp: 1e+3
+
+      active_joint_rb:
+        p: 1.0
+        i: 0.0
+        d: 1.0
+        i_clamp: 1e+3
+
+      active_joint_rc:
+        p: 1.0
+        i: 0.0
+        d: 1.0
+        i_clamp: 1e+3
+
+# Single arm controllers
+forward_effort_controller_single_arm:
+  ros__parameters:
+    joints:
+      - active_joint_la
+      - active_joint_lb
+      - active_joint_lc
+    interface_name: effort
+
+forward_position_controller_single_arm:
+  ros__parameters:
+    joints:
+      - active_joint_la
+      - active_joint_lb
+      - active_joint_lc
+    interface_name: position
+
+feedback_effort_controller_single_arm:
+  ros__parameters:
+    joints:
+      - active_joint_la
+      - active_joint_lb
+      - active_joint_lc
+    command_interfaces:
+      - effort
+
+    state_interfaces:
+      - position
+      - velocity
+
+    action_monitor_rate: 20.0 # Defaults to 20
+
+    allow_partial_joints_goal: false # Defaults to false
+    open_loop_control: true
+    allow_integration_in_goal_trajectories: true
+    constraints:
+      stopped_velocity_tolerance: 0.001 # Defaults to 0.01
+      goal_time: 0.0 # Defaults to 0.0 (start immediately)
+
+    gains:
+      active_joint_la: # or, active_joint_ra
+        p: 1.0
+        i: 0.0
+        d: 1.0
+        i_clamp: 1e+3
+
+      active_joint_lb: # or, active_joint_rb
+        p: 1.0
+        i: 0.0
+        d: 1.0
+        i_clamp: 1e+3
+
+      active_joint_lc:  # or, active_joint_rc
+        p: 1.0
+        i: 0.0
+        d: 1.0
+        i_clamp: 1e+3

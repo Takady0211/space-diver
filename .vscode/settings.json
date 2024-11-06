@@ -1,0 +1,29 @@
+{
+  "editor.formatOnSave": true,
+  "files.associations": {
+    "functional": "cpp",
+    "*.tcc": "cpp",
+    "deque": "cpp",
+    "forward_list": "cpp",
+    "list": "cpp",
+    "string": "cpp",
+    "vector": "cpp",
+    "hash_map": "cpp",
+    "hash_set": "cpp",
+    "valarray": "cpp",
+    "algorithm": "cpp",
+    "core": "cpp"
+  },
+  "C_Cpp.errorSquiggles": "enabled",
+  "cSpell.words": [
+    "bringup",
+    "colcon",
+    "feedforward",
+    "remappings",
+    "rosdep",
+    "rviz",
+    "spacediver",
+    "urdf",
+    "xacro"
+  ]
+}
