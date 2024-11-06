@@ -1,6 +1,7 @@
 # space-diver
 
 ## Setup
+
 ```bash
 git clone --recursive git@github.com:Space-Robotics-Laboratory/space-diver.git
 git submodule update --init --recursive
