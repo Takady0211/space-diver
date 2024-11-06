@@ -56,6 +56,17 @@ source install/setup.bash
 ros2 launch spacediver_ros2_control spacediver.launch.py
 ```
 
+## Development
+
+Create a branch following the naming rule as `feature/*******`.
+
+```bash
+git checkout feature/******* -b
+```
+
+> [!IMPORTANT]
+> It's important to avoid developing directory under develop branch, nor main branch.
+
 ## References
 
 - [How to create a gazebo model using SDF](https://www.theconstruct.ai/gazebo-5-minutes-004-create-gazebo-model-using-sdf/)
