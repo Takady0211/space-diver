@@ -42,13 +42,42 @@
         </material>
       </visual>
     </link>
-    
-    <link name="link_1">
-      <pose>0 0 ${BASE_Z/2}</pose>
+
+    <link name="left_shoulder_plate">
+      <pose>
+        ${SHOULDER_PLATE_POS_X} ${SHOULDER_PLATE_POS_Y} ${SHOULDER_PLATE_POS_Z}
+        ${SHOULDER_PLATE_ROT_X} ${SHOULDER_PLATE_ROT_Y} ${SHOULDER_PLATE_ROT_Z}
+      </pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://spacediver/meshes/shoulder_plate.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://spacediver/meshes/shoulder_plate.STL</uri>
+          </mesh>
+        </geometry>
+        <!-- <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/Grey</name>
+          </script>
+        </material> -->
+      </visual>
+    </link>
+
+    <link name="left_dynamixel_top">
+      <pose>
+        ${DYNAMIXEL_LEFT_TOP_POS_X} ${DYNAMIXEL_LEFT_TOP_POS_Y} ${DYNAMIXEL_LEFT_TOP_POS_Z}
+      </pose>
       <collision name="collision">
         <geometry>
           <box>
-            <size>${LINK_1_X} ${LINK_1_Y} ${LINK_1_Z}</size>
+            <size>${DYNAMIXEL_X} ${DYNAMIXEL_Y} ${DYNAMIXEL_Z}</size>
           </box>
         </geometry>
         <surface>
@@ -63,24 +92,26 @@
       <visual name="visual">
         <geometry>
           <box>
-            <size>${LINK_1_X} ${LINK_1_Y} ${LINK_1_Z}</size>
+            <size>${DYNAMIXEL_X} ${DYNAMIXEL_Y} ${DYNAMIXEL_Z}</size>
           </box>
         </geometry>
         <material>
           <script>
             <uri>file://media/materials/scripts/gazebo.material</uri>
-            <name>Gazebo/Red</name>
+            <name>Gazebo/Blue</name>
           </script>
         </material>
       </visual>
     </link>
 
-    <link name="link_2">
-      <pose>0 0 ${BASE_Z/2+LINK_1_X}</pose>
+    <link name="left_dynamixel_bottom">
+      <pose>
+        ${DYNAMIXEL_LEFT_BOT_POS_X} ${DYNAMIXEL_LEFT_BOT_POS_Y} ${DYNAMIXEL_LEFT_BOT_POS_Z}
+      </pose>
       <collision name="collision">
         <geometry>
           <box>
-            <size>${LINK_2_X} ${LINK_2_Y} ${LINK_2_Z}</size>
+            <size>${DYNAMIXEL_X} ${DYNAMIXEL_Y} ${DYNAMIXEL_Z}</size>
           </box>
         </geometry>
         <surface>
@@ -95,40 +126,35 @@
       <visual name="visual">
         <geometry>
           <box>
-            <size>${LINK_2_X} ${LINK_2_Y} ${LINK_2_Z}</size>
+            <size>${DYNAMIXEL_X} ${DYNAMIXEL_Y} ${DYNAMIXEL_Z}</size>
           </box>
         </geometry>
         <material>
           <script>
             <uri>file://media/materials/scripts/gazebo.material</uri>
-            <name>Gazebo/Red</name>
+            <name>Gazebo/Blue</name>
           </script>
         </material>
       </visual>
     </link>
 
-    <link name="link_3">
-      <pose>0 0 ${BASE_Z/2+LINK_1_X+LINK_2_X}</pose>
+    <link name="misumi_ln">
+      <pose>
+        ${MISUMILN_POS_X} ${MISUMILN_POS_Y} ${MISUMILN_POS_Z}
+        0 0 ${MISUMILN_ROT_Z}
+      </pose>
       <collision name="collision">
         <geometry>
-          <box>
-            <size>${LINK_3_X} ${LINK_3_Y} ${LINK_3_Z}</size>
-          </box>
+          <mesh>
+            <uri>model://spacediver/meshes/Link_MISUMI_LNMS16-10-200.STL</uri>
+          </mesh>
         </geometry>
-        <surface>
-          <friction>
-            <ode>
-              <mu>100</mu>
-              <mu2>50</mu2>
-            </ode>
-          </friction>
-        </surface>
       </collision>
       <visual name="visual">
         <geometry>
-          <box>
-            <size>${LINK_3_X} ${LINK_3_Y} ${LINK_3_Z}</size>
-          </box>
+          <mesh>
+            <uri>model://spacediver/meshes/Link_MISUMI_LNMS16-10-200.STL</uri>
+          </mesh>
         </geometry>
         <material>
           <script>
@@ -139,46 +165,101 @@
       </visual>
     </link>
 
-    <joint name="active_joint_la" type="revolute">
-      <parent>base_link</parent>
-      <child>link_1</child>
+    <link name="driving_link">
+      <pose>
+        ${DRIVING_POS_X} ${DRIVING_POS_Y} ${DRIVING_POS_Z}
+      </pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://spacediver/meshes/upper_arm_driving_link.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://spacediver/meshes/upper_arm_driving_link.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/Green</name>
+          </script>
+        </material>
+      </visual>
+    </link>
+
+    <link name="driven_link">
+      <pose>
+        ${DRIVEN_POS_X} ${DRIVEN_POS_Y} ${DRIVEN_POS_Z}
+        0 0 ${DRIVEN_ROT_Z}
+      </pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://spacediver/meshes/upper_arm_driven_link.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://spacediver/meshes/upper_arm_driven_link.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/Red</name>
+          </script>
+        </material>
+      </visual>
+    </link>
+
+    <link name="misumi_ft">
+      <pose>
+        ${MISUMIFT_POS_X} ${MISUMIFT_POS_Y} ${MISUMIFT_POS_Z}
+        0 0 ${MISUMIFT_ROT_Z}
+      </pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://spacediver/meshes/Misumi_LNFTS10-P10-V10-L200-S50-W18-T9.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://spacediver/meshes/Misumi_LNFTS10-P10-V10-L200-S50-W18-T9.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/Green</name>
+          </script>
+        </material>
+      </visual>
+    </link>
+
+
+    <joint name="dynamixel_to_driving_joint" type="revolute">
+      <parent>left_dynamixel_top</parent>
+      <child>driving_link</child>
       <axis>
-        <xyz>0 1 0</xyz>
+        <xyz>0 0 1</xyz>
       </axis>
-      <limit>
-        <lower>${ACTIVE_JOINT_LA_LOWER}</lower>
-        <upper>${ACTIVE_JOINT_LA_UPPER}</upper>
-        <effort>${ACTIVE_JOINT_LA_EFFORT}</effort>
-        <velocity>${ACTIVE_JOINT_LA_VELOCITY}</velocity>
-      </limit>
     </joint>
 
-    <joint name="active_joint_lb" type="revolute">
-      <parent>link_1</parent>
-      <child>link_2</child>
+    <joint name="driving_to_driven_joint" type="revolute">
+      <parent>driving_link</parent>
+      <child>driven_link</child>
       <axis>
-        <xyz>0 1 1</xyz>
+        <xyz>0 0 1</xyz>
       </axis>
-      <limit>
-        <lower>${ACTIVE_JOINT_LB_LOWER}</lower>
-        <upper>${ACTIVE_JOINT_LB_UPPER}</upper>
-        <effort>${ACTIVE_JOINT_LB_EFFORT}</effort>
-        <velocity>${ACTIVE_JOINT_LB_VELOCITY}</velocity>
-      </limit>
-    </joint>
-
-    <joint name="active_joint_lc" type="revolute">
-      <parent>link_2</parent>
-      <child>link_3</child>
-      <axis>
-        <xyz>1 1 0</xyz>
-      </axis>
-      <limit>
-        <lower>${ACTIVE_JOINT_LC_LOWER}</lower>
-        <upper>${ACTIVE_JOINT_LC_UPPER}</upper>
-        <effort>${ACTIVE_JOINT_LC_EFFORT}</effort>
-        <velocity>${ACTIVE_JOINT_LC_VELOCITY}</velocity>
-      </limit>
     </joint>
   </model>
 </sdf>
