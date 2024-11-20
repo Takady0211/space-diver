@@ -245,10 +245,23 @@
       </visual>
     </link>
 
+    <joint name="dynamixel_to_misumiln_joint" type="revolute">
+      <parent>left_dynamixel_bottom</parent>
+      <child>misumi_ln</child>
+      <pose>
+        ${MISUMILN_JOINTA_Y} ${MISUMILN_JOINTA_X} ${MISUMILN_JOINTA_Z}
+      </pose>
+      <axis>
+        <xyz>0 0 1</xyz>
+      </axis>
+    </joint>
 
     <joint name="dynamixel_to_driving_joint" type="revolute">
       <parent>left_dynamixel_top</parent>
       <child>driving_link</child>
+      <pose>
+        ${DRIVING_JOINTA_X} ${DRIVING_JOINTA_Y} ${DRIVING_JOINTA_Z}
+      </pose>
       <axis>
         <xyz>0 0 1</xyz>
       </axis>
@@ -257,9 +270,35 @@
     <joint name="driving_to_driven_joint" type="revolute">
       <parent>driving_link</parent>
       <child>driven_link</child>
+      <pose>
+        ${DRIVEN_JOINTA_X} ${DRIVEN_JOINTA_Y} ${DRIVEN_JOINTA_Z}
+      </pose>
       <axis>
         <xyz>0 0 1</xyz>
       </axis>
     </joint>
+
+    <joint name="driven_to_misumift_joint" type="revolute">
+      <parent>driven_link</parent>
+      <child>misumi_ft</child>
+      <pose>
+        ${MISUMIFT_JOINTA_X} ${MISUMIFT_JOINTA_Y} ${MISUMIFT_JOINTA_Z}
+      </pose>
+      <axis>
+        <xyz>0 0 1</xyz>
+      </axis>
+    </joint>
+
+    <joint name="misumiln_to_misumift_joint" type="revolute">
+      <parent>misumi_ln</parent>
+      <child>misumi_ft</child>
+      <pose>
+        ${MISUMIFT_JOINTB_X} ${MISUMIFT_JOINTB_Y} ${MISUMIFT_JOINTB_Z}
+      </pose>
+      <axis>
+        <xyz>0 0 1</xyz>
+      </axis>
+    </joint>
+
   </model>
 </sdf>
