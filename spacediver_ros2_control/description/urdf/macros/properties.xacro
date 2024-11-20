@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
-  <xacro:property name="PI" value="3.1415926535"/>
+  <xacro:property name="PI" value="${math.pi}"/>
+  <xacro:property name="ROT" value="${PI/6}"/>
 
   <xacro:property name="BASE_X" value="0.18"/>
   <xacro:property name="BASE_Y" value="0.0585"/>
@@ -38,12 +39,12 @@
   <xacro:property name="MISUMILN_X" value="0.032"/>
   <xacro:property name="MISUMILN_Y" value="0.225"/>
   <xacro:property name="MISUMILN_Z" value="0.009"/>
-  <xacro:property name="MISUMILN_ROT_Z" value="${-PI/2}"/>
+  <xacro:property name="MISUMILN_ROT_Z" value="${-PI/2+ROT}"/>
   <xacro:property name="MISUMILN_JOINTA_X" value="0.016"/>
   <xacro:property name="MISUMILN_JOINTA_Y" value="0.012"/>
   <xacro:property name="MISUMILN_JOINTA_Z" value="${0.01 + MISUMILN_Z/2}"/>
-  <xacro:property name="MISUMILN_POS_X" value="${DYNAMIXEL_LEFT_BOT_POS_X - MISUMILN_JOINTA_X}"/>
-  <xacro:property name="MISUMILN_POS_Y" value="${DYNAMIXEL_LEFT_BOT_POS_Y - DYNAMIXEL_JOINTB_Y + MISUMILN_JOINTA_Y}"/>
+  <xacro:property name="MISUMILN_POS_X" value="${DYNAMIXEL_LEFT_BOT_POS_X + math.cos(ROT)*(-MISUMILN_JOINTA_X) - math.sin(ROT)*(MISUMILN_JOINTA_Y)}"/>
+  <xacro:property name="MISUMILN_POS_Y" value="${DYNAMIXEL_LEFT_BOT_POS_Y - DYNAMIXEL_JOINTB_Y + math.sin(ROT)*(-MISUMILN_JOINTA_X) + math.cos(ROT)*(MISUMILN_JOINTA_Y)}"/>
   <xacro:property name="MISUMILN_POS_Z" value="${DYNAMIXEL_LEFT_BOT_POS_Z + DYNAMIXEL_Z/2 + 0.0045}"/>
 
 
@@ -53,6 +54,7 @@
   <xacro:property name="DRIVING_JOINTA_X" value="0.013"/>
   <xacro:property name="DRIVING_JOINTA_Y" value="0.013"/>
   <xacro:property name="DRIVING_JOINTA_Z" value="${DRIVING_Z/2}"/>
+  <xacro:property name="DRIVING_ROT_Z" value="${0}"/>
   <xacro:property name="DRIVING_POS_X" value="${DYNAMIXEL_LEFT_TOP_POS_X - DRIVING_JOINTA_X}"/>
   <xacro:property name="DRIVING_POS_Y" value="${DYNAMIXEL_LEFT_TOP_POS_Y - DYNAMIXEL_JOINTB_Y - DRIVING_JOINTA_Y}"/>
   <xacro:property name="DRIVING_POS_Z" value="${DYNAMIXEL_LEFT_TOP_POS_Z - DYNAMIXEL_Z/2 - DRIVING_Z - 0.0045}"/>
@@ -62,12 +64,12 @@
   <xacro:property name="DRIVEN_X" value="0.026"/>
   <xacro:property name="DRIVEN_Y" value="0.226"/>
   <xacro:property name="DRIVEN_Z" value="0.004"/>
-  <xacro:property name="DRIVEN_ROT_Z" value="${-PI/2}"/>
+  <xacro:property name="DRIVEN_ROT_Z" value="${-PI/2+ROT}"/>
   <xacro:property name="DRIVEN_JOINTA_X" value="0.013"/>
   <xacro:property name="DRIVEN_JOINTA_Y" value="0.013"/>
   <xacro:property name="DRIVEN_JOINTA_Z" value="${DRIVEN_Z/2}"/>
-  <xacro:property name="DRIVEN_POS_X" value="${DRIVING_POS_X + DRIVING_JOINTB_X - DRIVEN_JOINTA_X}"/>
-  <xacro:property name="DRIVEN_POS_Y" value="${DRIVING_POS_Y + DRIVING_JOINTB_Y + DRIVEN_JOINTA_Y}"/>
+  <xacro:property name="DRIVEN_POS_X" value="${DRIVING_POS_X + DRIVING_JOINTB_X + math.cos(ROT)*(-DRIVEN_JOINTA_X) - math.sin(ROT)*(DRIVEN_JOINTA_Y)}"/>
+  <xacro:property name="DRIVEN_POS_Y" value="${DRIVING_POS_Y + DRIVING_JOINTB_Y + math.sin(ROT)*(-DRIVEN_JOINTA_X) + math.cos(ROT)*(DRIVEN_JOINTA_Y)}"/>
   <xacro:property name="DRIVEN_POS_Z" value="${DRIVING_POS_Z - DRIVING_Z - 0.01}"/>
   <xacro:property name="DRIVEN_JOINTB_X" value="0.013"/>
   <xacro:property name="DRIVEN_JOINTB_Y" value="0.213"/>
@@ -76,15 +78,15 @@
   <xacro:property name="MISUMIFT_X" value="0.268"/>
   <xacro:property name="MISUMIFT_Y" value="0.018"/>
   <xacro:property name="MISUMIFT_Z" value="0.009"/>
-  <xacro:property name="MISUMIFT_ROT_Z" value="${-PI}"/>
+  <xacro:property name="MISUMIFT_ROT_Z" value="${PI}"/>
   <xacro:property name="MISUMIFT_JOINTA_X" value="0.009"/>
   <xacro:property name="MISUMIFT_JOINTA_Y" value="0.009"/>
   <xacro:property name="MISUMIFT_JOINTA_Z" value="${MISUMIFT_Z/2}"/>
   <xacro:property name="MISUMIFT_JOINTB_X" value="0.059"/>
   <xacro:property name="MISUMIFT_JOINTB_Y" value="0.009"/>
   <xacro:property name="MISUMIFT_JOINTB_Z" value="${MISUMIFT_Z/2}"/>
-  <xacro:property name="MISUMIFT_POS_X" value="${DRIVEN_POS_X + DRIVEN_JOINTB_X + MISUMIFT_JOINTA_X}"/>
-  <xacro:property name="MISUMIFT_POS_Y" value="${DRIVEN_POS_Y - DRIVEN_JOINTB_Y + MISUMIFT_JOINTA_Y}"/>
+  <xacro:property name="MISUMIFT_POS_X" value="${DRIVEN_POS_X + math.cos(ROT)*(DRIVEN_JOINTB_X) - math.sin(ROT)*(-DRIVEN_JOINTB_Y) + MISUMIFT_JOINTA_X}"/>
+  <xacro:property name="MISUMIFT_POS_Y" value="${DRIVEN_POS_Y + math.sin(ROT)*(DRIVEN_JOINTB_X) + math.cos(ROT)*(-DRIVEN_JOINTB_Y) + MISUMIFT_JOINTA_Y}"/>
   <xacro:property name="MISUMIFT_POS_Z" value="${DRIVEN_POS_Z - MISUMIFT_Z - 0.005}"/>
   
 

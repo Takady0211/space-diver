@@ -168,6 +168,7 @@
     <link name="driving_link">
       <pose>
         ${DRIVING_POS_X} ${DRIVING_POS_Y} ${DRIVING_POS_Z}
+        0 0 ${DRIVING_ROT_Z}
       </pose>
       <collision name="collision">
         <geometry>
