@@ -245,6 +245,21 @@
       </visual>
     </link>
 
+    <joint name="base_to_leftshoulderplate_joint" type="fixed">
+      <parent>base_link</parent>
+      <child>left_shoulder_plate</child>
+    </joint>
+
+    <joint name="leftshoulderplate_to_leftdynamixeltop_joint" type="fixed">
+      <parent>left_shoulder_plate</parent>
+      <child>left_dynamixel_top</child>
+    </joint>
+
+    <joint name="leftshoulderplate_to_leftdynamixelbottom_joint" type="fixed">
+      <parent>left_shoulder_plate</parent>
+      <child>left_dynamixel_bottom</child>
+    </joint>
+
     <joint name="dynamixel_to_misumiln_joint" type="revolute">
       <parent>left_dynamixel_bottom</parent>
       <child>misumi_ln</child>
