@@ -29,12 +29,10 @@
   <xacro:property name="DYNAMIXEL_Z" value="0.044"/>
   <xacro:property name="DYNAMIXEL_JOINTB_X" value="0"/>
   <xacro:property name="DYNAMIXEL_JOINTB_Y" value="${DYNAMIXEL_Y - 0.04475}"/>
-  <xacro:property name="DYNAMIXEL_TOP_POS_X" value="${SHOULDER_PLATE_POS_X + SHOULDER_PLATE_X + DYNAMIXEL_X/2}"/>
-  <xacro:property name="DYNAMIXEL_TOP_POS_Y" value="${SHOULDER_PLATE_POS_Y + SHOULDER_PLATE_Y_ADD + SHOULDER_PLATE_Y/2}"/>
+  <xacro:property name="DYNAMIXEL_POS_X" value="${SHOULDER_PLATE_POS_X + SHOULDER_PLATE_X + DYNAMIXEL_X/2}"/>
+  <xacro:property name="DYNAMIXEL_POS_Y" value="${SHOULDER_PLATE_POS_Y + SHOULDER_PLATE_Y_ADD + SHOULDER_PLATE_Y/2}"/>
   <xacro:property name="DYNAMIXEL_TOP_POS_Z" value="${SHOULDER_PLATE_POS_Z + SHOULDER_PLATE_Z - DYNAMIXEL_Z/2}"/>
-  <xacro:property name="DYNAMIXEL_BOT_POS_X" value="${SHOULDER_PLATE_POS_X + SHOULDER_PLATE_X + DYNAMIXEL_X/2}"/>
-  <xacro:property name="DYNAMIXEL_BOT_POS_Y" value="${SHOULDER_PLATE_POS_Y + SHOULDER_PLATE_Y_ADD + SHOULDER_PLATE_Y/2}"/>
-  <xacro:property name="DYNAMIXEL_BOT_POS_Z" value="${SHOULDER_PLATE_POS_Z+ DYNAMIXEL_Z/2}"/>
+  <xacro:property name="DYNAMIXEL_BOT_POS_Z" value="${SHOULDER_PLATE_POS_Z + DYNAMIXEL_Z/2}"/>
 
 
   <!-- MIUSMI LN (LOWER LINK) -->
@@ -47,12 +45,12 @@
   <xacro:property name="MISUMILN_JOINTA_Z" value="${0.01 + MISUMILN_Z/2}"/>
   <!-- LEFT -->
   <xacro:property name="L_MISUMILN_ROT_Z" value="${-PI/2+ROT}"/>
-  <xacro:property name="L_MISUMILN_POS_X" value="${DYNAMIXEL_BOT_POS_X + math.cos(ROT)*(-MISUMILN_JOINTA_X) - math.sin(ROT)*(MISUMILN_JOINTA_Y)}"/>
-  <xacro:property name="L_MISUMILN_POS_Y" value="${DYNAMIXEL_BOT_POS_Y - DYNAMIXEL_JOINTB_Y + math.sin(ROT)*(-MISUMILN_JOINTA_X) + math.cos(ROT)*(MISUMILN_JOINTA_Y)}"/>
+  <xacro:property name="L_MISUMILN_POS_X" value="${DYNAMIXEL_POS_X + math.cos(ROT)*(-MISUMILN_JOINTA_X) - math.sin(ROT)*(MISUMILN_JOINTA_Y)}"/>
+  <xacro:property name="L_MISUMILN_POS_Y" value="${DYNAMIXEL_POS_Y - DYNAMIXEL_JOINTB_Y + math.sin(ROT)*(-MISUMILN_JOINTA_X) + math.cos(ROT)*(MISUMILN_JOINTA_Y)}"/>
   <!-- RIGHT -->
   <xacro:property name="R_MISUMILN_ROT_Z" value="${-PI/2-ROT}"/>
-  <xacro:property name="R_MISUMILN_POS_X" value="${-DYNAMIXEL_BOT_POS_X + math.cos(-ROT)*(-MISUMILN_JOINTA_X) - math.sin(-ROT)*(MISUMILN_JOINTA_Y)}"/>
-  <xacro:property name="R_MISUMILN_POS_Y" value="${DYNAMIXEL_BOT_POS_Y - DYNAMIXEL_JOINTB_Y + math.sin(-ROT)*(-MISUMILN_JOINTA_X) + math.cos(-ROT)*(MISUMILN_JOINTA_Y)}"/>
+  <xacro:property name="R_MISUMILN_POS_X" value="${-DYNAMIXEL_POS_X + math.cos(-ROT)*(-MISUMILN_JOINTA_X) - math.sin(-ROT)*(MISUMILN_JOINTA_Y)}"/>
+  <xacro:property name="R_MISUMILN_POS_Y" value="${DYNAMIXEL_POS_Y - DYNAMIXEL_JOINTB_Y + math.sin(-ROT)*(-MISUMILN_JOINTA_X) + math.cos(-ROT)*(MISUMILN_JOINTA_Y)}"/>
 
   <xacro:property name="MISUMILN_POS_Z" value="${DYNAMIXEL_BOT_POS_Z + DYNAMIXEL_Z/2 + 0.0045}"/>
 
@@ -65,12 +63,12 @@
   <xacro:property name="DRIVING_JOINTA_Z" value="${DRIVING_Z/2}"/>
   <!-- LEFT -->
   <xacro:property name="L_DRIVING_ROT_Z" value="${0}"/>
-  <xacro:property name="L_DRIVING_POS_X" value="${DYNAMIXEL_TOP_POS_X - DRIVING_JOINTA_X}"/>
-  <xacro:property name="L_DRIVING_POS_Y" value="${DYNAMIXEL_TOP_POS_Y - DYNAMIXEL_JOINTB_Y - DRIVING_JOINTA_Y}"/>
+  <xacro:property name="L_DRIVING_POS_X" value="${DYNAMIXEL_POS_X - DRIVING_JOINTA_X}"/>
+  <xacro:property name="L_DRIVING_POS_Y" value="${DYNAMIXEL_POS_Y - DYNAMIXEL_JOINTB_Y - DRIVING_JOINTA_Y}"/>
   <!-- RIGHT -->
   <xacro:property name="R_DRIVING_ROT_Z" value="${PI}"/>
-  <xacro:property name="R_DRIVING_POS_X" value="${-DYNAMIXEL_TOP_POS_X + DRIVING_JOINTA_X}"/>
-  <xacro:property name="R_DRIVING_POS_Y" value="${DYNAMIXEL_TOP_POS_Y - DYNAMIXEL_JOINTB_Y + DRIVING_JOINTA_Y}"/>
+  <xacro:property name="R_DRIVING_POS_X" value="${-DYNAMIXEL_POS_X + DRIVING_JOINTA_X}"/>
+  <xacro:property name="R_DRIVING_POS_Y" value="${DYNAMIXEL_POS_Y - DYNAMIXEL_JOINTB_Y + DRIVING_JOINTA_Y}"/>
 
   <xacro:property name="DRIVING_POS_Z" value="${DYNAMIXEL_TOP_POS_Z - DYNAMIXEL_Z/2 - DRIVING_Z - 0.0045}"/>
   <xacro:property name="DRIVING_JOINTB_X" value="0.063"/>

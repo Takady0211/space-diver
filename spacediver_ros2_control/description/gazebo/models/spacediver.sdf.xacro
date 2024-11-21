@@ -100,7 +100,7 @@
     <!-- DYNAMIXELS -->
     <link name="left_dynamixel_top">
       <pose>
-        ${DYNAMIXEL_TOP_POS_X} ${DYNAMIXEL_TOP_POS_Y} ${DYNAMIXEL_TOP_POS_Z}
+        ${DYNAMIXEL_POS_X} ${DYNAMIXEL_POS_Y} ${DYNAMIXEL_TOP_POS_Z}
       </pose>
       <collision name="collision">
         <geometry>
@@ -134,7 +134,7 @@
 
     <link name="right_dynamixel_top">
       <pose>
-        ${-DYNAMIXEL_TOP_POS_X} ${DYNAMIXEL_TOP_POS_Y} ${DYNAMIXEL_TOP_POS_Z}
+        ${-DYNAMIXEL_POS_X} ${DYNAMIXEL_POS_Y} ${DYNAMIXEL_TOP_POS_Z}
       </pose>
       <collision name="collision">
         <geometry>
@@ -168,7 +168,7 @@
 
     <link name="left_dynamixel_bottom">
       <pose>
-        ${DYNAMIXEL_BOT_POS_X} ${DYNAMIXEL_BOT_POS_Y} ${DYNAMIXEL_BOT_POS_Z}
+        ${DYNAMIXEL_POS_X} ${DYNAMIXEL_POS_Y} ${DYNAMIXEL_BOT_POS_Z}
       </pose>
       <collision name="collision">
         <geometry>
@@ -202,7 +202,7 @@
 
     <link name="right_dynamixel_bottom">
       <pose>
-        ${-DYNAMIXEL_BOT_POS_X} ${DYNAMIXEL_BOT_POS_Y} ${DYNAMIXEL_BOT_POS_Z}
+        ${-DYNAMIXEL_POS_X} ${DYNAMIXEL_POS_Y} ${DYNAMIXEL_BOT_POS_Z}
       </pose>
       <collision name="collision">
         <geometry>
