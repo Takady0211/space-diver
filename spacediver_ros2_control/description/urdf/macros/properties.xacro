@@ -52,7 +52,7 @@
   <xacro:property name="R_MISUMILN_POS_X" value="${-DYNAMIXEL_POS_X + math.cos(-ROT)*(-MISUMILN_JOINTA_X) - math.sin(-ROT)*(MISUMILN_JOINTA_Y)}"/>
   <xacro:property name="R_MISUMILN_POS_Y" value="${DYNAMIXEL_POS_Y - DYNAMIXEL_JOINTB_Y + math.sin(-ROT)*(-MISUMILN_JOINTA_X) + math.cos(-ROT)*(MISUMILN_JOINTA_Y)}"/>
 
-  <xacro:property name="MISUMILN_POS_Z" value="${DYNAMIXEL_BOT_POS_Z + DYNAMIXEL_Z/2 + 0.0045}"/>
+  <xacro:property name="MISUMILN_POS_Z" value="${DYNAMIXEL_BOT_POS_Z + DYNAMIXEL_Z/2 + 0.0145}"/>
 
   <!-- DRIVING LINK -->
   <xacro:property name="DRIVING_X" value="0.076"/>
