@@ -238,8 +238,8 @@
     <!-- MISUMI LN (lower link) -->
     <link name="left_misumi_ln">
       <pose>
-        ${MISUMILN_POS_X} ${MISUMILN_POS_Y} ${MISUMILN_POS_Z}
-        0 0 ${MISUMILN_ROT_Z}
+        ${L_MISUMILN_POS_X} ${L_MISUMILN_POS_Y} ${L_MISUMILN_POS_Z}
+        0 0 ${L_MISUMILN_ROT_Z}
       </pose>
       <collision name="collision">
         <geometry>
@@ -293,8 +293,8 @@
     <!-- DRIVING LINK -->
     <link name="left_driving_link">
       <pose>
-        ${DRIVING_POS_X} ${DRIVING_POS_Y} ${DRIVING_POS_Z}
-        0 0 ${DRIVING_ROT_Z}
+        ${L_DRIVING_POS_X} ${L_DRIVING_POS_Y} ${L_DRIVING_POS_Z}
+        0 0 ${L_DRIVING_ROT_Z}
       </pose>
       <collision name="collision">
         <geometry>
@@ -348,8 +348,8 @@
     <!-- DRIVEN LINK -->
     <link name="left_driven_link">
       <pose>
-        ${DRIVEN_POS_X} ${DRIVEN_POS_Y} ${DRIVEN_POS_Z}
-        0 0 ${DRIVEN_ROT_Z}
+        ${L_DRIVEN_POS_X} ${L_DRIVEN_POS_Y} ${L_DRIVEN_POS_Z}
+        0 0 ${L_DRIVEN_ROT_Z}
       </pose>
       <collision name="collision">
         <geometry>
@@ -403,8 +403,8 @@
     <!-- MISUMI FT (final link) -->
     <link name="left_misumi_ft">
       <pose>
-        ${MISUMIFT_POS_X} ${MISUMIFT_POS_Y} ${MISUMIFT_POS_Z}
-        0 0 ${MISUMIFT_ROT_Z}
+        ${L_MISUMIFT_POS_X} ${L_MISUMIFT_POS_Y} ${L_MISUMIFT_POS_Z}
+        0 0 ${L_MISUMIFT_ROT_Z}
       </pose>
       <collision name="collision">
         <geometry>
