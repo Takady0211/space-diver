@@ -47,7 +47,6 @@
     <link name="left_shoulder_plate">
       <pose>
         ${SHOULDER_PLATE_POS_X} ${SHOULDER_PLATE_POS_Y} ${SHOULDER_PLATE_POS_Z}
-        ${SHOULDER_PLATE_ROT_X} ${SHOULDER_PLATE_ROT_Y} ${SHOULDER_PLATE_ROT_Z}
       </pose>
       <collision name="collision">
         <geometry>
@@ -74,7 +73,7 @@
     <link name="right_shoulder_plate">
       <pose>
         ${-SHOULDER_PLATE_POS_X} ${SHOULDER_PLATE_POS_Y} ${-SHOULDER_PLATE_POS_Z}
-        ${PI/2} ${0} ${-PI/2}
+        ${R_SHOULDER_PLATE_ROT_X} ${R_SHOULDER_PLATE_ROT_Y} ${R_SHOULDER_PLATE_ROT_Z}
       </pose>
       <collision name="collision">
         <geometry>
