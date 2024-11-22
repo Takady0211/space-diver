@@ -456,13 +456,25 @@
     </link>
 
     <!-- JOINTS -->
-    <joint name="base_to_leftshoulderplate_joint" type="fixed">
+    <joint name="base_to_leftshoulderplate_joint" type="revolute">
       <parent>base_link</parent>
       <child>left_shoulder_plate</child>
+      <pose>
+        ${SHOULDER_PLATE_JOINTA_X} ${SHOULDER_PLATE_JOINTA_Y} ${SHOULDER_PLATE_JOINTA_Z}
+      </pose>
+      <axis>
+        <xyz>0 1 0</xyz>
+      </axis>
     </joint>
-    <joint name="base_to_rightshoulderplate_joint" type="fixed">
+    <joint name="base_to_rightshoulderplate_joint" type="revolute">
       <parent>base_link</parent>
       <child>right_shoulder_plate</child>
+      <pose>
+        ${SHOULDER_PLATE_JOINTA_X} ${SHOULDER_PLATE_JOINTA_Y} ${SHOULDER_PLATE_JOINTA_Z}
+      </pose>
+      <axis>
+        <xyz>0 1 0</xyz>
+      </axis>
     </joint>
 
     <joint name="leftshoulderplate_to_leftdynamixeltop_joint" type="fixed">

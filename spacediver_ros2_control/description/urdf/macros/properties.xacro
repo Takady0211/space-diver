@@ -15,6 +15,9 @@
   <xacro:property name="SHOULDER_PLATE_Y" value="0.0585"/>
   <xacro:property name="SHOULDER_PLATE_Y_ADD" value="0.00275"/>
   <xacro:property name="SHOULDER_PLATE_Z" value="0.148"/>
+  <xacro:property name="SHOULDER_PLATE_JOINTA_X" value="${0.04475}"/>
+  <xacro:property name="SHOULDER_PLATE_JOINTA_Y" value="${0.005}"/>
+  <xacro:property name="SHOULDER_PLATE_JOINTA_Z" value="${SHOULDER_PLATE_Z/2}"/>
   <xacro:property name="SHOULDER_PLATE_POS_X" value="${BASE_X/2 + 0.0045}"/>
   <xacro:property name="SHOULDER_PLATE_POS_Y" value="${SHOULDER_PLATE_Y/2}"/>
   <xacro:property name="SHOULDER_PLATE_POS_Z" value="${-SHOULDER_PLATE_Z/2}"/>
@@ -44,7 +47,7 @@
 
   <xacro:property name="MISUMILN_JOINTA_X" value="0.016"/>
   <xacro:property name="MISUMILN_JOINTA_Y" value="0.012"/>
-  <xacro:property name="MISUMILN_JOINTA_Z" value="${0.01 + MISUMILN_Z/2}"/>
+  <xacro:property name="MISUMILN_JOINTA_Z" value="${MISUMILN_Z/2}"/>
   <!-- LEFT -->
   <xacro:property name="L_MISUMILN_ROT_Z" value="${-PI/2+ROT}"/>
   <xacro:property name="L_MISUMILN_POS_X" value="${DYNAMIXEL_POS_X + math.cos(ROT)*(-MISUMILN_JOINTA_X) - math.sin(ROT)*(MISUMILN_JOINTA_Y)}"/>
