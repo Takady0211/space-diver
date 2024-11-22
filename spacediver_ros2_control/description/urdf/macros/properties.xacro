@@ -3,12 +3,19 @@
 
   <xacro:property name="PI" value="${math.pi}"/>
   <xacro:property name="ROT" value="${PI/6}"/>
+  <xacro:property name="RPM" value="30"/>
 
+  <!-- BASE -->
   <xacro:property name="BASE_X" value="0.18"/>
   <xacro:property name="BASE_Y" value="0.0585"/>
   <xacro:property name="BASE_Z" value="0.0415"/>
   <xacro:property name="BASE_MASS" value="50"/>
   <xacro:property name="BASE_INERTIA_Z" value="0.13526810"/>
+  <!-- JOINT -->
+  <xacro:property name="BASE_DYNAMIXEL_LOWER" value="-${PI}"/>
+  <xacro:property name="BASE_DYNAMIXEL_UPPER" value=" ${PI}"/>
+  <xacro:property name="BASE_DYNAMIXEL_VELOCITY" value="${(RPM) * 2*(PI)/60}"/>
+  <xacro:property name="BASE_DYNAMIXEL_EFFORT" value="1"/>
 
   <!-- SHOULDER PLATE -->
   <xacro:property name="SHOULDER_PLATE_X" value="0.03"/>
@@ -32,12 +39,21 @@
   <xacro:property name="DYNAMIXEL_X" value="0.0335"/>
   <xacro:property name="DYNAMIXEL_Y" value="0.0585"/>
   <xacro:property name="DYNAMIXEL_Z" value="0.044"/>
-  <xacro:property name="DYNAMIXEL_JOINTB_X" value="0"/>
-  <xacro:property name="DYNAMIXEL_JOINTB_Y" value="${DYNAMIXEL_Y - 0.04475}"/>
   <xacro:property name="DYNAMIXEL_POS_X" value="${SHOULDER_PLATE_POS_X + SHOULDER_PLATE_X + DYNAMIXEL_X/2}"/>
   <xacro:property name="DYNAMIXEL_POS_Y" value="${SHOULDER_PLATE_POS_Y - SHOULDER_PLATE_Y/2}"/>
   <xacro:property name="DYNAMIXEL_TOP_POS_Z" value="${SHOULDER_PLATE_POS_Z + SHOULDER_PLATE_Z - DYNAMIXEL_Z/2}"/>
   <xacro:property name="DYNAMIXEL_BOT_POS_Z" value="${SHOULDER_PLATE_POS_Z + DYNAMIXEL_Z/2}"/>
+  <!-- JOINT -->
+  <xacro:property name="DYNAMIXEL_JOINTB_X" value="0"/>
+  <xacro:property name="DYNAMIXEL_JOINTB_Y" value="${DYNAMIXEL_Y - 0.04475}"/>
+  <xacro:property name="TOP_DYNAMIXEL_LOWER" value="-${PI}"/>
+  <xacro:property name="TOP_DYNAMIXEL_UPPER" value=" ${PI}"/>
+  <xacro:property name="TOP_DYNAMIXEL_VELOCITY" value="${(RPM) * 2*(PI)/60}"/>
+  <xacro:property name="TOP_DYNAMIXEL_EFFORT" value="1"/>
+  <xacro:property name="BOT_DYNAMIXEL_LOWER" value="-${PI}"/>
+  <xacro:property name="BOT_DYNAMIXEL_UPPER" value=" ${PI}"/>
+  <xacro:property name="BOT_DYNAMIXEL_VELOCITY" value="${(RPM) * 2*(PI)/60}"/>
+  <xacro:property name="BOT_DYNAMIXEL_EFFORT" value="1"/>
 
 
   <!-- MIUSMI LN (LOWER LINK) -->

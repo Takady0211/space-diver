@@ -12,6 +12,116 @@
       </hardware>
     </xacro:unless>
 
+    <!-- BASE TO LEFT SHOULDER PLATE -->
+    <joint name="base_to_leftshoulderplate_joint">
+      <command_interface name="position">
+        <param name="min">"${BASE_DYNAMIXEL_LOWER}"</param>
+        <param name="max">"${BASE_DYNAMIXEL_UPPER}"</param>
+      </command_interface>
+      <command_interface name="velocity">
+        <param name="min">"-${BASE_DYNAMIXEL_VELOCITY}"</param>
+        <param name="max">" ${BASE_DYNAMIXEL_VELOCITY}"</param>
+      </command_interface>
+      <command_interface name="effort">
+        <param name="min">"-${BASE_DYNAMIXEL_EFFORT}"</param>
+        <param name="max">" ${BASE_DYNAMIXEL_EFFORT}"</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+
+    <!-- BASE TO RIGHT SHOULDER PLATE -->
+    <joint name="base_to_rightshoulderplate_joint">
+      <command_interface name="position">
+        <param name="min">"${BASE_DYNAMIXEL_UPPER}"</param>
+        <param name="max">"${BASE_DYNAMIXEL_LOWER}"</param>
+      </command_interface>
+      <command_interface name="velocity">
+        <param name="min">"-${BASE_DYNAMIXEL_VELOCITY}"</param>
+        <param name="max">" ${BASE_DYNAMIXEL_VELOCITY}"</param>
+      </command_interface>
+      <command_interface name="effort">
+        <param name="min">"-${BASE_DYNAMIXEL_EFFORT}"</param>
+        <param name="max">" ${BASE_DYNAMIXEL_EFFORT}"</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+
+    <!-- TOP DYNAMIXEL TO DRIVING LINK -->
+    <joint name="leftdynamixeltop_to_leftdriving_joint">
+      <command_interface name="position">
+        <param name="min">"${TOP_DYNAMIXEL_LOWER}"</param>
+        <param name="max">"${TOP_DYNAMIXEL_UPPER}"</param>
+      </command_interface>
+      <command_interface name="velocity">
+        <param name="min">"-${TOP_DYNAMIXEL_VELOCITY}"</param>
+        <param name="max">" ${TOP_DYNAMIXEL_VELOCITY}"</param>
+      </command_interface>
+      <command_interface name="effort">
+        <param name="min">"-${TOP_DYNAMIXEL_EFFORT}"</param>
+        <param name="max">" ${TOP_DYNAMIXEL_EFFORT}"</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="rightdynamixeltop_to_rightdriving_joint">
+      <command_interface name="position">
+        <param name="min">"${TOP_DYNAMIXEL_UPPER}"</param>
+        <param name="max">"${TOP_DYNAMIXEL_LOWER}"</param>
+      </command_interface>
+      <command_interface name="velocity">
+        <param name="min">"-${TOP_DYNAMIXEL_VELOCITY}"</param>
+        <param name="max">" ${TOP_DYNAMIXEL_VELOCITY}"</param>
+      </command_interface>
+      <command_interface name="effort">
+        <param name="min">"-${TOP_DYNAMIXEL_EFFORT}"</param>
+        <param name="max">" ${TOP_DYNAMIXEL_EFFORT}"</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+
+    <!-- BOTTOM DYNAMIXEL TO MISUMI LN -->
+    <joint name="leftdynamixelbottom_to_leftmisumiln_joint">
+      <command_interface name="position">
+        <param name="min">"${BOT_DYNAMIXEL_LOWER}"</param>
+        <param name="max">"${BOT_DYNAMIXEL_UPPER}"</param>
+      </command_interface>
+      <command_interface name="velocity">
+        <param name="min">"-${BOT_DYNAMIXEL_VELOCITY}"</param>
+        <param name="max">" ${BOT_DYNAMIXEL_VELOCITY}"</param>
+      </command_interface>
+      <command_interface name="effort">
+        <param name="min">"-${BOT_DYNAMIXEL_EFFORT}"</param>
+        <param name="max">" ${BOT_DYNAMIXEL_EFFORT}"</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="rightdynamixelbottom_to_rightmisumiln_joint">
+      <command_interface name="position">
+        <param name="min">"${BOT_DYNAMIXEL_UPPER}"</param>
+        <param name="max">"${BOT_DYNAMIXEL_LOWER}"</param>
+      </command_interface>
+      <command_interface name="velocity">
+        <param name="min">"-${BOT_DYNAMIXEL_VELOCITY}"</param>
+        <param name="max">" ${BOT_DYNAMIXEL_VELOCITY}"</param>
+      </command_interface>
+      <command_interface name="effort">
+        <param name="min">"-${BOT_DYNAMIXEL_EFFORT}"</param>
+        <param name="max">" ${BOT_DYNAMIXEL_EFFORT}"</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+
     <!-- Joint 1 -->
     <joint name="active_joint_la">
       <command_interface name="position">

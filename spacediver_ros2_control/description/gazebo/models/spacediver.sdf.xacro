@@ -495,27 +495,6 @@
       <child>right_dynamixel_bottom</child>
     </joint>
 
-    <joint name="leftdynamixelbottom_to_leftmisumiln_joint" type="revolute">
-      <parent>left_dynamixel_bottom</parent>
-      <child>left_misumi_ln</child>
-      <pose>
-        ${MISUMILN_JOINTA_Y} ${MISUMILN_JOINTA_X} ${MISUMILN_JOINTA_Z}
-      </pose>
-      <axis>
-        <xyz>0 0 1</xyz>
-      </axis>
-    </joint>
-    <joint name="rightdynamixelbottom_to_rightmisumiln_joint" type="revolute">
-      <parent>right_dynamixel_bottom</parent>
-      <child>right_misumi_ln</child>
-      <pose>
-        ${MISUMILN_JOINTA_Y} ${MISUMILN_JOINTA_X} ${MISUMILN_JOINTA_Z}
-      </pose>
-      <axis>
-        <xyz>0 0 1</xyz>
-      </axis>
-    </joint>
-
     <joint name="leftdynamixeltop_to_leftdriving_joint" type="revolute">
       <parent>left_dynamixel_top</parent>
       <child>left_driving_link</child>
@@ -531,6 +510,27 @@
       <child>right_driving_link</child>
       <pose>
         ${DRIVING_JOINTA_X} ${DRIVING_JOINTA_Y} ${DRIVING_JOINTA_Z}
+      </pose>
+      <axis>
+        <xyz>0 0 1</xyz>
+      </axis>
+    </joint>
+
+    <joint name="leftdynamixelbottom_to_leftmisumiln_joint" type="revolute">
+      <parent>left_dynamixel_bottom</parent>
+      <child>left_misumi_ln</child>
+      <pose>
+        ${MISUMILN_JOINTA_Y} ${MISUMILN_JOINTA_X} ${MISUMILN_JOINTA_Z}
+      </pose>
+      <axis>
+        <xyz>0 0 1</xyz>
+      </axis>
+    </joint>
+    <joint name="rightdynamixelbottom_to_rightmisumiln_joint" type="revolute">
+      <parent>right_dynamixel_bottom</parent>
+      <child>right_misumi_ln</child>
+      <pose>
+        ${MISUMILN_JOINTA_Y} ${MISUMILN_JOINTA_X} ${MISUMILN_JOINTA_Z}
       </pose>
       <axis>
         <xyz>0 0 1</xyz>
