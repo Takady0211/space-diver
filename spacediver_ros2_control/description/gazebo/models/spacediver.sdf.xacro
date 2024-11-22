@@ -47,6 +47,7 @@
     <link name="left_shoulder_plate">
       <pose>
         ${SHOULDER_PLATE_POS_X} ${SHOULDER_PLATE_POS_Y} ${SHOULDER_PLATE_POS_Z}
+        0 0 ${L_SHOULDER_PLATE_ROT_Z}
       </pose>
       <collision name="collision">
         <geometry>
