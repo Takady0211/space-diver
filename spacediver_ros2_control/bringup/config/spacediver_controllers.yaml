@@ -166,19 +166,19 @@ feedback_effort_controller_single_arm:
       goal_time: 0.0 # Defaults to 0.0 (start immediately)
 
     gains:
-      active_joint_la: # or, active_joint_ra
+      base_to_leftshoulderplate_joint: # or, active_joint_ra
         p: 1.0
         i: 0.0
         d: 1.0
         i_clamp: 1e+3
 
-      active_joint_lb: # or, active_joint_rb
+      leftdynamixeltop_to_leftdriving_joint: # or, active_joint_rb
         p: 1.0
         i: 0.0
         d: 1.0
         i_clamp: 1e+3
 
-      active_joint_lc:  # or, active_joint_rc
+      leftdynamixelbottom_to_leftmisumiln_joint:  # or, active_joint_rc
         p: 1.0
         i: 0.0
         d: 1.0
