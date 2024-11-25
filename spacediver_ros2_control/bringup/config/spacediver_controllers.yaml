@@ -38,12 +38,6 @@ joint_state_broadcaster:
       - rightdynamixeltop_to_rightdriving_joint
       - leftdynamixelbottom_to_leftmisumiln_joint
       - rightdynamixelbottom_to_rightmisumiln_joint
-      - active_joint_la
-      - active_joint_lb
-      - active_joint_lc
-      - active_joint_ra
-      - active_joint_rb
-      - active_joint_rc
     interface_name: position
     interface_name: velocity
     interface_name: effort
@@ -153,14 +147,8 @@ feedback_effort_controller_single_arm:
   ros__parameters:
     joints:
       - base_to_leftshoulderplate_joint
-
       - leftdynamixeltop_to_leftdriving_joint
-
       - leftdynamixelbottom_to_leftmisumiln_joint
-
-      - active_joint_la
-      - active_joint_lb
-      - active_joint_lc
     command_interfaces:
       - effort
 
