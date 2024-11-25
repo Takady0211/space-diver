@@ -55,6 +55,14 @@ def generate_launch_description():
       name='sdf_model', 
       default_value=spacediver_sdf_path, 
       description='Absolute path to robot sdf file')
+    
+    # Controller Manager Node
+    controller_manager_node = Node(
+        package='controller_manager',
+        executable='ros2_control_node',
+        name='controller_manager',
+        output='screen',
+    )
 
     # Controller spawners Node
     joint_state_broadcaster_spawner = Node(
@@ -117,6 +125,9 @@ def generate_launch_description():
 
     # Create the launch description and populate
     ld = LaunchDescription()
+
+    # Add controller manager node first to make sure it is launched before spawners
+    ld.add_action(controller_manager_node)
 
     # Add controllers 
     ld.add_action(joint_state_broadcaster_spawner)
