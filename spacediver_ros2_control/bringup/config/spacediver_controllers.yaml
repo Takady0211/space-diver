@@ -153,11 +153,11 @@ feedback_effort_controller_single_arm:
   ros__parameters:
     joints:
       - base_to_leftshoulderplate_joint
-      - base_to_rightshoulderplate_joint
+
       - leftdynamixeltop_to_leftdriving_joint
-      - rightdynamixeltop_to_rightdriving_joint
+
       - leftdynamixelbottom_to_leftmisumiln_joint
-      - rightdynamixelbottom_to_rightmisumiln_joint
+
       - active_joint_la
       - active_joint_lb
       - active_joint_lc
