@@ -47,34 +47,34 @@ joint_state_broadcaster:
 forward_effort_controller:
   ros__parameters:
     joints:
-      - active_joint_la
-      # - active_joint_lb
-      # - active_joint_lc
-      # - active_joint_ra
-      # - active_joint_rb
-      # - active_joint_rc
+      - base_to_leftshoulderplate_joint
+      - base_to_rightshoulderplate_joint
+      - leftdynamixeltop_to_leftdriving_joint
+      - rightdynamixeltop_to_rightdriving_joint
+      - leftdynamixelbottom_to_leftmisumiln_joint
+      - rightdynamixelbottom_to_rightmisumiln_joint
     interface_name: effort
 
 forward_position_controller:
   ros__parameters:
     joints:
-      - active_joint_la
-      - active_joint_lb
-      - active_joint_lc
-      - active_joint_ra
-      - active_joint_rb
-      - active_joint_rc
+      - base_to_leftshoulderplate_joint
+      - base_to_rightshoulderplate_joint
+      - leftdynamixeltop_to_leftdriving_joint
+      - rightdynamixeltop_to_rightdriving_joint
+      - leftdynamixelbottom_to_leftmisumiln_joint
+      - rightdynamixelbottom_to_rightmisumiln_joint
     interface_name: position
 
 feedback_effort_controller:
   ros__parameters:
     joints:
-      - active_joint_la
-      - active_joint_lb
-      - active_joint_lc
-      - active_joint_ra
-      - active_joint_rb
-      - active_joint_rc
+      - base_to_leftshoulderplate_joint
+      - base_to_rightshoulderplate_joint
+      - leftdynamixeltop_to_leftdriving_joint
+      - rightdynamixeltop_to_rightdriving_joint
+      - leftdynamixelbottom_to_leftmisumiln_joint
+      - rightdynamixelbottom_to_rightmisumiln_joint
     command_interfaces:
       - effort
 
@@ -92,37 +92,37 @@ feedback_effort_controller:
       goal_time: 0.0  # Defaults to 0.0 (start immediately)
 
     gains:
-      active_joint_la:
+      base_to_leftshoulderplate_joint:
         p: 1.0
         i: 0.0
         d: 1.0
         i_clamp: 1e+3
 
-      active_joint_lb:
+      base_to_rightshoulderplate_joint:
         p: 1.0
         i: 0.0
         d: 1.0
         i_clamp: 1e+3
 
-      active_joint_lc:
+      leftdynamixeltop_to_leftdriving_joint:
         p: 1.0
         i: 0.0
         d: 1.0
         i_clamp: 1e+3
 
-      active_joint_ra:
+      rightdynamixeltop_to_rightdriving_joint:
         p: 1.0
         i: 0.0
         d: 1.0
         i_clamp: 1e+3
 
-      active_joint_rb:
+      leftdynamixelbottom_to_leftmisumiln_joint:
         p: 1.0
         i: 0.0
         d: 1.0
         i_clamp: 1e+3
 
-      active_joint_rc:
+      rightdynamixelbottom_to_rightmisumiln_joint:
         p: 1.0
         i: 0.0
         d: 1.0
@@ -132,17 +132,17 @@ feedback_effort_controller:
 forward_effort_controller_single_arm:
   ros__parameters:
     joints:
-      - active_joint_la
-      - active_joint_lb
-      - active_joint_lc
+      - base_to_leftshoulderplate_joint
+      - leftdynamixeltop_to_leftdriving_joint
+      - leftdynamixelbottom_to_leftmisumiln_joint
     interface_name: effort
 
 forward_position_controller_single_arm:
   ros__parameters:
     joints:
-      - active_joint_la
-      - active_joint_lb
-      - active_joint_lc
+      - base_to_leftshoulderplate_joint
+      - leftdynamixeltop_to_leftdriving_joint
+      - leftdynamixelbottom_to_leftmisumiln_joint
     interface_name: position
 
 feedback_effort_controller_single_arm:
@@ -168,19 +168,19 @@ feedback_effort_controller_single_arm:
       goal_time: 0.0  # Defaults to 0.0 (start immediately)
 
     gains:
-      base_to_leftshoulderplate_joint:  # or, active_joint_ra
+      base_to_leftshoulderplate_joint:
         p: 1.0
         i: 0.0
         d: 1.0
         i_clamp: 1e+3
 
-      leftdynamixeltop_to_leftdriving_joint:  # or, active_joint_rb
+      leftdynamixeltop_to_leftdriving_joint:
         p: 1.0
         i: 0.0
         d: 1.0
         i_clamp: 1e+3
 
-      leftdynamixelbottom_to_leftmisumiln_joint:  # or, active_joint_rc
+      leftdynamixelbottom_to_leftmisumiln_joint:
         p: 1.0
         i: 0.0
         d: 1.0
