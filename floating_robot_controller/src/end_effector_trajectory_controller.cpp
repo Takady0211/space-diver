@@ -107,7 +107,7 @@ rclcpp_action::GoalResponse EndEffectorTrajectoryController::handle_goal(
   RCLCPP_INFO(this->get_logger(), "Cancel preexisting goal");
   update_robot();
 
-  if (goal->trajectories.size() != end_effector_number_) {
+  if (static_cast<int>(goal->trajectories.size()) != end_effector_number_) {
     RCLCPP_ERROR(
         this->get_logger(),
         "Goal trajectory should have the same number as end-effectors. ");
@@ -317,10 +317,10 @@ EndEffectorTrajectoryController::get_current_end_effector_point(int id) {
   floating_robot_interfaces::msg::EndEffectorTrajectoryPoint point;
   auto link_id = robot_.getEndEffector(id).getId();
   point.pose =
-      tf2::toMsg(robot_.getLinkPoseInWorldFrame(link_id).getOriginPose());
+      tf2::toMsg(robot_.getLinkPoseInWorldFrame(link_id).getPoseInWorldFrame());
   auto twist = robot_.getLinkState(link_id).getTwistInWorldFrame();
-  point.twist.linear = tf2::toMsg2(twist.getOriginLinierVelocity());
-  point.twist.angular = tf2::toMsg2(twist.getOriginAngularVelocity());
+  point.twist.linear = tf2::toMsg2(twist.getLinearVelocity());
+  point.twist.angular = tf2::toMsg2(twist.getAngularVelocity());
   return point;
 }
 
