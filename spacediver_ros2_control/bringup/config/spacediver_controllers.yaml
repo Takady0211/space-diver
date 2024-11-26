@@ -1,3 +1,4 @@
+---
 controller_manager:
   ros__parameters:
     update_rate: 1000  # Hz
@@ -15,7 +16,7 @@ controller_manager:
     feedback_effort_controller:
       type: joint_trajectory_controller/JointTrajectoryController
 
-    # Controller used for single arm control 
+    # Controller used for single arm control
     # Select the joint to control by yourself. Default is left arm
     forward_position_controller_single_arm:
       type: forward_command_controller/ForwardCommandController
@@ -38,9 +39,10 @@ joint_state_broadcaster:
       - rightdynamixeltop_to_rightdriving_joint
       - leftdynamixelbottom_to_leftmisumiln_joint
       - rightdynamixelbottom_to_rightmisumiln_joint
-    interface_name: position
-    interface_name: velocity
-    interface_name: effort
+    interface_name:
+      - position
+      - velocity
+      - effort
 
 forward_effort_controller:
   ros__parameters:
@@ -80,14 +82,14 @@ feedback_effort_controller:
       - position
       - velocity
 
-    action_monitor_rate: 20.0 # Defaults to 20
+    action_monitor_rate: 20.0  # Defaults to 20
 
-    allow_partial_joints_goal: false # Defaults to false
+    allow_partial_joints_goal: false  # Defaults to false
     open_loop_control: true
     allow_integration_in_goal_trajectories: true
     constraints:
-      stopped_velocity_tolerance: 0.001 # Defaults to 0.01
-      goal_time: 0.0 # Defaults to 0.0 (start immediately)
+      stopped_velocity_tolerance: 0.001  # Defaults to 0.01
+      goal_time: 0.0  # Defaults to 0.0 (start immediately)
 
     gains:
       active_joint_la:
@@ -156,23 +158,23 @@ feedback_effort_controller_single_arm:
       - position
       - velocity
 
-    action_monitor_rate: 20.0 # Defaults to 20
+    action_monitor_rate: 20.0  # Defaults to 20
 
-    allow_partial_joints_goal: false # Defaults to false
+    allow_partial_joints_goal: false  # Defaults to false
     open_loop_control: true
     allow_integration_in_goal_trajectories: true
     constraints:
-      stopped_velocity_tolerance: 0.001 # Defaults to 0.01
-      goal_time: 0.0 # Defaults to 0.0 (start immediately)
+      stopped_velocity_tolerance: 0.001  # Defaults to 0.01
+      goal_time: 0.0  # Defaults to 0.0 (start immediately)
 
     gains:
-      base_to_leftshoulderplate_joint: # or, active_joint_ra
+      base_to_leftshoulderplate_joint:  # or, active_joint_ra
         p: 1.0
         i: 0.0
         d: 1.0
         i_clamp: 1e+3
 
-      leftdynamixeltop_to_leftdriving_joint: # or, active_joint_rb
+      leftdynamixeltop_to_leftdriving_joint:  # or, active_joint_rb
         p: 1.0
         i: 0.0
         d: 1.0
