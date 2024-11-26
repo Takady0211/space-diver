@@ -57,6 +57,7 @@ def generate_launch_description():
       description='Absolute path to robot sdf file')
     
     # Controller Manager Node
+    # Comment[AU] controller_manager_node is spawned in line 75 so you can remove this
     controller_manager_node = Node(
         package='controller_manager',
         executable='ros2_control_node',
