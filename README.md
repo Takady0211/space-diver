@@ -48,7 +48,14 @@ colcon build --symlink-install
 
 ## Launch Simulation
 
-After you built the project, you can launch gazebo simulation.
+After you built the project, you can launch gazebo simulation. Before that, you need to copy 3D meshes under `.gazebo/models/spacediver`. You can use bash script by running following command.
+
+```bash
+# At spacediver_ws
+. src/spacediver_ros2_control/description/gazebo/models/copy_meshes_to_gazebo.sh
+```
+
+Then, launch it!
 
 ```bash
 # At spacediver_ws
