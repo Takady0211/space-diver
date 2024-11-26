@@ -120,13 +120,13 @@ void EndEffectorTrajectoryClient::end_effector_traject_goal_response_callback(
 void EndEffectorTrajectoryClient::end_effector_traject_feedback_callback(
     ClientGoalHandleEndEffecTraject::SharedPtr,
     const std::shared_ptr<const FollowEndEffecTraject::Feedback> feedback) {
-  //
+
   // Publish feedback
-  // end_effector_goal_point_publisher_->publish(
-  //     end_effec_trj_goal_msg_.trajectories[0].points[0]);
-  // end_effector_desired_point_publisher_->publish(feedback->desired_points[0]);
-  // end_effector_actual_point_publisher_->publish(feedback->actual_points[0]);
-  // RCLCPP_INFO(this->get_logger(), "Received feedback ....");
+  end_effector_goal_point_publisher_->publish(
+      end_effec_trj_goal_msg_.trajectories[0].points[0]);
+  end_effector_desired_point_publisher_->publish(feedback->desired_points[0]);
+  end_effector_actual_point_publisher_->publish(feedback->actual_points[0]);
+  RCLCPP_INFO(this->get_logger(), "Received feedback ....");
 }
 
 void EndEffectorTrajectoryClient::end_effector_traject_result_callback(
