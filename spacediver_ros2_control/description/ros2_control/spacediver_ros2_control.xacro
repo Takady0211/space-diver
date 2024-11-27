@@ -13,7 +13,7 @@
     </xacro:unless>
 
     <!-- BASE TO LEFT SHOULDER PLATE -->
-    <joint name="base_to_leftshoulderplate_joint">
+    <joint name="base_to_leftshoulder_joint">
       <command_interface name="position">
         <param name="min">"${BASE_DYNAMIXEL_LOWER}"</param>
         <param name="max">"${BASE_DYNAMIXEL_UPPER}"</param>
@@ -32,7 +32,7 @@
     </joint>
 
     <!-- BASE TO RIGHT SHOULDER PLATE -->
-    <joint name="base_to_rightshoulderplate_joint">
+    <joint name="base_to_rightshoulder_joint">
       <command_interface name="position">
         <param name="min">"${BASE_DYNAMIXEL_UPPER}"</param>
         <param name="max">"${BASE_DYNAMIXEL_LOWER}"</param>

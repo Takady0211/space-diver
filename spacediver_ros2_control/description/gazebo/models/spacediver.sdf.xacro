@@ -44,7 +44,7 @@
     </link>
 
     <!-- SHOULDER PLATES -->
-    <link name="left_shoulder_plate">
+    <link name="left_shoulder_link">
       <pose>
         ${SHOULDER_PLATE_POS_X} ${SHOULDER_PLATE_POS_Y} ${SHOULDER_PLATE_POS_Z}
         0 0 ${L_SHOULDER_PLATE_ROT_Z}
@@ -71,7 +71,7 @@
       </visual>
     </link>
 
-    <link name="right_shoulder_plate">
+    <link name="right_shoulder_link">
       <pose>
         ${-SHOULDER_PLATE_POS_X} ${SHOULDER_PLATE_POS_Y} ${-SHOULDER_PLATE_POS_Z}
         ${R_SHOULDER_PLATE_ROT_X} ${R_SHOULDER_PLATE_ROT_Y} ${R_SHOULDER_PLATE_ROT_Z}
@@ -456,9 +456,9 @@
     </link>
 
     <!-- JOINTS -->
-    <joint name="base_to_leftshoulderplate_joint" type="revolute">
+    <joint name="base_to_leftshoulder_joint" type="revolute">
       <parent>base_link</parent>
-      <child>left_shoulder_plate</child>
+      <child>left_shoulder_link</child>
       <pose>
         ${SHOULDER_PLATE_JOINTA_X} ${SHOULDER_PLATE_JOINTA_Y} ${SHOULDER_PLATE_JOINTA_Z}
       </pose>
@@ -466,9 +466,9 @@
         <xyz>0 1 0</xyz>
       </axis>
     </joint>
-    <joint name="base_to_rightshoulderplate_joint" type="revolute">
+    <joint name="base_to_rightshoulder_joint" type="revolute">
       <parent>base_link</parent>
-      <child>right_shoulder_plate</child>
+      <child>right_shoulder_link</child>
       <pose>
         ${SHOULDER_PLATE_JOINTA_X} ${SHOULDER_PLATE_JOINTA_Y} ${SHOULDER_PLATE_JOINTA_Z}
       </pose>
@@ -477,21 +477,21 @@
       </axis>
     </joint>
 
-    <joint name="leftshoulderplate_to_leftdynamixeltop_joint" type="fixed">
-      <parent>left_shoulder_plate</parent>
+    <joint name="leftshoulder_to_leftdynamixeltop_joint" type="fixed">
+      <parent>left_shoulder_link</parent>
       <child>left_dynamixel_top</child>
     </joint>
-    <joint name="rightshoulderplate_to_rightdynamixeltop_joint" type="fixed">
-      <parent>right_shoulder_plate</parent>
+    <joint name="rightshoulder_to_rightdynamixeltop_joint" type="fixed">
+      <parent>right_shoulder_link</parent>
       <child>right_dynamixel_top</child>
     </joint>
 
-    <joint name="leftshoulderplate_to_leftdynamixelbottom_joint" type="fixed">
-      <parent>left_shoulder_plate</parent>
+    <joint name="leftshoulder_to_leftdynamixelbottom_joint" type="fixed">
+      <parent>left_shoulder_link</parent>
       <child>left_dynamixel_bottom</child>
     </joint>
-    <joint name="rightshoulderplate_to_rightdynamixelbottom_joint" type="fixed">
-      <parent>right_shoulder_plate</parent>
+    <joint name="rightshoulder_to_rightdynamixelbottom_joint" type="fixed">
+      <parent>right_shoulder_link</parent>
       <child>right_dynamixel_bottom</child>
     </joint>
 
