@@ -46,8 +46,8 @@
     <!-- SHOULDER PLATES -->
     <link name="left_shoulder_link">
       <pose>
-        ${SHOULDER_PLATE_POS_X} ${SHOULDER_PLATE_POS_Y} ${SHOULDER_PLATE_POS_Z}
-        0 0 ${L_SHOULDER_PLATE_ROT_Z}
+        ${SHOULDER_POS_X} ${SHOULDER_POS_Y} ${SHOULDER_POS_Z}
+        0 0 ${L_SHOULDER_ROT_Z}
       </pose>
       <collision name="collision">
         <geometry>
@@ -73,8 +73,8 @@
 
     <link name="right_shoulder_link">
       <pose>
-        ${-SHOULDER_PLATE_POS_X} ${SHOULDER_PLATE_POS_Y} ${-SHOULDER_PLATE_POS_Z}
-        ${R_SHOULDER_PLATE_ROT_X} ${R_SHOULDER_PLATE_ROT_Y} ${R_SHOULDER_PLATE_ROT_Z}
+        ${-SHOULDER_POS_X} ${SHOULDER_POS_Y} ${-SHOULDER_POS_Z}
+        ${R_SHOULDER_ROT_X} ${R_SHOULDER_ROT_Y} ${R_SHOULDER_ROT_Z}
       </pose>
       <collision name="collision">
         <geometry>
@@ -460,7 +460,7 @@
       <parent>base_link</parent>
       <child>left_shoulder_link</child>
       <pose>
-        ${SHOULDER_PLATE_JOINTA_X} ${SHOULDER_PLATE_JOINTA_Y} ${SHOULDER_PLATE_JOINTA_Z}
+        ${SHOULDER_JOINTA_X} ${SHOULDER_JOINTA_Y} ${SHOULDER_JOINTA_Z}
       </pose>
       <axis>
         <xyz>0 1 0</xyz>
@@ -470,7 +470,7 @@
       <parent>base_link</parent>
       <child>right_shoulder_link</child>
       <pose>
-        ${SHOULDER_PLATE_JOINTA_X} ${SHOULDER_PLATE_JOINTA_Y} ${SHOULDER_PLATE_JOINTA_Z}
+        ${SHOULDER_JOINTA_X} ${SHOULDER_JOINTA_Y} ${SHOULDER_JOINTA_Z}
       </pose>
       <axis>
         <xyz>0 1 0</xyz>

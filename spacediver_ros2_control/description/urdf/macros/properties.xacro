@@ -18,31 +18,31 @@
   <xacro:property name="BASE_DYNAMIXEL_EFFORT" value="1"/>
 
   <!-- SHOULDER PLATE -->
-  <xacro:property name="SHOULDER_PLATE_X" value="0.03"/>
-  <xacro:property name="SHOULDER_PLATE_Y" value="0.0585"/>
-  <xacro:property name="SHOULDER_PLATE_Y_ADD" value="0.00275"/>
-  <xacro:property name="SHOULDER_PLATE_Z" value="0.148"/>
-  <xacro:property name="SHOULDER_PLATE_JOINTA_X" value="${0.04475}"/>
-  <xacro:property name="SHOULDER_PLATE_JOINTA_Y" value="${0.005}"/>
-  <xacro:property name="SHOULDER_PLATE_JOINTA_Z" value="${SHOULDER_PLATE_Z/2}"/>
-  <xacro:property name="SHOULDER_PLATE_POS_X" value="${BASE_X/2 + 0.0045}"/>
-  <xacro:property name="SHOULDER_PLATE_POS_Y" value="${SHOULDER_PLATE_Y/2}"/>
-  <xacro:property name="SHOULDER_PLATE_POS_Z" value="${-SHOULDER_PLATE_Z/2}"/>
+  <xacro:property name="SHOULDER_X" value="0.03"/>
+  <xacro:property name="SHOULDER_Y" value="0.0585"/>
+  <xacro:property name="SHOULDER_Y_ADD" value="0.00275"/>
+  <xacro:property name="SHOULDER_Z" value="0.148"/>
+  <xacro:property name="SHOULDER_JOINTA_X" value="${0.04475}"/>
+  <xacro:property name="SHOULDER_JOINTA_Y" value="${0.005}"/>
+  <xacro:property name="SHOULDER_JOINTA_Z" value="${SHOULDER_Z/2}"/>
+  <xacro:property name="SHOULDER_POS_X" value="${BASE_X/2 + 0.0045}"/>
+  <xacro:property name="SHOULDER_POS_Y" value="${SHOULDER_Y/2}"/>
+  <xacro:property name="SHOULDER_POS_Z" value="${-SHOULDER_Z/2}"/>
   <!-- LEFT -->
-  <xacro:property name="L_SHOULDER_PLATE_ROT_Z" value="${-PI/2}"/>
+  <xacro:property name="L_SHOULDER_ROT_Z" value="${-PI/2}"/>
   <!-- RIGHT -->
-  <xacro:property name="R_SHOULDER_PLATE_ROT_X" value="${PI}"/>
-  <xacro:property name="R_SHOULDER_PLATE_ROT_Y" value="${0}"/>
-  <xacro:property name="R_SHOULDER_PLATE_ROT_Z" value="${-PI/2}"/>
+  <xacro:property name="R_SHOULDER_ROT_X" value="${PI}"/>
+  <xacro:property name="R_SHOULDER_ROT_Y" value="${0}"/>
+  <xacro:property name="R_SHOULDER_ROT_Z" value="${-PI/2}"/>
 
   <!-- DYNAMIXEL -->
   <xacro:property name="DYNAMIXEL_X" value="0.0335"/>
   <xacro:property name="DYNAMIXEL_Y" value="0.0585"/>
   <xacro:property name="DYNAMIXEL_Z" value="0.044"/>
-  <xacro:property name="DYNAMIXEL_POS_X" value="${SHOULDER_PLATE_POS_X + SHOULDER_PLATE_X + DYNAMIXEL_X/2}"/>
-  <xacro:property name="DYNAMIXEL_POS_Y" value="${SHOULDER_PLATE_POS_Y - SHOULDER_PLATE_Y/2}"/>
-  <xacro:property name="DYNAMIXEL_TOP_POS_Z" value="${SHOULDER_PLATE_POS_Z + SHOULDER_PLATE_Z - DYNAMIXEL_Z/2}"/>
-  <xacro:property name="DYNAMIXEL_BOT_POS_Z" value="${SHOULDER_PLATE_POS_Z + DYNAMIXEL_Z/2}"/>
+  <xacro:property name="DYNAMIXEL_POS_X" value="${SHOULDER_POS_X + SHOULDER_X + DYNAMIXEL_X/2}"/>
+  <xacro:property name="DYNAMIXEL_POS_Y" value="${SHOULDER_POS_Y - SHOULDER_Y/2}"/>
+  <xacro:property name="DYNAMIXEL_TOP_POS_Z" value="${SHOULDER_POS_Z + SHOULDER_Z - DYNAMIXEL_Z/2}"/>
+  <xacro:property name="DYNAMIXEL_BOT_POS_Z" value="${SHOULDER_POS_Z + DYNAMIXEL_Z/2}"/>
   <!-- JOINT -->
   <xacro:property name="DYNAMIXEL_JOINTB_X" value="0"/>
   <xacro:property name="DYNAMIXEL_JOINTB_Y" value="${DYNAMIXEL_Y - 0.04475}"/>
