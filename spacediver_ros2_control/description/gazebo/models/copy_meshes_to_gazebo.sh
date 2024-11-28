@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define source and destination directories
-SCRIPT_DIR=$(dirname "$(realpath "$0")")
+SCRIPT_DIR=$(dirname "$(realpath "${BASH_SOURCE[0]}")")
 
 SOURCE_DIR="$SCRIPT_DIR/meshes"
 DEST_DIR="$HOME/.gazebo/models/spacediver"
