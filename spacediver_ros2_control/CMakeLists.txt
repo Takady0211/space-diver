@@ -48,8 +48,6 @@ install(
   DIRECTORY 
     bringup
     description
-    config # DYNAMIXEL
-    launch # DYNAMIXEL
   DESTINATION share/${PROJECT_NAME}
 )
 # DYNAMIXEL
