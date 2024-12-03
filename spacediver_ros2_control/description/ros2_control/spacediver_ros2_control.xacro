@@ -14,6 +14,7 @@
 
     <!-- BASE TO LEFT SHOULDER PLATE -->
     <joint name="base_to_leftshoulder_joint">
+      <param name="id">"1"</param>
       <command_interface name="position">
         <param name="min">"${BASE_DYNAMIXEL_LOWER}"</param>
         <param name="max">"${BASE_DYNAMIXEL_UPPER}"</param>
@@ -52,6 +53,7 @@
 
     <!-- TOP DYNAMIXEL TO DRIVING LINK -->
     <joint name="leftdynamixeltop_to_leftdriving_joint">
+      <param name="id">"2"</param>
       <command_interface name="position">
         <param name="min">"${TOP_DYNAMIXEL_LOWER}"</param>
         <param name="max">"${TOP_DYNAMIXEL_UPPER}"</param>
@@ -88,6 +90,7 @@
 
     <!-- BOTTOM DYNAMIXEL TO MISUMI LN -->
     <joint name="leftdynamixelbottom_to_leftmisumiln_joint">
+      <param name="id">"3"</param>
       <command_interface name="position">
         <param name="min">"${BOT_DYNAMIXEL_LOWER}"</param>
         <param name="max">"${BOT_DYNAMIXEL_UPPER}"</param>
