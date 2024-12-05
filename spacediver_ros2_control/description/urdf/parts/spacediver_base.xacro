@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <!-- import xacro reffering here https://gbiggs.github.io/rosjp_urdf_tutorial_text/manipulator_urdf.html -->
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
-  <link name="base_link">
+  <link name="${BASE_LINK_NAME}">
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
         <box size="${BASE_X} ${BASE_Y} ${BASE_Z}"/>
       </geometry>
-      <material name="white"/>
+      <material name="black"/>
     </visual>
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0"/>
