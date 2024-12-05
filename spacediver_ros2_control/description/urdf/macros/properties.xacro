@@ -5,6 +5,54 @@
   <xacro:property name="ROT" value="${PI/6}"/>
   <xacro:property name="RPM" value="30"/>
 
+  <!-- LINK NAMES -->
+  <xacro:property name="BASE_LINK_NAME" value="base_link"/>
+  <xacro:property name="L_SHOULDER_LINK_NAME" value="left_shoulder_link"/>
+  <xacro:property name="R_SHOULDER_LINK_NAME" value="right_shoulder_link"/>
+  
+  <xacro:property name="L_TOP_DYNAMIXEL_LINK_NAME" value="left_dynamixel_top"/>
+  <xacro:property name="R_TOP_DYNAMIXEL_LINK_NAME" value="right_dynamixel_top"/>
+  <xacro:property name="L_BOT_DYNAMIXEL_LINK_NAME" value="left_dynamixel_bottom"/>
+  <xacro:property name="R_BOT_DYNAMIXEL_LINK_NAME" value="right_dynamixel_bottom"/>
+  
+  <xacro:property name="L_MISUMILN_LINK_NAME" value="left_misumi_ln"/>
+  <xacro:property name="R_MISUMILN_LINK_NAME" value="right_misumi_ln"/>
+  
+  <xacro:property name="L_DRIVING_LINK_NAME" value="left_driving_link"/>
+  <xacro:property name="R_DRIVING_LINK_NAME" value="right_driving_link"/>
+  
+  <xacro:property name="L_DRIVEN_LINK_NAME" value="left_driven_link"/>
+  <xacro:property name="R_DRIVEN_LINK_NAME" value="right_driven_link"/>
+  
+  <xacro:property name="L_MISUMIFT_LINK_NAME" value="left_misumi_ft"/>
+  <xacro:property name="R_MISUMIFT_LINK_NAME" value="right_misumi_ft"/>
+
+  <!-- JOINT NAMES -->
+  <xacro:property name="BASE_TO_LEFTSHOULDER_JOINT_NAME" value="base_to_leftshoulder_joint"/>
+  <xacro:property name="BASE_TO_RIGHTSHOULDER_JOINT_NAME" value="base_to_rightshoulder_joint"/>
+  
+  <xacro:property name="LEFTSHOULDER_TO_LEFTDYNAMIXELTOP_JOINT_NAME" value="leftshoulder_to_leftdynamixeltop_joint"/>
+  <xacro:property name="RIGHTSHOULDER_TO_RIGHTDYNAMIXELTOP_JOINT_NAME" value="rightshoulder_to_rightdynamixeltop_joint"/>
+  
+  <xacro:property name="LEFTSHOULDER_TO_LEFTDYNAMIXELBOT_JOINT_NAME" value="leftshoulder_to_leftdynamixelbottom_joint"/>
+  <xacro:property name="RIGHTSHOULDER_TO_RIGHTDYNAMIXELBOT_JOINT_NAME" value="rightshoulder_to_rightdynamixelbottom_joint"/>
+  
+  <xacro:property name="LEFT_DYNAMIXELBOT_TO_LEFTMISUMILN_JOINT_NAME" value="leftdynamixelbottom_to_leftmisumiln_joint"/>
+  <xacro:property name="RIGHT_DYNAMIXELBOT_TO_RIGHTMISUMILN_JOINT_NAME" value="rightdynamixelbottom_to_rightmisumiln_joint"/>
+  
+  <xacro:property name="LEFTDYNAMIXELTOP_TO_LEFTDRIVING_JOINT_NAME" value="leftdynamixeltop_to_leftdriving_joint"/>
+  <xacro:property name="RIGHTDYNAMIXELTOP_TO_RIGHTDRIVING_JOINT_NAME" value="rightdynamixeltop_to_rightdriving_joint"/>
+  
+  <xacro:property name="LEFTDRIVING_TO_LEFTDRIVEN_JOINT_NAME" value="leftdriving_to_leftdriven_joint"/>
+  <xacro:property name="RIGHTDRIVING_TO_RIGHTDRIVEN_JOINT_NAME" value="rightdriving_to_rightdriven_joint"/>
+  
+  <xacro:property name="LEFTDRIVEN_TO_LEFTMISUMIFT_JOINT_NAME" value="leftdriven_to_leftmisumift_joint"/>
+  <xacro:property name="RIGHTDRIVEN_TO_RIGHTMISUMIFT_JOINT_NAME" value="rightdriven_to_rightmisumift_joint"/>
+  
+  <xacro:property name="LEFTMISUMILN_TO_LEFTMISUMIFT_JOINT_NAME" value="leftmisumiln_to_leftmisumift_joint"/>
+  <xacro:property name="RIGHTMISUMILN_TO_RIGHTMISUMIFT_JOINT_NAME" value="rightmisumiln_to_rightmisumift_joint"/>
+
+
   <!-- BASE -->
   <xacro:property name="BASE_X" value="0.18"/>
   <xacro:property name="BASE_Y" value="0.0585"/>
