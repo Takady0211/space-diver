@@ -31,7 +31,11 @@
         <material name="grey"/>
       </visual>
       <collision>
-        <origin xyz="${SHOULDER_X/2} ${SHOULDER_Y/2} ${SHOULDER_Z/2}" rpy="0 0 0"/>
+        <origin xyz="
+          ${0}
+          ${SHOULDER_JOINTA_X}
+          ${-SHOULDER_Z/2}
+        " rpy="0 0 ${L_SHOULDER_ROT_Z}"/>
         <geometry>
           <mesh filename="package://spacediver_ros2_control/description/gazebo/models/meshes/shoulder_plate.STL"/>
         </geometry>
@@ -102,7 +106,11 @@
         <material name="blue"/>
       </visual>
       <collision>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <origin xyz="
+          ${L_MISUMILN_POS_X-DYNAMIXEL_POS_X}
+          ${L_MISUMILN_POS_Y+DYNAMIXEL_JOINTB_Y-DYNAMIXEL_POS_Y}
+          0
+        " rpy="0 0 ${L_MISUMILN_ROT_Z}"/>
         <geometry>
           <mesh filename="package://spacediver_ros2_control/description/gazebo/models/meshes/Link_MISUMI_LNMS16-10-200.STL"/>
         </geometry>
@@ -173,7 +181,11 @@
         <material name="blue"/>
       </visual>
       <collision>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <origin xyz="
+          ${-DRIVING_JOINTA_X}
+          ${-DRIVING_JOINTA_Y}
+          ${0}
+        " rpy="0 0 0"/>
         <geometry>
           <mesh filename="package://spacediver_ros2_control/description/gazebo/models/meshes/upper_arm_driving_link.STL"/>
         </geometry>
@@ -190,12 +202,12 @@
       <origin xyz="
         ${DRIVING_JOINTB_X-DRIVING_JOINTA_X}
         ${0}
-        ${DRIVEN_POS_Z - DRIVING_POS_Z - DRIVING_Z}
+        ${DRIVEN_POS_Z - DRIVING_POS_Z}
       "
         rpy="0 0 ${0}"/>
       <axis xyz="0 0 1"/>
-      <limit lower="${TOP_DYNAMIXEL_LOWER}" upper="${TOP_DYNAMIXEL_UPPER}"
-        effort="${TOP_DYNAMIXEL_EFFORT}" velocity="${TOP_DYNAMIXEL_VELOCITY}"/>
+      <limit lower="${-2*PI}" upper="${2*PI}"
+        effort="${10}" velocity="${10}"/>
     </joint>
 
     <!-- DRIVEN LINK -->
@@ -212,7 +224,11 @@
         <material name="blue"/>
       </visual>
       <collision>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <origin xyz="
+          ${L_DRIVEN_POS_X - (L_DRIVING_POS_X + DRIVING_JOINTB_X)}
+          ${L_DRIVEN_POS_Y - (L_DRIVING_POS_Y + DRIVING_JOINTB_Y)}
+          ${0}
+        " rpy="0 0 ${L_DRIVEN_ROT_Z}"/>
         <geometry>
           <mesh filename="package://spacediver_ros2_control/description/gazebo/models/meshes/upper_arm_driven_link.STL"/>
         </geometry>
@@ -226,10 +242,10 @@
     <link name="${L_MISUMIFT_LINK_NAME}">
       <visual>
         <origin xyz="
-          ${0}
-          ${0}
-          ${0}
-        " rpy="0 0 ${L_MISUMIFT_ROT_Z}"/>
+          ${MISUMIFT_JOINTA_X}
+          ${MISUMIFT_JOINTA_Y}
+          ${0}"
+          rpy="0 0 ${L_MISUMIFT_ROT_Z}"/>
         <geometry>
           <mesh filename="package://spacediver_ros2_control/description/gazebo/models/meshes/Misumi_LNFTS10-P10-V10-L200-S50-W18-T9.STL"/>
         </geometry>
@@ -246,12 +262,6 @@
       </xacro:inertial_box>
     </link>
 
-<!-- 
-      ${L_MISUMIFT_POS_X - (L_DRIVEN_POS_X + MISUMIFT_JOINTA_X) + (L_DRIVEN_POS_X - (L_DRIVING_POS_X + DRIVING_JOINTB_X))}
-        ${L_MISUMIFT_POS_Y - (L_DRIVEN_POS_Y + MISUMIFT_JOINTA_Y) + (L_DRIVEN_POS_Y - (L_DRIVING_POS_Y + DRIVING_JOINTB_Y))}
-        ${0}
-     -->
-
     <!-- DRIVEN LINK TO MISUMI FT -->
     <joint name="${LEFTDRIVEN_TO_LEFTMISUMIFT_JOINT_NAME}" type="revolute">
       <parent link="${L_DRIVEN_LINK_NAME}"/>
@@ -259,12 +269,12 @@
       <origin xyz="
         ${L_MISUMIFT_POS_X - (L_DRIVEN_POS_X + MISUMIFT_JOINTA_X) + (L_DRIVEN_POS_X - (L_DRIVING_POS_X + DRIVING_JOINTB_X))}
         ${L_MISUMIFT_POS_Y - (L_DRIVEN_POS_Y + MISUMIFT_JOINTA_Y) + (L_DRIVEN_POS_Y - (L_DRIVING_POS_Y + DRIVING_JOINTB_Y))}
-        ${0}
+        ${MISUMIFT_POS_Z - DRIVEN_POS_Z}
       "
         rpy="0 0 ${0}"/>
       <axis xyz="0 0 1"/>
-      <limit lower="${TOP_DYNAMIXEL_LOWER}" upper="${TOP_DYNAMIXEL_UPPER}"
-        effort="${TOP_DYNAMIXEL_EFFORT}" velocity="${TOP_DYNAMIXEL_VELOCITY}"/>
+      <limit lower="${-2*PI}" upper="${2*PI}"
+        effort="${10}" velocity="${10}"/>
     </joint>
 
     <!-- MISUMI LN TO MISUMI FT -->
@@ -278,11 +288,9 @@
       "
         rpy="0 0 ${0}"/>
       <axis xyz="0 0 1"/>
-      <limit lower="${TOP_DYNAMIXEL_LOWER}" upper="${TOP_DYNAMIXEL_UPPER}"
-        effort="${TOP_DYNAMIXEL_EFFORT}" velocity="${TOP_DYNAMIXEL_VELOCITY}"/>
+      <limit lower="${-2*PI}" upper="${2*PI}"
+        effort="${10}" velocity="${10}"/>
     </joint> -->
-
-    
 
   </xacro:macro>
 
