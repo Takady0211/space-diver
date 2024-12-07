@@ -1,0 +1,35 @@
+---
+controller_manager:
+  ros__parameters:
+    update_rate: 1000  # Hz
+
+    # List of controllers to start
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    # Controller used for single arm control
+    # Select the joint to control by yourself. Default is left arm
+    forward_position_controller_single_arm:
+      type: forward_command_controller/ForwardCommandController
+
+### Controllers setup
+# Full body controllers
+joint_state_broadcaster:
+  ros__parameters:
+    joints:
+      - base_to_leftshoulder_joint
+      - base_to_rightshoulder_joint
+      - leftdynamixeltop_to_leftdriving_joint
+    interface_name:
+      - position
+      - velocity
+      - effort
+
+# Single arm controllers
+forward_position_controller_single_arm:
+  ros__parameters:
+    joints:
+      - base_to_leftshoulder_joint
+      - leftdynamixeltop_to_leftdriving_joint
+      - leftdynamixelbottom_to_leftmisumiln_joint
+    interface_name: position
