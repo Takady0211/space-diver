@@ -11,7 +11,7 @@ from launch_ros.actions import Node
 import xacro
 
 # User settings
-controller_name = "forward_position_controller_single_arm" # Select controller from controller_list
+controller_name = "position_trajectory_controller" # Select controller from controller_list
 
 # Path setting for xacro, urdf, rviz, and world files
 pkg_dir = get_package_share_directory("spacediver_ros2_control")
@@ -20,7 +20,7 @@ spacediver_urdf_xacro_path = os.path.join(
 spacediver_urdf_path = os.path.join(
     pkg_dir, "description", "urdf", "spacediver.urdf")
 controller_config = os.path.join(
-    pkg_dir, "bringup", "config", "dynamixel_controllers.yaml")
+    pkg_dir, "bringup", "config", "spacediver_controllers.yaml")
 rviz_path = os.path.join(pkg_dir, "description", "rviz", "spacediver_config.rviz")
 
 def parse_xacro(xacro_path, xml_path):
@@ -70,4 +70,19 @@ def generate_launch_description():
             parameters=[{"robot_description": robot_description_config.toxml()}, {'use_sim_time': True}],
             # arguments=[spacediver_urdf_path],
         ),
+                Node(
+            package='joint_state_publisher',
+            executable='joint_state_publisher',
+            name='joint_state_publisher',
+            output='screen',
+        ),
+
+        # RViz2 Node
+        Node(
+            package='rviz2',
+            executable='rviz2',
+            name='rviz2',
+            output='screen',
+            arguments=['-d', rviz_path]
+        )
     ])
