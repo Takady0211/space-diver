@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
   <ros2_control name="spacediver" type="system">
-    <xacro:if value="$(arg use_gazebo)">
+    <!-- <xacro:if value="$(arg use_gazebo)">
       <hardware>
         <plugin>gazebo_ros2_control/GazeboSystem</plugin>
       </hardware>
@@ -10,7 +10,13 @@
       <hardware>
         <plugin>spacediver_ros2_control/SpacediverSystem</plugin>
       </hardware>
-    </xacro:unless>
+    </xacro:unless> -->
+
+    <hardware>
+      <plugin>dynamixel_hardware/DynamixelHardware</plugin>
+      <param name="usb_port">"/dev/ttyUSB0"</param>
+      <param name="baud_rate">57600</param>
+    </hardware>
 
     <!-- BASE TO LEFT SHOULDER PLATE -->
     <joint name="base_to_leftshoulder_joint">
@@ -33,7 +39,7 @@
     </joint>
 
     <!-- BASE TO RIGHT SHOULDER PLATE -->
-    <joint name="base_to_rightshoulder_joint">
+    <!-- <joint name="base_to_rightshoulder_joint">
       <command_interface name="position">
         <param name="min">"${BASE_DYNAMIXEL_UPPER}"</param>
         <param name="max">"${BASE_DYNAMIXEL_LOWER}"</param>
@@ -49,7 +55,7 @@
       <state_interface name="position"/>
       <state_interface name="velocity"/>
       <state_interface name="effort"/>
-    </joint>
+    </joint> -->
 
     <!-- TOP DYNAMIXEL TO DRIVING LINK -->
     <joint name="leftdynamixeltop_to_leftdriving_joint">
@@ -70,7 +76,7 @@
       <state_interface name="velocity"/>
       <state_interface name="effort"/>
     </joint>
-    <joint name="rightdynamixeltop_to_rightdriving_joint">
+    <!-- <joint name="rightdynamixeltop_to_rightdriving_joint">
       <command_interface name="position">
         <param name="min">"${TOP_DYNAMIXEL_UPPER}"</param>
         <param name="max">"${TOP_DYNAMIXEL_LOWER}"</param>
@@ -86,7 +92,7 @@
       <state_interface name="position"/>
       <state_interface name="velocity"/>
       <state_interface name="effort"/>
-    </joint>
+    </joint> -->
 
     <!-- BOTTOM DYNAMIXEL TO MISUMI LN -->
     <joint name="leftdynamixelbottom_to_leftmisumiln_joint">
@@ -107,7 +113,7 @@
       <state_interface name="velocity"/>
       <state_interface name="effort"/>
     </joint>
-    <joint name="rightdynamixelbottom_to_rightmisumiln_joint">
+    <!-- <joint name="rightdynamixelbottom_to_rightmisumiln_joint">
       <command_interface name="position">
         <param name="min">"${BOT_DYNAMIXEL_UPPER}"</param>
         <param name="max">"${BOT_DYNAMIXEL_LOWER}"</param>
@@ -123,7 +129,7 @@
       <state_interface name="position"/>
       <state_interface name="velocity"/>
       <state_interface name="effort"/>
-    </joint>
+    </joint> -->
 
   </ros2_control>
 </robot>
