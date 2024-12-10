@@ -39,23 +39,24 @@
     </joint>
 
     <!-- BASE TO RIGHT SHOULDER PLATE -->
-    <!-- <joint name="base_to_rightshoulder_joint">
+    <joint name="base_to_rightshoulder_joint">
+      <param name="id">4</param>
       <command_interface name="position">
         <param name="min">"${BASE_DYNAMIXEL_UPPER}"</param>
         <param name="max">"${BASE_DYNAMIXEL_LOWER}"</param>
       </command_interface>
-      <command_interface name="velocity">
+      <!-- <command_interface name="velocity">
         <param name="min">"-${BASE_DYNAMIXEL_VELOCITY}"</param>
         <param name="max">" ${BASE_DYNAMIXEL_VELOCITY}"</param>
       </command_interface>
       <command_interface name="effort">
         <param name="min">"-${BASE_DYNAMIXEL_EFFORT}"</param>
         <param name="max">" ${BASE_DYNAMIXEL_EFFORT}"</param>
-      </command_interface>
+      </command_interface> -->
       <state_interface name="position"/>
       <state_interface name="velocity"/>
-      <state_interface name="effort"/>
-    </joint> -->
+      <!-- <state_interface name="effort"/> -->
+    </joint>
 
     <!-- TOP DYNAMIXEL TO DRIVING LINK -->
     <joint name="leftdynamixeltop_to_leftdriving_joint">
@@ -76,23 +77,24 @@
       <state_interface name="velocity"/>
       <!-- <state_interface name="effort"/> -->
     </joint>
-    <!-- <joint name="rightdynamixeltop_to_rightdriving_joint">
+    <joint name="rightdynamixeltop_to_rightdriving_joint">
+      <param name="id">5</param>
       <command_interface name="position">
         <param name="min">"${TOP_DYNAMIXEL_UPPER}"</param>
         <param name="max">"${TOP_DYNAMIXEL_LOWER}"</param>
       </command_interface>
-      <command_interface name="velocity">
+      <!-- <command_interface name="velocity">
         <param name="min">"-${TOP_DYNAMIXEL_VELOCITY}"</param>
         <param name="max">" ${TOP_DYNAMIXEL_VELOCITY}"</param>
       </command_interface>
       <command_interface name="effort">
         <param name="min">"-${TOP_DYNAMIXEL_EFFORT}"</param>
         <param name="max">" ${TOP_DYNAMIXEL_EFFORT}"</param>
-      </command_interface>
+      </command_interface> -->
       <state_interface name="position"/>
       <state_interface name="velocity"/>
-      <state_interface name="effort"/>
-    </joint> -->
+      <!-- <state_interface name="effort"/> -->
+    </joint>
 
     <!-- BOTTOM DYNAMIXEL TO MISUMI LN -->
     <joint name="leftdynamixelbottom_to_leftmisumiln_joint">
@@ -113,23 +115,24 @@
       <state_interface name="velocity"/>
       <!-- <state_interface name="effort"/> -->
     </joint>
-    <!-- <joint name="rightdynamixelbottom_to_rightmisumiln_joint">
+    <joint name="rightdynamixelbottom_to_rightmisumiln_joint">
+      <param name="id">6</param>
       <command_interface name="position">
         <param name="min">"${BOT_DYNAMIXEL_UPPER}"</param>
         <param name="max">"${BOT_DYNAMIXEL_LOWER}"</param>
       </command_interface>
-      <command_interface name="velocity">
+      <!-- <command_interface name="velocity">
         <param name="min">"-${BOT_DYNAMIXEL_VELOCITY}"</param>
         <param name="max">" ${BOT_DYNAMIXEL_VELOCITY}"</param>
       </command_interface>
       <command_interface name="effort">
         <param name="min">"-${BOT_DYNAMIXEL_EFFORT}"</param>
         <param name="max">" ${BOT_DYNAMIXEL_EFFORT}"</param>
-      </command_interface>
+      </command_interface> -->
       <state_interface name="position"/>
       <state_interface name="velocity"/>
-      <state_interface name="effort"/>
-    </joint> -->
+      <!-- <state_interface name="effort"/> -->
+    </joint>
 
   </ros2_control>
 </robot>
