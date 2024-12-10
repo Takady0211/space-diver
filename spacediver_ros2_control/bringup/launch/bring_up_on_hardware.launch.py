@@ -16,9 +16,9 @@ controller_name = "position_trajectory_controller" # Select controller from cont
 # Path setting for xacro, urdf, rviz, and world files
 pkg_dir = get_package_share_directory("spacediver_ros2_control")
 spacediver_urdf_xacro_path = os.path.join(
-    pkg_dir, "description", "urdf", "spacediver.urdf.xacro")
+    pkg_dir, "description", "urdf", "spacediver_dual_arm.urdf.xacro")
 spacediver_urdf_path = os.path.join(
-    pkg_dir, "description", "urdf", "spacediver.urdf")
+    pkg_dir, "description", "urdf", "spacediver_dual_arm.urdf")
 controller_config = os.path.join(
     pkg_dir, "bringup", "config", "spacediver_controllers.yaml")
 rviz_path = os.path.join(pkg_dir, "description", "rviz", "spacediver_config.rviz")
