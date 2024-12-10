@@ -1,0 +1,231 @@
+<?xml version="1.0"?>
+<!-- import xacro reffering here
+https://gbiggs.github.io/rosjp_urdf_tutorial_text/manipulator_urdf.html -->
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:macro name="right_arm" params="base_name *origin">
+
+    <!-- BASE TO SHOULDER -->
+    <joint name="${BASE_TO_RIGHTSHOULDER_JOINT_NAME}" type="revolute">
+      <parent link="${BASE_LINK_NAME}" />
+      <child link="${R_SHOULDER_LINK_NAME}" />
+      <origin
+        xyz="
+        ${-SHOULDER_POS_X}
+        ${-(SHOULDER_JOINTA_X-SHOULDER_Y/2)}
+        ${0}
+      "
+        rpy="0 0 ${PI}" />
+      <axis xyz="1 0 0" />
+      <limit lower="${BASE_DYNAMIXEL_LOWER}" upper="${BASE_DYNAMIXEL_UPPER}"
+        effort="${BASE_DYNAMIXEL_EFFORT}" velocity="${BASE_DYNAMIXEL_VELOCITY}" />
+    </joint>
+
+    <!-- SHOULDER -->
+    <link name="${R_SHOULDER_LINK_NAME}">
+      <visual>
+        <origin
+          xyz="
+          ${0}
+          ${-SHOULDER_JOINTA_X}
+          ${SHOULDER_Z/2}
+        "
+          rpy="${PI} 0 ${-L_SHOULDER_ROT_Z}" />
+        <geometry>
+          <mesh
+            filename="package://spacediver_ros2_control/description/gazebo/models/meshes/shoulder_plate.STL" />
+        </geometry>
+        <material name="grey" />
+      </visual>
+      <collision>
+        <origin
+          xyz="
+          ${0}
+          ${-SHOULDER_JOINTA_X}
+          ${SHOULDER_Z/2}
+        "
+          rpy="${PI} 0 ${-L_SHOULDER_ROT_Z}" />
+        <geometry>
+          <mesh
+            filename="package://spacediver_ros2_control/description/gazebo/models/meshes/shoulder_plate.STL" />
+        </geometry>
+      </collision>
+      <xacro:inertial_box mass="${LINK_1_MASS}" x="${LINK_1_X/2}" y="${LINK_1_Y/2}"
+        z="${LINK_1_Z/2}">
+        <origin xyz="0 0 ${LINK_1_Z/2}" rpy="0 0 0" />
+      </xacro:inertial_box>
+    </link>
+
+    <!-- SHOULDER TO BOTTOM DYNAMIXEL -->
+    <joint name="${RIGHTSHOULDER_TO_RIGHTDYNAMIXELBOT_JOINT_NAME}" type="fixed">
+      <parent link="${R_SHOULDER_LINK_NAME}" />
+      <child link="${R_BOT_DYNAMIXEL_LINK_NAME}" />
+      <origin
+        xyz="
+        ${SHOULDER_X + DYNAMIXEL_X/2}
+        ${DYNAMIXEL_Y/2 - SHOULDER_JOINTA_X}
+        ${-SHOULDER_Z/2 + DYNAMIXEL_Z/2}
+      "
+        rpy="0 0 0" />
+      <axis xyz="0 0 1" />
+    </joint>
+
+    <!-- BOTTOM DYNAMIXEL -->
+    <link name="${R_BOT_DYNAMIXEL_LINK_NAME}">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <box size="${DYNAMIXEL_X} ${DYNAMIXEL_Y} ${DYNAMIXEL_Z}" />
+        </geometry>
+        <material name="blue" />
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <box size="${DYNAMIXEL_X} ${DYNAMIXEL_Y} ${DYNAMIXEL_Z}" />
+        </geometry>
+      </collision>
+      <xacro:inertial_box mass="${LINK_1_MASS}" x="${LINK_1_X/2}" y="${LINK_1_Y/2}"
+        z="${LINK_1_Z/2}">
+        <origin xyz="0 0 ${LINK_1_Z/2}" rpy="0 0 0" />
+      </xacro:inertial_box>
+    </link>
+
+    <!-- BOTTOM DYNAMIXEL TO MISUMI LN -->
+    <joint name="${RIGHT_DYNAMIXELBOT_TO_RIGHTMISUMILN_JOINT_NAME}" type="revolute">
+      <parent link="${R_BOT_DYNAMIXEL_LINK_NAME}" />
+      <child link="${R_MISUMILN_LINK_NAME}" />
+      <origin
+        xyz="
+        ${0}
+        ${DYNAMIXEL_Y/2 - DYNAMIXEL_JOINTB_Y}
+        ${MISUMILN_POS_Z-DYNAMIXEL_BOT_POS_Z}"
+        rpy="0 0 ${-L_MISUMILN_ROT_Z}" />
+      <axis xyz="0 0 1" />
+      <limit lower="${BOT_DYNAMIXEL_LOWER}" upper="${BOT_DYNAMIXEL_UPPER}"
+        effort="${BOT_DYNAMIXEL_EFFORT}" velocity="${BOT_DYNAMIXEL_VELOCITY}" />
+    </joint>
+
+    <!-- MISUMI LN -->
+    <link name="${R_MISUMILN_LINK_NAME}">
+      <visual>
+        <origin
+          xyz="
+          ${-MISUMILN_JOINTA_Y}
+          ${-MISUMILN_JOINTA_X}
+          0
+        "
+          rpy="0 0 ${0}" />
+        <geometry>
+          <mesh
+            filename="package://spacediver_ros2_control/description/gazebo/models/meshes/Link_MISUMI_LNMS16-10-200.STL" />
+        </geometry>
+        <material name="blue" />
+      </visual>
+      <collision>
+        <origin
+          xyz="
+          ${-MISUMILN_JOINTA_Y}
+          ${-MISUMILN_JOINTA_X}
+          0
+        "
+          rpy="0 0 ${0}" />
+        <geometry>
+          <mesh
+            filename="package://spacediver_ros2_control/description/gazebo/models/meshes/Link_MISUMI_LNMS16-10-200.STL" />
+        </geometry>
+      </collision>
+      <xacro:inertial_box mass="${LINK_1_MASS}" x="${LINK_1_X/2}" y="${LINK_1_Y/2}"
+        z="${LINK_1_Z/2}">
+        <origin xyz="0 0 ${LINK_1_Z/2}" rpy="0 0 0" />
+      </xacro:inertial_box>
+    </link>
+
+    <!-- SHOULDER TO TOP DYNAMIXEL -->
+    <joint name="${RIGHTSHOULDER_TO_RIGHTDYNAMIXELTOP_JOINT_NAME}" type="fixed">
+      <parent link="${R_SHOULDER_LINK_NAME}" />
+      <child link="${R_TOP_DYNAMIXEL_LINK_NAME}" />
+      <origin
+        xyz="
+        ${SHOULDER_X + DYNAMIXEL_X/2}
+        ${DYNAMIXEL_Y/2 - SHOULDER_JOINTA_X}
+        ${SHOULDER_Z/2 - DYNAMIXEL_Z/2}
+      "
+        rpy="0 0 0" />
+      <axis xyz="0 0 1" />
+    </joint>
+
+    <!-- TOP DYNAMIXEL -->
+    <link name="${R_TOP_DYNAMIXEL_LINK_NAME}">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <box size="${DYNAMIXEL_X} ${DYNAMIXEL_Y} ${DYNAMIXEL_Z}" />
+        </geometry>
+        <material name="blue" />
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <box size="${DYNAMIXEL_X} ${DYNAMIXEL_Y} ${DYNAMIXEL_Z}" />
+        </geometry>
+      </collision>
+      <xacro:inertial_box mass="${LINK_1_MASS}" x="${LINK_1_X/2}" y="${LINK_1_Y/2}"
+        z="${LINK_1_Z/2}">
+        <origin xyz="0 0 ${LINK_1_Z/2}" rpy="0 0 0" />
+      </xacro:inertial_box>
+    </link>
+
+    <!-- TOP DYNAMIXEL TO DRIVING LINK -->
+    <joint name="${RIGHTDYNAMIXELTOP_TO_RIGHTDRIVING_JOINT_NAME}" type="revolute">
+      <parent link="${R_TOP_DYNAMIXEL_LINK_NAME}" />
+      <child link="${R_DRIVING_LINK_NAME}" />
+      <origin
+        xyz="
+        ${0}
+        ${DYNAMIXEL_Y/2 - DYNAMIXEL_JOINTB_Y}
+        ${DRIVING_POS_Z - DYNAMIXEL_TOP_POS_Z}"
+        rpy="0 0 ${0}" />
+      <axis xyz="0 0 1" />
+      <limit lower="${TOP_DYNAMIXEL_LOWER}" upper="${TOP_DYNAMIXEL_UPPER}"
+        effort="${TOP_DYNAMIXEL_EFFORT}" velocity="${TOP_DYNAMIXEL_VELOCITY}" />
+    </joint>
+
+    <!-- DRIVING LINK -->
+    <link name="${R_DRIVING_LINK_NAME}">
+      <visual>
+        <origin
+          xyz="
+          ${-DRIVING_JOINTA_X}
+          ${-DRIVING_JOINTA_Y}
+          ${0}
+        "
+          rpy="0 0 0" />
+        <geometry>
+          <mesh
+            filename="package://spacediver_ros2_control/description/gazebo/models/meshes/upper_arm_driving_link.STL" />
+        </geometry>
+        <material name="blue" />
+      </visual>
+      <collision>
+        <origin
+          xyz="
+          ${-DRIVING_JOINTA_X}
+          ${-DRIVING_JOINTA_Y}
+          ${0}
+        "
+          rpy="0 0 0" />
+        <geometry>
+          <mesh
+            filename="package://spacediver_ros2_control/description/gazebo/models/meshes/upper_arm_driving_link.STL" />
+        </geometry>
+      </collision>
+      <xacro:inertial_box mass="${LINK_1_MASS}" x="${LINK_1_X/2}" y="${LINK_1_Y/2}"
+        z="${LINK_1_Z/2}">
+        <origin xyz="0 0 ${LINK_1_Z/2}" rpy="0 0 0" />
+      </xacro:inertial_box>
+    </link>
+
+  </xacro:macro>
+
+</robot>
