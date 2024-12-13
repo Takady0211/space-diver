@@ -13,14 +13,17 @@ controller_name = (
 )
 
 # Path setting for xacro, urdf, rviz, and world files
-pkg_dir = get_package_share_directory("spacediver_ros2_control")
+spacediver_ros2_control_pkg_dir = get_package_share_directory("spacediver_ros2_control")
 spacediver_urdf_xacro_path = os.path.join(
-    pkg_dir, "description", "urdf", "spacediver_dual_arm.urdf.xacro"
+    spacediver_ros2_control_pkg_dir, "description", "urdf", "spacediver_dual_arm.urdf.xacro"
 )
+rviz_path = os.path.join(spacediver_ros2_control_pkg_dir, "description", "rviz", "spacediver_config.rviz")
+
+pkg_dir = get_package_share_directory("dynamixel_hardware")
 controller_config = os.path.join(
-    pkg_dir, "bringup", "config", "spacediver_controllers.yaml"
+    pkg_dir, "config", "dynamixel_controllers.yaml"
 )
-rviz_path = os.path.join(pkg_dir, "description", "rviz", "spacediver_config.rviz")
+
 
 
 def generate_launch_description():
