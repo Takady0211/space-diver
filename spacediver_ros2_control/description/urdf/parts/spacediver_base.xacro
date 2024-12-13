@@ -15,8 +15,12 @@
         <box size="${BASE_X} ${BASE_Y} ${BASE_Z}"/>
       </geometry>
     </collision>
-    <!-- <xacro:inertial_box mass="${BASE_MASS}" x="${BASE_X/2}" y="${BASE_Y/2}" z="${BASE_Z/2}">
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-    </xacro:inertial_box> -->
+
+    <xacro:if value="$(arg use_gazebo)">
+      <xacro:inertial_box mass="${BASE_MASS}" x="${BASE_X/2}" y="${BASE_Y/2}" z="${BASE_Z/2}">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      </xacro:inertial_box>
+    </xacro:if>
+
   </link>
 </robot>
