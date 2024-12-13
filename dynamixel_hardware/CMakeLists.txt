@@ -12,6 +12,45 @@ find_package(pluginlib REQUIRED)
 find_package(hardware_interface REQUIRED)
 find_package(dynamixel_workbench_toolbox REQUIRED)
 
+include_directories(include)
+add_library(
+  ${PROJECT_NAME}
+  SHARED
+  src/dynamixel_hardware.cpp
+)
+target_include_directories(
+  ${PROJECT_NAME}
+  PRIVATE
+  include
+)
+ament_target_dependencies(
+  ${PROJECT_NAME}
+  rclcpp
+  hardware_interface
+  pluginlib
+  dynamixel_workbench_toolbox
+)
+
+pluginlib_export_plugin_description_file(hardware_interface dynamixel_hardware.xml)
+
+# INSTALL
+install(
+  TARGETS ${PROJECT_NAME}
+  DESTINATION lib
+)
+install(
+  DIRECTORY include/
+  DESTINATION include
+)
+install(
+  DIRECTORY
+    launch
+    config
+  DESTINATION
+    share/${PROJECT_NAME}
+)
+
+
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   # the following line skips the linter which checks for copyrights
@@ -23,5 +62,19 @@ if(BUILD_TESTING)
   set(ament_cmake_cpplint_FOUND TRUE)
   ament_lint_auto_find_test_dependencies()
 endif()
+
+# EXPORTS
+ament_export_include_directories(
+  include
+)
+ament_export_libraries(
+  ${PROJECT_NAME}
+)
+ament_export_dependencies(
+  rclcpp
+  hardware_interface
+  pluginlib
+  dynamixel_workbench_toolbox
+)
 
 ament_package()
