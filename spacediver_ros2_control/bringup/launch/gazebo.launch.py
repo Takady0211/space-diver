@@ -11,18 +11,26 @@ from launch.substitutions import LaunchConfiguration
 
 import xacro
 
+controller_list = [
+    "forward_position_controller",
+    "forward_effort_controller",
+    "feedback_effort_controller",
+    "forward_position_controller_single_arm",
+    "forward_effort_controller_single_arm",
+    "feedback_effort_controller_single_arm",
+]
+
+
 # User settings
 use_sim_time = LaunchConfiguration("use_sim_time", default="true")
-controller_name = "feedback_effort_controller_single_arm"
+controller_name = controller_list[2]
 
 # Path setting for xacro, urdf, rviz, and world files
 pkg_dir = get_package_share_directory("spacediver_ros2_control")
 spacediver_urdf_xacro_path = os.path.join(
     pkg_dir, "description", "urdf", "spacediver.urdf.xacro"
 )
-spacediver_urdf_path = os.path.join(
-    pkg_dir, "description", "urdf", "spacediver.urdf"
-)
+spacediver_urdf_path = os.path.join(pkg_dir, "description", "urdf", "spacediver.urdf")
 spacediver_sdf_xacro_path = os.path.join(
     pkg_dir, "description", "gazebo", "models", "spacediver.sdf.xacro"
 )
