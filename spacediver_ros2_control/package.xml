@@ -15,10 +15,6 @@
   <depend>hardware_interface</depend>
   <depend>gazebo_ros_pkgs</depend>
   <depend>gazebo_ros2_control</depend>
-  <depend>rclcpp</depend> <!-- DYNAMIXEL -->
-  <depend>pluginlib</depend> <!-- DYNAMIXEL -->
-  <depend>dynamixel_workbench_toolbox</depend> <!-- DYNAMIXEL -->
-  <!-- <depend>rclcpp_lifecycle</depend> --> <!-- DYNAMIXEL -->
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
