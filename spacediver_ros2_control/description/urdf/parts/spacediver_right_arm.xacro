@@ -2,34 +2,35 @@
 <!-- import xacro reffering here
 https://gbiggs.github.io/rosjp_urdf_tutorial_text/manipulator_urdf.html -->
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
-  <xacro:macro name="left_arm" params="base_name *origin">
+
+  <xacro:macro name="right_arm" params="base_name *origin">
 
     <!-- BASE TO SHOULDER -->
-    <joint name="${BASE_TO_LEFTSHOULDER_JOINT_NAME}" type="revolute">
+    <joint name="${BASE_TO_RIGHTSHOULDER_JOINT_NAME}" type="revolute">
       <parent link="${BASE_LINK_NAME}" />
-      <child link="${L_SHOULDER_LINK_NAME}" />
+      <child link="${R_SHOULDER_LINK_NAME}" />
       <origin
         xyz="
-        ${SHOULDER_POS_X}
+        ${-SHOULDER_POS_X}
         ${-(SHOULDER_JOINTA_X-SHOULDER_Y/2)}
         ${0}
       "
-        rpy="0 0 0" />
+        rpy="0 0 ${PI}" />
       <axis xyz="1 0 0" />
       <limit lower="${BASE_DYNAMIXEL_LOWER}" upper="${BASE_DYNAMIXEL_UPPER}"
         effort="${BASE_DYNAMIXEL_EFFORT}" velocity="${BASE_DYNAMIXEL_VELOCITY}" />
     </joint>
 
     <!-- SHOULDER -->
-    <link name="${L_SHOULDER_LINK_NAME}">
+    <link name="${R_SHOULDER_LINK_NAME}">
       <visual>
         <origin
           xyz="
           ${0}
-          ${SHOULDER_JOINTA_X}
-          ${-SHOULDER_Z/2}
+          ${-SHOULDER_JOINTA_X}
+          ${SHOULDER_Z/2}
         "
-          rpy="0 0 ${L_SHOULDER_ROT_Z}" />
+          rpy="${PI} 0 ${-L_SHOULDER_ROT_Z}" />
         <geometry>
           <mesh
             filename="package://spacediver_ros2_control/description/gazebo/models/meshes/shoulder_plate.STL" />
@@ -40,10 +41,10 @@ https://gbiggs.github.io/rosjp_urdf_tutorial_text/manipulator_urdf.html -->
         <origin
           xyz="
           ${0}
-          ${SHOULDER_JOINTA_X}
-          ${-SHOULDER_Z/2}
+          ${-SHOULDER_JOINTA_X}
+          ${SHOULDER_Z/2}
         "
-          rpy="0 0 ${L_SHOULDER_ROT_Z}" />
+          rpy="${PI} 0 ${-L_SHOULDER_ROT_Z}" />
         <geometry>
           <mesh
             filename="package://spacediver_ros2_control/description/gazebo/models/meshes/shoulder_plate.STL" />
@@ -56,13 +57,13 @@ https://gbiggs.github.io/rosjp_urdf_tutorial_text/manipulator_urdf.html -->
     </link>
 
     <!-- SHOULDER TO BOTTOM DYNAMIXEL -->
-    <joint name="${LEFTSHOULDER_TO_LEFTDYNAMIXELBOT_JOINT_NAME}" type="fixed">
-      <parent link="${L_SHOULDER_LINK_NAME}" />
-      <child link="${L_BOT_DYNAMIXEL_LINK_NAME}" />
+    <joint name="${RIGHTSHOULDER_TO_RIGHTDYNAMIXELBOT_JOINT_NAME}" type="fixed">
+      <parent link="${R_SHOULDER_LINK_NAME}" />
+      <child link="${R_BOT_DYNAMIXEL_LINK_NAME}" />
       <origin
         xyz="
         ${SHOULDER_X + DYNAMIXEL_X/2}
-        ${SHOULDER_JOINTA_X - DYNAMIXEL_Y/2}
+        ${DYNAMIXEL_Y/2 - SHOULDER_JOINTA_X}
         ${-SHOULDER_Z/2 + DYNAMIXEL_Z/2}
       "
         rpy="0 0 0" />
@@ -70,7 +71,7 @@ https://gbiggs.github.io/rosjp_urdf_tutorial_text/manipulator_urdf.html -->
     </joint>
 
     <!-- BOTTOM DYNAMIXEL -->
-    <link name="${L_BOT_DYNAMIXEL_LINK_NAME}">
+    <link name="${R_BOT_DYNAMIXEL_LINK_NAME}">
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
@@ -91,26 +92,30 @@ https://gbiggs.github.io/rosjp_urdf_tutorial_text/manipulator_urdf.html -->
     </link>
 
     <!-- BOTTOM DYNAMIXEL TO MISUMI LN -->
-    <joint name="${LEFT_DYNAMIXELBOT_TO_LEFTMISUMILN_JOINT_NAME}" type="revolute">
-      <parent link="${L_BOT_DYNAMIXEL_LINK_NAME}" />
-      <child link="${L_MISUMILN_LINK_NAME}" />
+    <joint name="${RIGHT_DYNAMIXELBOT_TO_RIGHTMISUMILN_JOINT_NAME}" type="revolute">
+      <parent link="${R_BOT_DYNAMIXEL_LINK_NAME}" />
+      <child link="${R_MISUMILN_LINK_NAME}" />
       <origin
         xyz="
         ${0}
-        ${DYNAMIXEL_JOINTB_Y-DYNAMIXEL_Y/2}
+        ${DYNAMIXEL_Y/2 - DYNAMIXEL_JOINTB_Y}
         ${MISUMILN_POS_Z-DYNAMIXEL_BOT_POS_Z}"
-        rpy="0 0 ${L_MISUMILN_ROT_Z}" />
+        rpy="0 0 ${-L_MISUMILN_ROT_Z}" />
       <axis xyz="0 0 1" />
       <limit lower="${BOT_DYNAMIXEL_LOWER}" upper="${BOT_DYNAMIXEL_UPPER}"
         effort="${BOT_DYNAMIXEL_EFFORT}" velocity="${BOT_DYNAMIXEL_VELOCITY}" />
     </joint>
 
     <!-- MISUMI LN -->
-    <link name="${L_MISUMILN_LINK_NAME}">
+    <link name="${R_MISUMILN_LINK_NAME}">
       <visual>
         <origin
-          xyz="${-MISUMILN_JOINTA_Y} ${-MISUMILN_JOINTA_X} 0"
-          rpy="0 0 0" />
+          xyz="
+          ${-MISUMILN_JOINTA_Y}
+          ${-MISUMILN_JOINTA_X}
+          0
+        "
+          rpy="0 0 ${0}" />
         <geometry>
           <mesh
             filename="package://spacediver_ros2_control/description/gazebo/models/meshes/Link_MISUMI_LNMS16-10-200.STL" />
@@ -119,8 +124,12 @@ https://gbiggs.github.io/rosjp_urdf_tutorial_text/manipulator_urdf.html -->
       </visual>
       <collision>
         <origin
-          xyz="${-MISUMILN_JOINTA_Y} ${-MISUMILN_JOINTA_X} 0"
-          rpy="0 0 0" />
+          xyz="
+          ${-MISUMILN_JOINTA_Y}
+          ${-MISUMILN_JOINTA_X}
+          0
+        "
+          rpy="0 0 ${0}" />
         <geometry>
           <mesh
             filename="package://spacediver_ros2_control/description/gazebo/models/meshes/Link_MISUMI_LNMS16-10-200.STL" />
@@ -133,21 +142,21 @@ https://gbiggs.github.io/rosjp_urdf_tutorial_text/manipulator_urdf.html -->
     </link>
 
     <!-- SHOULDER TO TOP DYNAMIXEL -->
-    <joint name="${LEFTSHOULDER_TO_LEFTDYNAMIXELTOP_JOINT_NAME}" type="fixed">
-      <parent link="${L_SHOULDER_LINK_NAME}" />
-      <child link="${L_TOP_DYNAMIXEL_LINK_NAME}" />
+    <joint name="${RIGHTSHOULDER_TO_RIGHTDYNAMIXELTOP_JOINT_NAME}" type="fixed">
+      <parent link="${R_SHOULDER_LINK_NAME}" />
+      <child link="${R_TOP_DYNAMIXEL_LINK_NAME}" />
       <origin
         xyz="
-          ${SHOULDER_X + DYNAMIXEL_X/2}
-          ${SHOULDER_JOINTA_X - DYNAMIXEL_Y/2}
-          ${SHOULDER_Z/2 - DYNAMIXEL_Z/2}
-        "
+        ${SHOULDER_X + DYNAMIXEL_X/2}
+        ${DYNAMIXEL_Y/2 - SHOULDER_JOINTA_X}
+        ${SHOULDER_Z/2 - DYNAMIXEL_Z/2}
+      "
         rpy="0 0 0" />
       <axis xyz="0 0 1" />
     </joint>
 
     <!-- TOP DYNAMIXEL -->
-    <link name="${L_TOP_DYNAMIXEL_LINK_NAME}">
+    <link name="${R_TOP_DYNAMIXEL_LINK_NAME}">
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
@@ -168,13 +177,13 @@ https://gbiggs.github.io/rosjp_urdf_tutorial_text/manipulator_urdf.html -->
     </link>
 
     <!-- TOP DYNAMIXEL TO DRIVING LINK -->
-    <joint name="${LEFTDYNAMIXELTOP_TO_LEFTDRIVING_JOINT_NAME}" type="revolute">
-      <parent link="${L_TOP_DYNAMIXEL_LINK_NAME}" />
-      <child link="${L_DRIVING_LINK_NAME}" />
+    <joint name="${RIGHTDYNAMIXELTOP_TO_RIGHTDRIVING_JOINT_NAME}" type="revolute">
+      <parent link="${R_TOP_DYNAMIXEL_LINK_NAME}" />
+      <child link="${R_DRIVING_LINK_NAME}" />
       <origin
         xyz="
         ${0}
-        ${DYNAMIXEL_JOINTB_Y-DYNAMIXEL_Y/2}
+        ${DYNAMIXEL_Y/2 - DYNAMIXEL_JOINTB_Y}
         ${DRIVING_POS_Z - DYNAMIXEL_TOP_POS_Z}"
         rpy="0 0 ${0}" />
       <axis xyz="0 0 1" />
@@ -183,7 +192,7 @@ https://gbiggs.github.io/rosjp_urdf_tutorial_text/manipulator_urdf.html -->
     </joint>
 
     <!-- DRIVING LINK -->
-    <link name="${L_DRIVING_LINK_NAME}">
+    <link name="${R_DRIVING_LINK_NAME}">
       <visual>
         <origin
           xyz="

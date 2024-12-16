@@ -3,12 +3,186 @@
 
   <xacro:property name="PI" value="${math.pi}"/>
   <xacro:property name="ROT" value="${PI/6}"/>
+  <xacro:property name="RPM" value="30"/>
 
+  <!-- LINK NAMES -->
+  <xacro:property name="BASE_LINK_NAME" value="base_link"/>
+  <xacro:property name="L_SHOULDER_LINK_NAME" value="left_shoulder_link"/>
+  <xacro:property name="R_SHOULDER_LINK_NAME" value="right_shoulder_link"/>
+  
+  <xacro:property name="L_TOP_DYNAMIXEL_LINK_NAME" value="left_dynamixel_top"/>
+  <xacro:property name="R_TOP_DYNAMIXEL_LINK_NAME" value="right_dynamixel_top"/>
+  <xacro:property name="L_BOT_DYNAMIXEL_LINK_NAME" value="left_dynamixel_bottom"/>
+  <xacro:property name="R_BOT_DYNAMIXEL_LINK_NAME" value="right_dynamixel_bottom"/>
+  
+  <xacro:property name="L_MISUMILN_LINK_NAME" value="left_misumi_ln"/>
+  <xacro:property name="R_MISUMILN_LINK_NAME" value="right_misumi_ln"/>
+  
+  <xacro:property name="L_DRIVING_LINK_NAME" value="left_driving_link"/>
+  <xacro:property name="R_DRIVING_LINK_NAME" value="right_driving_link"/>
+  
+  <xacro:property name="L_DRIVEN_LINK_NAME" value="left_driven_link"/>
+  <xacro:property name="R_DRIVEN_LINK_NAME" value="right_driven_link"/>
+  
+  <xacro:property name="L_MISUMIFT_LINK_NAME" value="left_misumi_ft"/>
+  <xacro:property name="R_MISUMIFT_LINK_NAME" value="right_misumi_ft"/>
+
+  <!-- JOINT NAMES -->
+  <xacro:property name="BASE_TO_LEFTSHOULDER_JOINT_NAME" value="base_to_leftshoulder_joint"/>
+  <xacro:property name="BASE_TO_RIGHTSHOULDER_JOINT_NAME" value="base_to_rightshoulder_joint"/>
+  
+  <xacro:property name="LEFTSHOULDER_TO_LEFTDYNAMIXELTOP_JOINT_NAME" value="leftshoulder_to_leftdynamixeltop_joint"/>
+  <xacro:property name="RIGHTSHOULDER_TO_RIGHTDYNAMIXELTOP_JOINT_NAME" value="rightshoulder_to_rightdynamixeltop_joint"/>
+  
+  <xacro:property name="LEFTSHOULDER_TO_LEFTDYNAMIXELBOT_JOINT_NAME" value="leftshoulder_to_leftdynamixelbottom_joint"/>
+  <xacro:property name="RIGHTSHOULDER_TO_RIGHTDYNAMIXELBOT_JOINT_NAME" value="rightshoulder_to_rightdynamixelbottom_joint"/>
+  
+  <xacro:property name="LEFT_DYNAMIXELBOT_TO_LEFTMISUMILN_JOINT_NAME" value="leftdynamixelbottom_to_leftmisumiln_joint"/>
+  <xacro:property name="RIGHT_DYNAMIXELBOT_TO_RIGHTMISUMILN_JOINT_NAME" value="rightdynamixelbottom_to_rightmisumiln_joint"/>
+  
+  <xacro:property name="LEFTDYNAMIXELTOP_TO_LEFTDRIVING_JOINT_NAME" value="leftdynamixeltop_to_leftdriving_joint"/>
+  <xacro:property name="RIGHTDYNAMIXELTOP_TO_RIGHTDRIVING_JOINT_NAME" value="rightdynamixeltop_to_rightdriving_joint"/>
+  
+  <xacro:property name="LEFTDRIVING_TO_LEFTDRIVEN_JOINT_NAME" value="leftdriving_to_leftdriven_joint"/>
+  <xacro:property name="RIGHTDRIVING_TO_RIGHTDRIVEN_JOINT_NAME" value="rightdriving_to_rightdriven_joint"/>
+  
+  <xacro:property name="LEFTDRIVEN_TO_LEFTMISUMIFT_JOINT_NAME" value="leftdriven_to_leftmisumift_joint"/>
+  <xacro:property name="RIGHTDRIVEN_TO_RIGHTMISUMIFT_JOINT_NAME" value="rightdriven_to_rightmisumift_joint"/>
+  
+  <xacro:property name="LEFTMISUMILN_TO_LEFTMISUMIFT_JOINT_NAME" value="leftmisumiln_to_leftmisumift_joint"/>
+  <xacro:property name="RIGHTMISUMILN_TO_RIGHTMISUMIFT_JOINT_NAME" value="rightmisumiln_to_rightmisumift_joint"/>
+
+
+  <!-- BASE -->
   <xacro:property name="BASE_X" value="0.18"/>
   <xacro:property name="BASE_Y" value="0.0585"/>
   <xacro:property name="BASE_Z" value="0.0415"/>
   <xacro:property name="BASE_MASS" value="50"/>
   <xacro:property name="BASE_INERTIA_Z" value="0.13526810"/>
+  <!-- JOINT -->
+  <xacro:property name="BASE_DYNAMIXEL_LOWER" value="-${PI}"/>
+  <xacro:property name="BASE_DYNAMIXEL_UPPER" value=" ${PI}"/>
+  <xacro:property name="BASE_DYNAMIXEL_VELOCITY" value="${(RPM) * 2*(PI)/60}"/>
+  <xacro:property name="BASE_DYNAMIXEL_EFFORT" value="1"/>
+
+  <!-- SHOULDER PLATE -->
+  <xacro:property name="SHOULDER_X" value="0.03"/>
+  <xacro:property name="SHOULDER_Y" value="0.0585"/>
+  <xacro:property name="SHOULDER_Y_ADD" value="0.00275"/>
+  <xacro:property name="SHOULDER_Z" value="0.148"/>
+  <xacro:property name="SHOULDER_JOINTA_X" value="${0.04475}"/>
+  <xacro:property name="SHOULDER_JOINTA_Y" value="${0.005}"/>
+  <xacro:property name="SHOULDER_JOINTA_Z" value="${SHOULDER_Z/2}"/>
+  <xacro:property name="SHOULDER_POS_X" value="${BASE_X/2 + 0.0045}"/>
+  <xacro:property name="SHOULDER_POS_Y" value="${SHOULDER_Y/2}"/>
+  <xacro:property name="SHOULDER_POS_Z" value="${-SHOULDER_Z/2}"/>
+  <!-- LEFT -->
+  <xacro:property name="L_SHOULDER_ROT_Z" value="${-PI/2}"/>
+  <!-- RIGHT -->
+  <xacro:property name="R_SHOULDER_ROT_X" value="${PI}"/>
+  <xacro:property name="R_SHOULDER_ROT_Y" value="${0}"/>
+  <xacro:property name="R_SHOULDER_ROT_Z" value="${-PI/2}"/>
+
+  <!-- DYNAMIXEL -->
+  <xacro:property name="DYNAMIXEL_X" value="0.0335"/>
+  <xacro:property name="DYNAMIXEL_Y" value="0.0585"/>
+  <xacro:property name="DYNAMIXEL_Z" value="0.044"/>
+  <xacro:property name="DYNAMIXEL_POS_X" value="${SHOULDER_POS_X + SHOULDER_X + DYNAMIXEL_X/2}"/>
+  <xacro:property name="DYNAMIXEL_POS_Y" value="${SHOULDER_POS_Y - SHOULDER_Y/2}"/>
+  <xacro:property name="DYNAMIXEL_TOP_POS_Z" value="${SHOULDER_POS_Z + SHOULDER_Z - DYNAMIXEL_Z/2}"/>
+  <xacro:property name="DYNAMIXEL_BOT_POS_Z" value="${SHOULDER_POS_Z + DYNAMIXEL_Z/2}"/>
+  <!-- JOINT -->
+  <xacro:property name="DYNAMIXEL_JOINTB_X" value="0"/>
+  <xacro:property name="DYNAMIXEL_JOINTB_Y" value="${DYNAMIXEL_Y - 0.04475}"/>
+  <xacro:property name="TOP_DYNAMIXEL_LOWER" value="-${PI}"/>
+  <xacro:property name="TOP_DYNAMIXEL_UPPER" value=" ${PI}"/>
+  <xacro:property name="TOP_DYNAMIXEL_VELOCITY" value="${(RPM) * 2*(PI)/60}"/>
+  <xacro:property name="TOP_DYNAMIXEL_EFFORT" value="1"/>
+  <xacro:property name="BOT_DYNAMIXEL_LOWER" value="-${PI}"/>
+  <xacro:property name="BOT_DYNAMIXEL_UPPER" value=" ${PI}"/>
+  <xacro:property name="BOT_DYNAMIXEL_VELOCITY" value="${(RPM) * 2*(PI)/60}"/>
+  <xacro:property name="BOT_DYNAMIXEL_EFFORT" value="1"/>
+
+
+  <!-- MIUSMI LN (LOWER LINK) -->
+  <xacro:property name="MISUMILN_X" value="0.032"/>
+  <xacro:property name="MISUMILN_Y" value="0.225"/>
+  <xacro:property name="MISUMILN_Z" value="0.009"/>
+
+  <xacro:property name="MISUMILN_JOINTA_X" value="0.016"/>
+  <xacro:property name="MISUMILN_JOINTA_Y" value="0.012"/>
+  <xacro:property name="MISUMILN_JOINTA_Z" value="${MISUMILN_Z/2}"/>
+  <!-- LEFT -->
+  <xacro:property name="L_MISUMILN_ROT_Z" value="${-PI/2+ROT}"/>
+  <xacro:property name="L_MISUMILN_POS_X" value="${DYNAMIXEL_POS_X + math.cos(ROT)*(-MISUMILN_JOINTA_X) - math.sin(ROT)*(MISUMILN_JOINTA_Y)}"/>
+  <xacro:property name="L_MISUMILN_POS_Y" value="${DYNAMIXEL_POS_Y - DYNAMIXEL_JOINTB_Y + math.sin(ROT)*(-MISUMILN_JOINTA_X) + math.cos(ROT)*(MISUMILN_JOINTA_Y)}"/>
+  <!-- RIGHT -->
+  <xacro:property name="R_MISUMILN_ROT_Z" value="${-PI/2-ROT}"/>
+  <xacro:property name="R_MISUMILN_POS_X" value="${-DYNAMIXEL_POS_X + math.cos(-ROT)*(-MISUMILN_JOINTA_X) - math.sin(-ROT)*(MISUMILN_JOINTA_Y)}"/>
+  <xacro:property name="R_MISUMILN_POS_Y" value="${DYNAMIXEL_POS_Y - DYNAMIXEL_JOINTB_Y + math.sin(-ROT)*(-MISUMILN_JOINTA_X) + math.cos(-ROT)*(MISUMILN_JOINTA_Y)}"/>
+
+  <xacro:property name="MISUMILN_POS_Z" value="${DYNAMIXEL_BOT_POS_Z + DYNAMIXEL_Z/2 + 0.0145}"/>
+
+  <!-- DRIVING LINK -->
+  <xacro:property name="DRIVING_X" value="0.076"/>
+  <xacro:property name="DRIVING_Y" value="0.026"/>
+  <xacro:property name="DRIVING_Z" value="0.004"/>
+  <xacro:property name="DRIVING_JOINTA_X" value="0.013"/>
+  <xacro:property name="DRIVING_JOINTA_Y" value="0.013"/>
+  <xacro:property name="DRIVING_JOINTA_Z" value="${DRIVING_Z/2}"/>
+  <!-- LEFT -->
+  <xacro:property name="L_DRIVING_ROT_Z" value="${0}"/>
+  <xacro:property name="L_DRIVING_POS_X" value="${DYNAMIXEL_POS_X - DRIVING_JOINTA_X}"/>
+  <xacro:property name="L_DRIVING_POS_Y" value="${DYNAMIXEL_POS_Y - DYNAMIXEL_JOINTB_Y - DRIVING_JOINTA_Y}"/>
+  <!-- RIGHT -->
+  <xacro:property name="R_DRIVING_ROT_Z" value="${PI}"/>
+  <xacro:property name="R_DRIVING_POS_X" value="${-DYNAMIXEL_POS_X + DRIVING_JOINTA_X}"/>
+  <xacro:property name="R_DRIVING_POS_Y" value="${DYNAMIXEL_POS_Y - DYNAMIXEL_JOINTB_Y + DRIVING_JOINTA_Y}"/>
+
+  <xacro:property name="DRIVING_POS_Z" value="${DYNAMIXEL_TOP_POS_Z - DYNAMIXEL_Z/2 - DRIVING_Z - 0.0045}"/>
+  <xacro:property name="DRIVING_JOINTB_X" value="0.063"/>
+  <xacro:property name="DRIVING_JOINTB_Y" value="0.013"/>
+
+  <!-- DRIVEN LINK -->
+  <xacro:property name="DRIVEN_X" value="0.026"/>
+  <xacro:property name="DRIVEN_Y" value="0.226"/>
+  <xacro:property name="DRIVEN_Z" value="0.004"/>
+  <xacro:property name="DRIVEN_JOINTA_X" value="0.013"/>
+  <xacro:property name="DRIVEN_JOINTA_Y" value="0.013"/>
+  <xacro:property name="DRIVEN_JOINTA_Z" value="${DRIVEN_Z/2}"/>
+  <!-- LEFT -->
+  <xacro:property name="L_DRIVEN_ROT_Z" value="${-PI/2+ROT}"/>
+  <xacro:property name="L_DRIVEN_POS_X" value="${L_DRIVING_POS_X + DRIVING_JOINTB_X + math.cos(ROT)*(-DRIVEN_JOINTA_X) - math.sin(ROT)*(DRIVEN_JOINTA_Y)}"/>
+  <xacro:property name="L_DRIVEN_POS_Y" value="${L_DRIVING_POS_Y + DRIVING_JOINTB_Y + math.sin(ROT)*(-DRIVEN_JOINTA_X) + math.cos(ROT)*(DRIVEN_JOINTA_Y)}"/>
+  <!-- RIGHT -->
+  <xacro:property name="R_DRIVEN_ROT_Z" value="${-PI/2-ROT}"/>
+  <xacro:property name="R_DRIVEN_POS_X" value="${R_DRIVING_POS_X - DRIVING_JOINTB_X + math.cos(-ROT)*(-DRIVEN_JOINTA_X) - math.sin(-ROT)*(DRIVEN_JOINTA_Y)}"/>
+  <xacro:property name="R_DRIVEN_POS_Y" value="${R_DRIVING_POS_Y - DRIVING_JOINTB_Y + math.sin(-ROT)*(-DRIVEN_JOINTA_X) + math.cos(-ROT)*(DRIVEN_JOINTA_Y)}"/>
+
+  <xacro:property name="DRIVEN_POS_Z" value="${DRIVING_POS_Z - DRIVING_Z - 0.01}"/>
+  <xacro:property name="DRIVEN_JOINTB_X" value="0.013"/>
+  <xacro:property name="DRIVEN_JOINTB_Y" value="0.213"/>
+
+  <!-- MISUMI FT (final link) -->
+  <xacro:property name="MISUMIFT_X" value="0.268"/>
+  <xacro:property name="MISUMIFT_Y" value="0.018"/>
+  <xacro:property name="MISUMIFT_Z" value="0.009"/>
+  <xacro:property name="MISUMIFT_JOINTA_X" value="0.009"/>
+  <xacro:property name="MISUMIFT_JOINTA_Y" value="0.009"/>
+  <xacro:property name="MISUMIFT_JOINTA_Z" value="${MISUMIFT_Z/2}"/>
+  <xacro:property name="MISUMIFT_JOINTB_X" value="0.059"/>
+  <xacro:property name="MISUMIFT_JOINTB_Y" value="0.009"/>
+  <xacro:property name="MISUMIFT_JOINTB_Z" value="${MISUMIFT_Z/2}"/>
+  <!-- LEFT -->
+  <xacro:property name="L_MISUMIFT_ROT_Z" value="${PI}"/>
+  <xacro:property name="L_MISUMIFT_POS_X" value="${L_DRIVEN_POS_X + math.cos(ROT)*(DRIVEN_JOINTB_X) - math.sin(ROT)*(-DRIVEN_JOINTB_Y) + MISUMIFT_JOINTA_X}"/>
+  <xacro:property name="L_MISUMIFT_POS_Y" value="${L_DRIVEN_POS_Y + math.sin(ROT)*(DRIVEN_JOINTB_X) + math.cos(ROT)*(-DRIVEN_JOINTB_Y) + MISUMIFT_JOINTA_Y}"/>
+  <!-- RIGHT -->
+  <xacro:property name="R_MISUMIFT_ROT_Z" value="${0}"/>
+  <xacro:property name="R_MISUMIFT_POS_X" value="${R_DRIVEN_POS_X + math.cos(-ROT)*(DRIVEN_JOINTB_X) - math.sin(-ROT)*(-DRIVEN_JOINTB_Y) - MISUMIFT_JOINTA_X}"/>
+  <xacro:property name="R_MISUMIFT_POS_Y" value="${R_DRIVEN_POS_Y + math.sin(-ROT)*(DRIVEN_JOINTB_X) + math.cos(-ROT)*(-DRIVEN_JOINTB_Y) - MISUMIFT_JOINTA_Y}"/>
+
+  <xacro:property name="MISUMIFT_POS_Z" value="${DRIVEN_POS_Z - MISUMIFT_Z - 0.005}"/>
 
   <!-- SHOULDER PLATE -->
   <xacro:property name="SHOULDER_PLATE_X" value="0.03"/>
