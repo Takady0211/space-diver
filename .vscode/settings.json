@@ -1,4 +1,6 @@
 {
+  "git.pruneOnFetch": true,
+  "git.autofetch": true,
   "editor.formatOnSave": true,
   "files.associations": {
     "functional": "cpp",
