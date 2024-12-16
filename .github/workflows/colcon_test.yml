@@ -7,7 +7,7 @@ on:
       - develop
   push:
     branches:  # If you want to run in a feature branch, please specify here.
-      - feature/installCI
+      - feature/example
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
