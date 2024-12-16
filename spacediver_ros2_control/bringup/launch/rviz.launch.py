@@ -4,7 +4,6 @@ from ament_index_python.packages import get_package_share_directory
 
 from launch import LaunchDescription
 from launch_ros.actions import Node
-from launch.actions import DeclareLaunchArgument
 from launch.substitutions import LaunchConfiguration
 import xacro
 
@@ -18,6 +17,7 @@ spacediver_urdf_path = os.path.join(
     pkg_dir, "description", "urdf", "spacediver_dual_arm.urdf")
 rviz_path = os.path.join(pkg_dir, "description", "rviz", "simple_config.rviz")
 
+
 def parse_xacro(xacro_path, xml_path):
     doc = xacro.process_file(xacro_path)
     robot_desc = doc.toprettyxml(indent=' ')
@@ -25,9 +25,11 @@ def parse_xacro(xacro_path, xml_path):
     f.write(robot_desc)
     f.close()
 
+
 def file_contents(file):
     with open(file) as f:
         return f.read()
+
 
 def generate_launch_description():
 
@@ -42,7 +44,7 @@ def generate_launch_description():
             name='robot_state_publisher',
             output='screen',
             parameters=[{
-                'robot_description': file_contents(spacediver_urdf_path),    
+                'robot_description': file_contents(spacediver_urdf_path),
                 'use_sim_time': use_sim_time
             }],
         ),

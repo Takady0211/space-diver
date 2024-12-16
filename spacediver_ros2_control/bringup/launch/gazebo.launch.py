@@ -1,5 +1,4 @@
 import os
-from re import L
 
 from ament_index_python.packages import get_package_share_directory
 
@@ -30,7 +29,8 @@ pkg_dir = get_package_share_directory("spacediver_ros2_control")
 spacediver_urdf_xacro_path = os.path.join(
     pkg_dir, "description", "urdf", "spacediver.urdf.xacro"
 )
-spacediver_urdf_path = os.path.join(pkg_dir, "description", "urdf", "spacediver.urdf")
+spacediver_urdf_path = os.path.join(
+    pkg_dir, "description", "urdf", "spacediver.urdf")
 spacediver_sdf_xacro_path = os.path.join(
     pkg_dir, "description", "gazebo", "models", "spacediver.sdf.xacro"
 )
@@ -40,7 +40,8 @@ spacediver_sdf_path = os.path.join(
 controller_config = os.path.join(
     pkg_dir, "bringup", "config", "spacediver_controllers.yaml"
 )
-rviz_path = os.path.join(pkg_dir, "description", "rviz", "spacediver_config.rviz")
+rviz_path = os.path.join(
+    pkg_dir, "description", "rviz", "spacediver_config.rviz")
 world_path = os.path.join(
     pkg_dir, "description", "gazebo", "worlds", "underwater.world"
 )

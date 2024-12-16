@@ -10,16 +10,22 @@ from launch.substitutions import LaunchConfiguration
 from launch.actions import DeclareLaunchArgument
 import xacro
 
-controller_list = ['forward_position_controller', 'forward_effort_controller', 'feedback_effort_controller',
-                   'forward_position_controller_single_arm', 'forward_effort_controller_single_arm', 'feedback_effort_controller_single_arm']
+controller_list = ['forward_position_controller',
+                   'forward_effort_controller',
+                   'feedback_effort_controller',
+                   'forward_position_controller_single_arm',
+                   'forward_effort_controller_single_arm',
+                   'feedback_effort_controller_single_arm']
 
 # User settings
 use_sim_time = LaunchConfiguration('use_sim_time', default='true')
-use_gazebo = LaunchConfiguration('use_gazebo', default='false') # TODO: Implement this feature
-controller_name = controller_list[5] # Select controller from controller_list
+use_gazebo = LaunchConfiguration('use_gazebo', default='false')  # TODO: Implement this feature
+controller_name = controller_list[5]  # Select controller from controller_list
 
 # Path setting for xacro, urdf, rviz, and world files
-# Pay attention to the pkg_dir is ".../spacediver_ws/install/spacediver_ros2_control/share/spacediver_ros2_control" not under this repository.
+# Pay attention to the pkg_dir is
+# ".../spacediver_ws/install/spacediver_ros2_control/share/spacediver_ros2_control"
+# not under this repository.
 pkg_dir = get_package_share_directory("spacediver_ros2_control")
 spacediver_urdf_xacro_path = os.path.join(
     pkg_dir, "description", "urdf", "spacediver.urdf.xacro")
@@ -29,8 +35,11 @@ spacediver_sdf_xacro_path = os.path.join(
     pkg_dir, "description", "gazebo", "models", "spacediver.sdf.xacro")
 spacediver_sdf_path = os.path.join(
     pkg_dir, "description", "gazebo", "models", "spacediver.sdf")
-rviz_path = os.path.join(pkg_dir, "description", "rviz", "spacediver_config.rviz")
-world_path = os.path.join(pkg_dir, "description", "gazebo", "worlds", "underwater.world")
+rviz_path = os.path.join(
+    pkg_dir, "description", "rviz", "spacediver_config.rviz")
+world_path = os.path.join(
+    pkg_dir, "description", "gazebo", "worlds", "underwater.world")
+
 
 def parse_xacro(xacro_path, xml_path):
     doc = xacro.process_file(xacro_path)
@@ -52,8 +61,8 @@ def generate_launch_description():
 
     # Declare the launch arguments
     declare_sdf_model_path_cmd = DeclareLaunchArgument(
-      name='sdf_model', 
-      default_value=spacediver_sdf_path, 
+      name='sdf_model',
+      default_value=spacediver_sdf_path,
       description='Absolute path to robot sdf file')
 
     # Controller spawners Node
@@ -64,11 +73,11 @@ def generate_launch_description():
                    "/controller_manager"]
     )
 
-    controller_spawner = Node( 
+    controller_spawner = Node(
         package="controller_manager",
         executable="spawner",
         arguments=[controller_name, "--controller-manager",
-                     "/controller_manager"]
+                   "/controller_manager"]
     )
 
     # Robot state publisher
@@ -90,7 +99,6 @@ def generate_launch_description():
         parameters=[{'use_sim_time': use_sim_time}],
         arguments=[spacediver_urdf_path]
     )
-    
 
     rviz2 = Node(
         package="rviz2",
@@ -110,7 +118,7 @@ def generate_launch_description():
     robot_spawner = Node(
         package="gazebo_ros",
         executable="spawn_entity.py",
-        arguments=["-entity", "spacediver", "-file", sdf_model, 
+        arguments=["-entity", "spacediver", "-file", sdf_model,
                    "-x", "0", "-y", "0", "-z", "0", "-Y", "0"],
         output="screen"
     )
@@ -118,7 +126,7 @@ def generate_launch_description():
     # Create the launch description and populate
     ld = LaunchDescription()
 
-    # Add controllers 
+    # Add controllers
     ld.add_action(joint_state_broadcaster_spawner)
     ld.add_action(controller_spawner)
     ld.add_action(end_effector_trajectory_controller)
