@@ -23,6 +23,7 @@
     "rosdep",
     "rviz",
     "spacediver",
+    "spacedyn",
     "urdf",
     "xacro"
   ]

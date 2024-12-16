@@ -2,29 +2,33 @@
 #include "eigen3/Eigen/Dense"
 #include "tf2_eigen/tf2_eigen.hpp"
 
-namespace floating_robot_controller {
+namespace floating_robot_controller
+{
 
 Trajectory::Trajectory(
-    const rclcpp::Time &current_time,
-    const floating_robot_interfaces::msg::EndEffectorTrajectoryPoint
-        &current_point) {
+  const rclcpp::Time & current_time,
+  const floating_robot_interfaces::msg::EndEffectorTrajectoryPoint
+  & current_point)
+{
   trajectory_start_time_ = current_time;
   set_point_before_trajectory_msg(current_time, current_point);
 }
 // Trajectory
 
 void Trajectory::set_point_before_trajectory_msg(
-    const rclcpp::Time &current_time,
-    const floating_robot_interfaces::msg::EndEffectorTrajectoryPoint
-        &current_point) {
+  const rclcpp::Time & current_time,
+  const floating_robot_interfaces::msg::EndEffectorTrajectoryPoint
+  & current_point)
+{
   time_before_traj_msg_ = current_time;
   state_before_traj_mgs_ = current_point;
 } // set_point_before_trajectory_msg
 
 void Trajectory::update(
-    floating_robot_interfaces::msg::EndEffectorTrajectory joint_trajectory,
-    const floating_robot_interfaces::msg::EndEffectorTrajectoryPoint
-        &current_point) {
+  floating_robot_interfaces::msg::EndEffectorTrajectory joint_trajectory,
+  const floating_robot_interfaces::msg::EndEffectorTrajectoryPoint
+  & current_point)
+{
   trajectory_msg_ = joint_trajectory;
   auto current_time = static_cast<rclcpp::Time>(joint_trajectory.header.stamp);
   trajectory_start_time_ = current_time;
@@ -33,12 +37,13 @@ void Trajectory::update(
 } // update
 
 bool Trajectory::sample(
-    const rclcpp::Time &sample_time, double &sec_to_point,
-    floating_robot_interfaces::msg::EndEffectorTrajectoryPoint &output_state,
-    floating_robot_interfaces::msg::EndEffectorTrajectoryPoint
-        &first_goal_state,
-    TrajectoryPointConstIter &start_segment_itr,
-    TrajectoryPointConstIter &end_segment_itr) {
+  const rclcpp::Time & sample_time, double & sec_to_point,
+  floating_robot_interfaces::msg::EndEffectorTrajectoryPoint & output_state,
+  floating_robot_interfaces::msg::EndEffectorTrajectoryPoint
+  & first_goal_state,
+  TrajectoryPointConstIter & start_segment_itr,
+  TrajectoryPointConstIter & end_segment_itr)
+{
   if (trajectory_msg_.points.empty()) {
     start_segment_itr = end();
     end_segment_itr = end();
@@ -54,22 +59,24 @@ bool Trajectory::sample(
   }
 
   output_state = floating_robot_interfaces::msg::EndEffectorTrajectoryPoint();
-  auto &first_point_in_msg = trajectory_msg_.points[0];
+  auto & first_point_in_msg = trajectory_msg_.points[0];
   const rclcpp::Time first_point_timestamp =
-      trajectory_start_time_ + first_point_in_msg.time_from_start;
+    trajectory_start_time_ + first_point_in_msg.time_from_start;
 
   // current time hasn't reached traj time of the first point in the msg yet
   if (sample_time < first_point_timestamp) {
     sec_to_point = first_point_timestamp.seconds() - sample_time.seconds();
     // If trajectory is is IGNORE, skip interpolation
     if (first_point_in_msg.path_generation_id ==
-        floating_robot_interfaces::msg::EndEffectorTrajectoryPoint::
-            IGNORE_TRAJECTORY) {
+      floating_robot_interfaces::msg::EndEffectorTrajectoryPoint::
+      IGNORE_TRAJECTORY)
+    {
       output_state = trajectory_start_state_;
     } else {
-      interpolate_between_points(trajectory_start_time_,
-                                 trajectory_start_state_, first_point_timestamp,
-                                 first_point_in_msg, sample_time, output_state);
+      interpolate_between_points(
+        trajectory_start_time_,
+        trajectory_start_state_, first_point_timestamp,
+        first_point_in_msg, sample_time, output_state);
     }
     first_goal_state = first_point_in_msg;
     start_segment_itr = begin(); // no segments before the first
@@ -81,8 +88,8 @@ bool Trajectory::sample(
   // trajectory current time is between trajectory stamps
   const auto last_idx = trajectory_msg_.points.size() - 1;
   for (size_t i = 0; i < last_idx; ++i) {
-    auto &point = trajectory_msg_.points[i];
-    auto &next_point = trajectory_msg_.points[i + 1];
+    auto & point = trajectory_msg_.points[i];
+    auto & next_point = trajectory_msg_.points[i + 1];
 
     const rclcpp::Time t0 = trajectory_start_time_ + point.time_from_start;
     const rclcpp::Time t1 = trajectory_start_time_ + next_point.time_from_start;
@@ -96,15 +103,17 @@ bool Trajectory::sample(
       sec_to_point = t1.seconds() - sample_time.seconds();
       // If interpolation is disabled, just forward the next waypoint
       if (first_point_in_msg.path_generation_id ==
-          floating_robot_interfaces::msg::EndEffectorTrajectoryPoint::
-              IGNORE_TRAJECTORY) {
+        floating_robot_interfaces::msg::EndEffectorTrajectoryPoint::
+        IGNORE_TRAJECTORY)
+      {
         output_state = next_point;
       } else {
         // Do interpolation
         // it changes points only if position and velocity do not exist, but
         // their derivatives
-        interpolate_between_points(t0, point, t1, next_point, sample_time,
-                                   output_state);
+        interpolate_between_points(
+          t0, point, t1, next_point, sample_time,
+          output_state);
       }
       first_goal_state = next_point;
       start_segment_itr = begin() + i;
@@ -148,12 +157,13 @@ bool Trajectory::sample(
 } // sample
 
 void Trajectory::interpolate_between_points(
-    const rclcpp::Time &time_a,
-    const floating_robot_interfaces::msg::EndEffectorTrajectoryPoint &state_a,
-    const rclcpp::Time &time_b,
-    const floating_robot_interfaces::msg::EndEffectorTrajectoryPoint &state_b,
-    const rclcpp::Time &sample_time,
-    floating_robot_interfaces::msg::EndEffectorTrajectoryPoint &output) {
+  const rclcpp::Time & time_a,
+  const floating_robot_interfaces::msg::EndEffectorTrajectoryPoint & state_a,
+  const rclcpp::Time & time_b,
+  const floating_robot_interfaces::msg::EndEffectorTrajectoryPoint & state_b,
+  const rclcpp::Time & sample_time,
+  floating_robot_interfaces::msg::EndEffectorTrajectoryPoint & output)
+{
   // NOW: IGNORING TWIST AND ACCEL
   //
   //
@@ -187,7 +197,7 @@ void Trajectory::interpolate_between_points(
   delta_ori = end_ori * start_ori.conjugate();
   axis = delta_ori.vec().normalized(); // Rotation axis
   theta = start_ori.angularDistance(end_ori) *
-          2; // Cuz quaternion angle is half as rotation angle
+    2;       // Cuz quaternion angle is half as rotation angle
 
   // double path_len_btwn_points;
   double normed_path_so_far; // 0 at ta, 1 at tb
@@ -202,50 +212,53 @@ void Trajectory::interpolate_between_points(
 
   // Calculate normalized velocity
   switch (state_b.time_scaling_id) {
-  case floating_robot_interfaces::msg::EndEffectorTrajectoryPoint::
+    case floating_robot_interfaces::msg::EndEffectorTrajectoryPoint::
       CONSTANT_TIME_SCALING:
-    // Linier and angular velocities are all constant
-    normed_vel = 1 / duration_btwn_points.seconds(); // [1/s]
-    normed_path_so_far = duration_so_far.seconds() /
-                         duration_btwn_points.seconds(); // 0 at start 1 at end
-    break;
+      // Linier and angular velocities are all constant
+      normed_vel = 1 / duration_btwn_points.seconds(); // [1/s]
+      normed_path_so_far = duration_so_far.seconds() /
+        duration_btwn_points.seconds();                  // 0 at start 1 at end
+      break;
 
-  case floating_robot_interfaces::msg::EndEffectorTrajectoryPoint::
+    case floating_robot_interfaces::msg::EndEffectorTrajectoryPoint::
       POLY3_TIME_SCALING:
-    // Polynomial time scaling 3 order
-    normed_vel = 6 * duration_so_far.seconds() /
-                     std::pow(duration_btwn_points.seconds(), 2) -
-                 6 * std::pow(duration_so_far.seconds(), 2) /
-                     std::pow(duration_btwn_points.seconds(),
-                              3); // [1/s] 0 at start and end
-    normed_path_so_far =
-        3 * std::pow(duration_so_far.seconds() / duration_btwn_points.seconds(),
-                     2) -
-        2 * std::pow(duration_so_far.seconds() / duration_btwn_points.seconds(),
-                     3); // 0 at start 1 at end
-    break;
+      // Polynomial time scaling 3 order
+      normed_vel = 6 * duration_so_far.seconds() /
+        std::pow(duration_btwn_points.seconds(), 2) -
+        6 * std::pow(duration_so_far.seconds(), 2) /
+        std::pow(
+        duration_btwn_points.seconds(),
+        3);                       // [1/s] 0 at start and end
+      normed_path_so_far =
+        3 * std::pow(
+        duration_so_far.seconds() / duration_btwn_points.seconds(),
+        2) -
+        2 * std::pow(
+        duration_so_far.seconds() / duration_btwn_points.seconds(),
+        3);              // 0 at start 1 at end
+      break;
 
-  default:
-    break;
+    default:
+      break;
   }
 
   // Calculate output state
   switch (state_b.path_generation_id) {
-  case floating_robot_interfaces::msg::EndEffectorTrajectoryPoint::
+    case floating_robot_interfaces::msg::EndEffectorTrajectoryPoint::
       STRAIGHT_LINE_PATH:
-    // Ignore twist and accel this case
-    // Interpolate position
-    output_pos = start_pos + (end_pos - start_pos) * normed_path_so_far;
-    output_vel = (end_pos - start_pos) * normed_vel;
-    // Interpolate orientation
-    output_ori = start_ori.slerp(
+      // Ignore twist and accel this case
+      // Interpolate position
+      output_pos = start_pos + (end_pos - start_pos) * normed_path_so_far;
+      output_vel = (end_pos - start_pos) * normed_vel;
+      // Interpolate orientation
+      output_ori = start_ori.slerp(
         normed_path_so_far, end_ori); // theta = omega * t, q(t)=a q_A + b q_B
-    output_ang_vel = axis * normed_vel * theta;
-    break;
+      output_ang_vel = axis * normed_vel * theta;
+      break;
 
-  default:
-    // Ignore trajectory, if not set path_generation_id or IGNORE_TRAJECTORY
-    break;
+    default:
+      // Ignore trajectory, if not set path_generation_id or IGNORE_TRAJECTORY
+      break;
   }
 
   output.pose.position = tf2::toMsg(output_pos);
@@ -255,11 +268,13 @@ void Trajectory::interpolate_between_points(
 
 } // interpolate_between_points
 
-TrajectoryPointConstIter Trajectory::begin() const {
+TrajectoryPointConstIter Trajectory::begin() const
+{
   return trajectory_msg_.points.begin();
 } // begin
 
-TrajectoryPointConstIter Trajectory::end() const {
+TrajectoryPointConstIter Trajectory::end() const
+{
   return trajectory_msg_.points.end();
 } // end
 

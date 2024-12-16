@@ -20,24 +20,27 @@
 
 //  TODO: Change translator into tf2 from custom
 
-namespace floating_robot_controller {
-class EndEffectorTrajectoryController : public rclcpp::Node {
+namespace floating_robot_controller
+{
+class EndEffectorTrajectoryController : public rclcpp::Node
+{
 public:
   using FollowTraject =
-      floating_robot_interfaces::action::FollowEndEffectorTrajectory;
+    floating_robot_interfaces::action::FollowEndEffectorTrajectory;
   using ServerGoalHandleTraject =
-      rclcpp_action::ServerGoalHandle<FollowTraject>;
+    rclcpp_action::ServerGoalHandle<FollowTraject>;
 
-  EndEffectorTrajectoryController(const char *node_name,
-                                  const char *action_name,
-                                  const char *path_to_robot_model);
+  EndEffectorTrajectoryController(
+    const char * node_name,
+    const char * action_name,
+    const char * path_to_robot_model);
 
 private:
   // -------------------------- Basic functions --------------------------
   // To compare with msg stamp, ros_clock has to use ros time, not system time
   int dt_millisec_;
   rclcpp::Clock ros_clock_;
-  rclcpp::Time now() { return ros_clock_.now(); }
+  rclcpp::Time now() {return ros_clock_.now();}
   rclcpp::Time controller_start_time_;
   rclcpp::Time get_current_time();
   void timer_callback();
@@ -49,14 +52,14 @@ private:
 
   // // Command
   rclcpp::Publisher<trajectory_msgs::msg::JointTrajectory>::SharedPtr
-      joint_trajectory_publisher_;
+    joint_trajectory_publisher_;
   void publish_command(std_msgs::msg::Float64MultiArray msg);
 
   // // State
   // // // Joint state
   sensor_msgs::msg::JointState joint_state_;
   rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr
-      joint_state_subscriber_;
+    joint_state_subscriber_;
   void joint_state_callback(const sensor_msgs::msg::JointState::SharedPtr msg);
   // // // Base state
   nav_msgs::msg::Odometry odm_base_;
@@ -70,7 +73,7 @@ private:
   std_msgs::msg::Float64MultiArray
   compute_joint_effort(geometry_msgs::msg::Twist end_effector_velocity);
   std_msgs::msg::Float64MultiArray compute_joint_velocity(
-      std::vector<geometry_msgs::msg::Twist> end_effector_velocities);
+    std::vector<geometry_msgs::msg::Twist> end_effector_velocities);
   void update_robot();
   //   Eigen::VectorXd solve_constrained_least_squares(Eigen::MatrixXd A,
   //                                                   Eigen::VectorXd b,
@@ -88,8 +91,9 @@ private:
   // Action handling
   rclcpp_action::Server<FollowTraject>::SharedPtr action_server_;
   rclcpp_action::GoalResponse
-  handle_goal(const rclcpp_action::GoalUUID &uuid,
-              std::shared_ptr<const FollowTraject::Goal> goal);
+  handle_goal(
+    const rclcpp_action::GoalUUID & uuid,
+    std::shared_ptr<const FollowTraject::Goal> goal);
   rclcpp_action::CancelResponse
   handle_cancel(const std::shared_ptr<ServerGoalHandleTraject> goal_handle);
   void
@@ -101,14 +105,14 @@ private:
   /// If true, a velocity feedforward term plus corrective PID term is used
   bool use_closed_loop_pid_adapter_;
   std::vector<std::vector<control_toolbox::Pid>>
-      pids_vector_; // ee_num * joint_num
+  pids_vector_;     // ee_num * joint_num
   double point_follow_gain_r_;
   double point_follow_gain_ff_;
-  void init_pids(std::vector<control_toolbox::Pid> &pids);
+  void init_pids(std::vector<control_toolbox::Pid> & pids);
   geometry_msgs::msg::Twist compute_pids_command(
-      std::vector<control_toolbox::Pid> &pids,
-      floating_robot_interfaces::msg::EndEffectorTrajectoryPoint des,
-      floating_robot_interfaces::msg::EndEffectorTrajectoryPoint real);
+    std::vector<control_toolbox::Pid> & pids,
+    floating_robot_interfaces::msg::EndEffectorTrajectoryPoint des,
+    floating_robot_interfaces::msg::EndEffectorTrajectoryPoint real);
   // ---------------------------------------------------------------------
 }; // EndEffectorTrajectoryController
 } // namespace floating_robot_controller
