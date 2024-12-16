@@ -123,7 +123,7 @@ git checkout feature/******* -b
 This command will run colcon test for all packages except for `spacedyn_ros`.jo
 
 ```bash
-colcon build && colcon test --packages-ignore-regex 'spacedyn_ros' 'spd_example' && colcon test-result --verbose
+colcon build && colcon test --packages-ignore 'spacedyn_ros' 'spd_example' && colcon test-result --verbose
 ```
 
 ## References

@@ -31,6 +31,7 @@
     "rclcpp",
     "remappings",
     "rosdep",
+    "rosdistro",
     "rosidl",
     "rviz",
     "schematypens",
