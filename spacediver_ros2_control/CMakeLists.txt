@@ -19,7 +19,7 @@ find_package(gazebo_ros_pkgs REQUIRED)
 
 ## Install rules
 install(
-  DIRECTORY 
+  DIRECTORY
     bringup
     description
   DESTINATION share/${PROJECT_NAME}

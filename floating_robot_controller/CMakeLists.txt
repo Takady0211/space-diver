@@ -50,8 +50,8 @@ add_executable(end_effector_trajectory_controller
 add_executable(client_example
   src/client_example.cpp)
 target_link_libraries(end_effector_trajectory_controller spacedyn_ros::spacedyn_ros)
-ament_target_dependencies(end_effector_trajectory_controller ${THIS_PACKAGE_INCLUDE_DEPENDS} )
-ament_target_dependencies(client_example ${THIS_PACKAGE_INCLUDE_DEPENDS} )
+ament_target_dependencies(end_effector_trajectory_controller ${THIS_PACKAGE_INCLUDE_DEPENDS})
+ament_target_dependencies(client_example ${THIS_PACKAGE_INCLUDE_DEPENDS})
 
 #include directories
 target_include_directories(end_effector_trajectory_controller
@@ -69,7 +69,7 @@ target_include_directories(client_example
 install(DIRECTORY include/
   DESTINATION include)
 
-install(DIRECTORY 
+install(DIRECTORY
   model
   DESTINATION share/${PROJECT_NAME}/
 )

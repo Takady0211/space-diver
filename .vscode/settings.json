@@ -1,4 +1,6 @@
 {
+  "git.pruneOnFetch": true,
+  "git.autofetch": true,
   "editor.formatOnSave": true,
   "files.associations": {
     "functional": "cpp",
@@ -16,14 +18,30 @@
   },
   "C_Cpp.errorSquiggles": "enabled",
   "cSpell.words": [
+    "akiyoshi",
     "bringup",
+    "buildtool",
     "colcon",
+    "cpplint",
+    "DYNAMIXEL",
+    "eigen",
+    "endforeach",
     "feedforward",
+    "GNUCXX",
+    "pkgs",
+    "pluginlib",
+    "rclcpp",
     "remappings",
     "rosdep",
+    "rosdistro",
+    "rosidl",
     "rviz",
+    "schematypens",
     "spacediver",
+    "spacedyn",
     "urdf",
+    "Wextra",
+    "Wpedantic",
     "xacro"
   ]
 }

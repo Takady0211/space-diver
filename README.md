@@ -118,6 +118,14 @@ git checkout feature/******* -b
 > [!IMPORTANT]
 > It's important to avoid developing directory under develop branch, nor main branch.
 
+### How to Run Code Test
+
+This command will run colcon test for all packages except for `spacedyn_ros`.jo
+
+```bash
+colcon build && colcon test --packages-ignore 'spacedyn_ros' 'spd_example' && colcon test-result --verbose
+```
+
 ## References
 
 - [How to create a gazebo model using SDF](https://www.theconstruct.ai/gazebo-5-minutes-004-create-gazebo-model-using-sdf/)
