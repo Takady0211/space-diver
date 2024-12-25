@@ -49,10 +49,20 @@ https://gbiggs.github.io/rosjp_urdf_tutorial_text/manipulator_urdf.html -->
             filename="package://spacediver_ros2_control/description/gazebo/models/meshes/shoulder_plate.STL" />
         </geometry>
       </collision>
-      <xacro:inertial_box mass="${LINK_1_MASS}" x="${LINK_1_X/2}" y="${LINK_1_Y/2}"
-        z="${LINK_1_Z/2}">
-        <origin xyz="0 0 ${LINK_1_Z/2}" rpy="0 0 0" />
-      </xacro:inertial_box>
+      <inertial>
+        <origin
+          xyz="157.37 15.17 32.18"
+          rpy="0 0 ${radians(90)}" />
+        <mass
+          value="152" />
+        <inertia
+          ixx="400463.56"
+          ixy="0.00"
+          ixz="156.80"
+          iyy="54063.82"
+          iyz="-1.4424E-06"
+          izz="369542.91" />
+      </inertial>
     </link>
 
     <!-- SHOULDER TO BOTTOM DYNAMIXEL -->
@@ -84,10 +94,17 @@ https://gbiggs.github.io/rosjp_urdf_tutorial_text/manipulator_urdf.html -->
           <box size="${DYNAMIXEL_X} ${DYNAMIXEL_Y} ${DYNAMIXEL_Z}" />
         </geometry>
       </collision>
-      <xacro:inertial_box mass="${LINK_1_MASS}" x="${LINK_1_X/2}" y="${LINK_1_Y/2}"
-        z="${LINK_1_Z/2}">
-        <origin xyz="0 0 ${LINK_1_Z/2}" rpy="0 0 0" />
-      </xacro:inertial_box>
+      <inertial>
+        <origin
+          xyz="0 0 -0.0030083"
+          rpy="0 0 ${radians(90)}" />
+        <mass
+          value="3.1152" />
+        <!-- 不明点 -->
+        <xacro:inertial_box mass="${LINK_1_MASS}" x="${LINK_1_X/2}" y="${LINK_1_Y/2}"
+          z="${LINK_1_Z/2}">
+          <origin xyz="0 0 ${LINK_1_Z/2}" rpy="0 0 0" />
+        </xacro:inertial_box>
     </link>
 
     <!-- BOTTOM DYNAMIXEL TO MISUMI LN -->
@@ -126,10 +143,20 @@ https://gbiggs.github.io/rosjp_urdf_tutorial_text/manipulator_urdf.html -->
             filename="package://spacediver_ros2_control/description/gazebo/models/meshes/Link_MISUMI_LNMS16-10-200.STL" />
         </geometry>
       </collision>
-      <xacro:inertial_box mass="${LINK_1_MASS}" x="${LINK_1_X/2}" y="${LINK_1_Y/2}"
-        z="${LINK_1_Z/2}">
-        <origin xyz="0 0 ${LINK_1_Z/2}" rpy="0 0 0" />
-      </xacro:inertial_box>
+      <inertial>
+        <origin
+          xyz=" 234.53 4.17 139.95"
+          rpy="0 0 ${radians(90)}" />
+        <mass
+          value="473" />
+        <inertia
+          ixx="1474475.79"
+          ixy="0.00"
+          ixz="678078.58"
+          iyy="1833808.78"
+          iyz="0.00"
+          izz="365725.00" />
+      </inertial>
     </link>
 
     <!-- SHOULDER TO TOP DYNAMIXEL -->
@@ -161,6 +188,7 @@ https://gbiggs.github.io/rosjp_urdf_tutorial_text/manipulator_urdf.html -->
           <box size="${DYNAMIXEL_X} ${DYNAMIXEL_Y} ${DYNAMIXEL_Z}" />
         </geometry>
       </collision>
+      <!-- 不明点 -->
       <xacro:inertial_box mass="${LINK_1_MASS}" x="${LINK_1_X/2}" y="${LINK_1_Y/2}"
         z="${LINK_1_Z/2}">
         <origin xyz="0 0 ${LINK_1_Z/2}" rpy="0 0 0" />
@@ -211,10 +239,20 @@ https://gbiggs.github.io/rosjp_urdf_tutorial_text/manipulator_urdf.html -->
             filename="package://spacediver_ros2_control/description/gazebo/models/meshes/upper_arm_driving_link.STL" />
         </geometry>
       </collision>
-      <xacro:inertial_box mass="${LINK_1_MASS}" x="${LINK_1_X/2}" y="${LINK_1_Y/2}"
-        z="${LINK_1_Z/2}">
-        <origin xyz="0 0 ${LINK_1_Z/2}" rpy="0 0 0" />
-      </xacro:inertial_box>
+      <inertial>
+        <origin
+          xyz="214.98 38.67 39.12"
+          rpy="0 0 ${radians(90)}" />
+        <mass
+          value="7.30" />
+        <inertia
+          ixx="706.95"
+          ixy="0.00"
+          ixz="-788.79"
+          iyy="3292.20"
+          iyz="0.00"
+          izz="2604.72" />
+      </inertial>
     </link>
 
   </xacro:macro>
