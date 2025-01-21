@@ -15,7 +15,9 @@ namespace floating_robot_controller
 class EndEffectorTrajectoryClient : public rclcpp::Node
 {
 public:
-  EndEffectorTrajectoryClient(const char * node_name);
+  EndEffectorTrajectoryClient(
+    const std::string & yaml_goal,
+    const char * node_name);
 
 protected:
   // // Main control function

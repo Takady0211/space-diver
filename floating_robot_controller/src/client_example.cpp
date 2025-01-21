@@ -6,9 +6,13 @@
 namespace floating_robot_controller
 {
 EndEffectorTrajectoryClient::EndEffectorTrajectoryClient(
+  const std::string & yaml_goal,
   const char * node_name = "end_effect_trajectory_client")
 : Node(node_name)
 {
+  (void) yaml_goal;
+  RCLCPP_INFO(this->get_logger(), "YAML Goal: %s", yaml_goal.c_str());
+  
   // // End Effector Trajectory CLient Setting // //
   this->end_effec_trj_ctrl_clnt_ptr_ =
     rclcpp_action::create_client<FollowEndEffecTraject>(
@@ -170,9 +174,19 @@ void EndEffectorTrajectoryClient::end_effector_traject_result_callback(
 int main(int argc, char * argv[])
 {
   rclcpp::init(argc, argv);
+
+  if (argc != 2) {
+    RCLCPP_ERROR(
+      rclcpp::get_logger("rclcpp"),
+      "usage: <executable> <YAML_goal>");
+    return 1;
+  }
+
+  std::string yaml_goal = argv[1];
+
   rclcpp::spin(
     std::make_shared<
-      floating_robot_controller::EndEffectorTrajectoryClient>());
+      floating_robot_controller::EndEffectorTrajectoryClient>(yaml_goal));
   rclcpp::shutdown();
   return 0;
 }
