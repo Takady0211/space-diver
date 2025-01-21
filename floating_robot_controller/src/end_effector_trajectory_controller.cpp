@@ -326,7 +326,7 @@ void EndEffectorTrajectoryController::update_robot()
     odm_base_.twist.twist.angular.y, odm_base_.twist.twist.angular.z;
   robot_.overwriteBasePoseInWorldFrame(pose);
   robot_.overwriteBaseTwistInWorldFrame(twist);
-  robot_.overWriteJointState(joint_state_);
+  robot_.overwriteJointState(joint_state_);
   robot_.setStateVariable(
     spacedyn_ros::Kinematics::computeForward(robot_, true, true, false));
 }
