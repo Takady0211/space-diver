@@ -23,7 +23,8 @@ set(THIS_PACKAGE_INCLUDE_DEPENDS
   builtin_interfaces
   floating_robot_interfaces
   geometry_msgs
-  std_msgs)
+  std_msgs
+  yaml-cpp)
 
 # Find dependencies
 find_package(ament_cmake REQUIRED)
@@ -50,6 +51,7 @@ add_executable(end_effector_trajectory_controller
 add_executable(client_example
   src/client_example.cpp)
 target_link_libraries(end_effector_trajectory_controller spacedyn_ros::spacedyn_ros)
+target_link_libraries(client_example yaml-cpp)
 ament_target_dependencies(end_effector_trajectory_controller ${THIS_PACKAGE_INCLUDE_DEPENDS})
 ament_target_dependencies(client_example ${THIS_PACKAGE_INCLUDE_DEPENDS})
 

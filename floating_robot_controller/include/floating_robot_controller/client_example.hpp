@@ -28,7 +28,7 @@ protected:
     floating_robot_interfaces::action::FollowEndEffectorTrajectory;
   using ClientGoalHandleEndEffecTraject =
     rclcpp_action::ClientGoalHandle<FollowEndEffecTraject>;
-  void end_effector_traject_set_goal();
+  void end_effector_traject_set_goal(const std::string & yaml_goal);
   void end_effector_traject_send_goal();
   floating_robot_interfaces::action::FollowEndEffectorTrajectory::Goal
     end_effec_trj_goal_msg_ = FollowEndEffecTraject::Goal();
