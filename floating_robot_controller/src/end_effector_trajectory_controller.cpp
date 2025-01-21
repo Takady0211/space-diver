@@ -27,7 +27,7 @@ EndEffectorTrajectoryController::EndEffectorTrajectoryController(
   const char * action_name = "end_effector_trajectory_control",
   const char * path_to_robot_model =
   (package_share_directory + "/model/example.urdf").c_str())
-: Node(node_name), robot_(path_to_robot_model), ros_clock_(RCL_ROS_TIME)
+: Node(node_name), ros_clock_(RCL_ROS_TIME), robot_(path_to_robot_model)
 {
   using namespace std::placeholders;
 
