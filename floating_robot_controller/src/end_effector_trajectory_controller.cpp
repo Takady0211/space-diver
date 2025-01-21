@@ -275,6 +275,9 @@ std_msgs::msg::Float64MultiArray
 EndEffectorTrajectoryController::compute_joint_effort(
   geometry_msgs::msg::Twist end_effector_velocity)
 {
+  // Mark parameter as unused to avoid colcon build warning
+  (void)end_effector_velocity;
+
   std_msgs::msg::Float64MultiArray joint_effort;
   return joint_effort;
 }
