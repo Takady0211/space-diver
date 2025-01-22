@@ -45,6 +45,7 @@ void EndEffectorTrajectoryClient::timer_callback() {
 
 // End Effector Trajectory CLient
 void EndEffectorTrajectoryClient::end_effector_traject_set_goal(const std::string &yaml_goal) {
+  (void)yaml_goal;
   using Traject = floating_robot_interfaces::msg::EndEffectorTrajectory;
   using Point = floating_robot_interfaces::msg::EndEffectorTrajectoryPoint;
   Traject trajectory;
@@ -160,25 +161,40 @@ void EndEffectorTrajectoryClient::end_effector_traject_result_callback(
 
 int validate_goal(const std::string &yaml_goal) {
 
-  YAML::Node config;
+  YAML::Node parsed_yaml_goal;
 
   try {
-    config = YAML::Load(yaml_goal);
+    parsed_yaml_goal = YAML::Load(yaml_goal);
   } catch (const YAML::ParserException &e) {
     RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "YAML Parsing Error: %s",
                  e.what());
-    return 0;
+    return 1;
   }
 
-  if (config["goal"]) {
+  if (parsed_yaml_goal["goal"]) {
     try {
-      for (const auto &point : config["goal"]) {
+      
+      const auto &goal = parsed_yaml_goal["goal"];
+      const size_t goal_size = goal.size();
+
+      if (goal_size == 0) {
+        RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Array of points missing in YAML input");
+        return 1;
+      }
+
+      for (size_t i = 0; i < goal_size; i++) {
+
+        const auto &point = goal[i];
+
+        RCLCPP_INFO(rclcpp::get_logger("rclcpp"),
+              "Checking goal of end effector %zu", i+1);
+
         if (!point["pose"]["position"]["x"] ||
             !point["pose"]["position"]["y"] ||
             !point["pose"]["position"]["z"]) {
           RCLCPP_ERROR(rclcpp::get_logger("rclcpp"),
                        "Missing pose position { x, y, z } in YAML input");
-          return 0;
+          return 1;
         }
         if (!point["pose"]["orientation"]["x"] ||
             !point["pose"]["orientation"]["y"] ||
@@ -186,20 +202,20 @@ int validate_goal(const std::string &yaml_goal) {
             !point["pose"]["orientation"]["w"]) {
           RCLCPP_ERROR(rclcpp::get_logger("rclcpp"),
                        "Missing pose orientation { x, y, z, w } in YAML input");
-          return 0;
+          return 1;
         }
         if (!point["time_from_start"]) {
           RCLCPP_ERROR(rclcpp::get_logger("rclcpp"),
                        "Missing time_from_start in YAML input");
-          return 0;
+          return 1;
         }
         if (!point["path_generation_id"] || !point["time_scaling_id"]) {
           RCLCPP_ERROR(
               rclcpp::get_logger("rclcpp"),
               "Missing path_generation_id or time_scaling_id in YAML input");
-          return 0;
+          return 1;
         }
-        int id = point["id"].as<int>();
+        // int id = point["id"].as<int>();
         auto position = point["pose"]["position"];
         auto orientation = point["pose"]["orientation"];
         int time_from_start = point["time_from_start"].as<int>();
@@ -209,25 +225,30 @@ int validate_goal(const std::string &yaml_goal) {
             point["time_scaling_id"].as<std::string>();
 
         RCLCPP_INFO(rclcpp::get_logger("rclcpp"),
-                    "\n\n\nPoint ID: %d, Position: [%.2f, %.2f, %.2f], "
-                    "Orientation: [%.2f, %.2f, %.2f, %.2f]\n\n\n",
-                    id, position["x"].as<double>(), position["y"].as<double>(),
-                    position["z"].as<double>(), orientation["x"].as<double>(),
-                    orientation["y"].as<double>(),
-                    orientation["z"].as<double>(),
-                    orientation["w"].as<double>());
+              "\n\nEnd Effector: %zu\n"
+              "Position: [%.2f, %.2f, %.2f]\n"
+              "Orientation: [%.2f, %.2f, %.2f, %.2f]\n"
+              "Time from start: %d\n"
+              "Path generation ID: %s\n"
+              "Time scaling ID: %s\n\n",
+              i+1, position["x"].as<double>(), position["y"].as<double>(),
+              position["z"].as<double>(), orientation["x"].as<double>(),
+              orientation["y"].as<double>(),
+              orientation["z"].as<double>(),
+              orientation["w"].as<double>(), time_from_start,
+              path_generation_id.c_str(), time_scaling_id.c_str());
       }
     } catch (const YAML::TypedBadConversion<YAML::Node> &e) {
       RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "YAML Parsing Error: %s",
                    e.what());
-      return 0;
+      return 1;
     }
   } else {
     RCLCPP_ERROR(rclcpp::get_logger("rclcpp"),
                  "No 'goal' key found in YAML input");
-    return 0;
+    return 1;
   }
-  return 1;
+  return 0;
 }
 
 // Is it better to separate main function?
@@ -242,9 +263,9 @@ int main(int argc, char *argv[]) {
 
   std::string yaml_goal = argv[1];
 
-  const int valid_goal = validate_goal(yaml_goal);
+  const int invalid_goal = validate_goal(yaml_goal);
 
-  if (!valid_goal) {
+  if (invalid_goal) {
     RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Invalid YAML goal");
     return 1;
   }
