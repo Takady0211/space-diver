@@ -45,7 +45,6 @@ void EndEffectorTrajectoryClient::timer_callback() {
 
 // End Effector Trajectory CLient
 void EndEffectorTrajectoryClient::end_effector_traject_set_goal(const std::string &yaml_goal) {
-  (void)yaml_goal;
   using Traject = floating_robot_interfaces::msg::EndEffectorTrajectory;
   using Point = floating_robot_interfaces::msg::EndEffectorTrajectoryPoint;
   Traject trajectory;
@@ -53,6 +52,22 @@ void EndEffectorTrajectoryClient::end_effector_traject_set_goal(const std::strin
   trajectory.header.stamp = now();
   trajectory.header.stamp = now();
 
+  YAML::Node parsed_yaml_goal = YAML::Load(yaml_goal);
+
+  for (const auto &goal : parsed_yaml_goal["goal"]) {
+    point.pose.position.x = goal["pose"]["position"]["x"].as<double>();
+    point.pose.position.y = goal["pose"]["position"]["y"].as<double>();
+    point.pose.position.z = goal["pose"]["position"]["z"].as<double>();
+    point.pose.orientation.x = goal["pose"]["orientation"]["x"].as<double>();
+    point.pose.orientation.y = goal["pose"]["orientation"]["y"].as<double>();
+    point.pose.orientation.z = goal["pose"]["orientation"]["z"].as<double>();
+    point.pose.orientation.w = goal["pose"]["orientation"]["w"].as<double>();
+    point.time_from_start.sec = goal["time_from_start"].as<int>();
+    point.path_generation_id = Point::STRAIGHT_LINE_PATH;
+    point.time_scaling_id = Point::POLY3_TIME_SCALING;
+    trajectory.points.push_back(point);
+  }
+  /*
   // point 1
   point.pose.position.x = 1.3;
   point.pose.position.y = 0.2;
@@ -78,7 +93,7 @@ void EndEffectorTrajectoryClient::end_effector_traject_set_goal(const std::strin
   point.path_generation_id = Point::STRAIGHT_LINE_PATH;
   point.time_scaling_id = Point::POLY3_TIME_SCALING;
   trajectory.points.push_back(point);
-
+  */
   end_effec_trj_goal_msg_.trajectories.push_back(trajectory);
 }
 
