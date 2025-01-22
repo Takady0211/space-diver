@@ -36,32 +36,19 @@ https://gbiggs.github.io/rosjp_urdf_tutorial_text/manipulator_urdf.html -->
         </geometry>
         <material name="grey" />
       </visual>
-      <collision>
-        <origin
-          xyz="
-          ${0}
-          ${SHOULDER_JOINTA_X}
-          ${-SHOULDER_Z/2}
-        "
-          rpy="0 0 ${L_SHOULDER_ROT_Z}" />
-        <geometry>
-          <mesh
-            filename="package://spacediver_ros2_control/description/gazebo/models/meshes/shoulder_plate.STL" />
-        </geometry>
-      </collision>
       <inertial>
         <origin
-          xyz="157.37 15.17 32.18"
+          xyz="-0.05806 0.01517 0.03218"
           rpy="0 0 ${radians(90)}" />
         <mass
-          value="152" />
+          value="0.152" />
         <inertia
-          ixx="400463.56"
+          ixx="0.40046356"
           ixy="0.00"
-          ixz="156.80"
-          iyy="54063.82"
-          iyz="-1.4424E-06"
-          izz="369542.91" />
+          ixz="0.00015680"
+          iyy="0.05406382"
+          iyz="0.00"
+          izz="0.36954291" />
       </inertial>
     </link>
 
@@ -87,24 +74,21 @@ https://gbiggs.github.io/rosjp_urdf_tutorial_text/manipulator_urdf.html -->
           <box size="${DYNAMIXEL_X} ${DYNAMIXEL_Y} ${DYNAMIXEL_Z}" />
         </geometry>
         <material name="blue" />
-      </visual>
-      <collision>
-        <origin xyz="0 0 0" rpy="0 0 0" />
-        <geometry>
-          <box size="${DYNAMIXEL_X} ${DYNAMIXEL_Y} ${DYNAMIXEL_Z}" />
-        </geometry>
-      </collision>
+      </visual>  
       <inertial>
         <origin
-          xyz="0 0 -0.0030083"
+          xyz="0.190.91 -0.03620 0.03207"
           rpy="0 0 ${radians(90)}" />
         <mass
-          value="3.1152" />
-        <!-- 不明点 -->
-        <xacro:inertial_box mass="${LINK_1_MASS}" x="${LINK_1_X/2}" y="${LINK_1_Y/2}"
-          z="${LINK_1_Z/2}">
-          <origin xyz="0 0 ${LINK_1_Z/2}" rpy="0 0 0" />
-        </xacro:inertial_box>
+          value="0.08395" />
+        <inertia
+          ixx="0.03680554"
+          ixy="0.00"
+          ixz="0.00"
+          iyy="0.03139792"
+          iyz="0.00078981"
+          izz="0.02106717" />
+      </inertial>
     </link>
 
     <!-- BOTTOM DYNAMIXEL TO MISUMI LN -->
@@ -148,14 +132,14 @@ https://gbiggs.github.io/rosjp_urdf_tutorial_text/manipulator_urdf.html -->
           xyz=" 234.53 4.17 139.95"
           rpy="0 0 ${radians(90)}" />
         <mass
-          value="473" />
+          value="0.473" />
         <inertia
-          ixx="1474475.79"
+          ixx="1.47447579"
           ixy="0.00"
-          ixz="678078.58"
-          iyy="1833808.78"
+          ixz="0.67807858"
+          iyy="1.83380878"
           iyz="0.00"
-          izz="365725.00" />
+          izz="0.36572500" />
       </inertial>
     </link>
 
@@ -181,18 +165,21 @@ https://gbiggs.github.io/rosjp_urdf_tutorial_text/manipulator_urdf.html -->
           <box size="${DYNAMIXEL_X} ${DYNAMIXEL_Y} ${DYNAMIXEL_Z}" />
         </geometry>
         <material name="blue" />
-      </visual>
-      <collision>
-        <origin xyz="0 0 0" rpy="0 0 0" />
-        <geometry>
-          <box size="${DYNAMIXEL_X} ${DYNAMIXEL_Y} ${DYNAMIXEL_Z}" />
-        </geometry>
-      </collision>
-      <!-- 不明点 -->
-      <xacro:inertial_box mass="${LINK_1_MASS}" x="${LINK_1_X/2}" y="${LINK_1_Y/2}"
-        z="${LINK_1_Z/2}">
-        <origin xyz="0 0 ${LINK_1_Z/2}" rpy="0 0 0" />
-      </xacro:inertial_box>
+      </visual>  
+      <inertial>
+        <origin
+          xyz="0.190.91 0.06654 0.03207"
+          rpy="0 0 ${radians(90)}" />
+        <mass
+          value="0.08395" />
+        <inertia
+          ixx="0.03680554"
+          ixy="0.00"
+          ixz="0.00"
+          iyy="0.03139792"
+          iyz="0.00078981"
+          izz="0.02106717" />
+      </inertial>
     </link>
 
     <!-- TOP DYNAMIXEL TO DRIVING LINK -->
@@ -244,14 +231,14 @@ https://gbiggs.github.io/rosjp_urdf_tutorial_text/manipulator_urdf.html -->
           xyz="214.98 38.67 39.12"
           rpy="0 0 ${radians(90)}" />
         <mass
-          value="7.30" />
+          value="0.00730" />
         <inertia
-          ixx="706.95"
+          ixx="0.00070695"
           ixy="0.00"
-          ixz="-788.79"
-          iyy="3292.20"
+          ixz="-0.00078879"
+          iyy="0.00329220"
           iyz="0.00"
-          izz="2604.72" />
+          izz="0.00260472" />
       </inertial>
     </link>
 
