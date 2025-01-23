@@ -118,6 +118,31 @@ rclcpp_action::GoalResponse EndEffectorTrajectoryController::handle_goal(
     RCLCPP_ERROR(
       this->get_logger(),
       "Goal trajectory should have the same number as end-effectors. ");
+    return rclcpp_action::GoalResponse::REJECT;
+  }
+
+  // Check if the goal is valid
+
+  double workspace_radius = 0.2+0.2;
+
+  for (size_t i = 0; i < goal->trajectories.size(); ++i) {
+    const auto & trajectory = goal->trajectories[i];
+    for (size_t j = 0; j < trajectory.points.size(); ++j) {
+      const auto & point = trajectory.points[j];
+      double magnitude = std::sqrt(
+        std::pow(point.pose.position.x, 2) +
+        std::pow(point.pose.position.y, 2) +
+        std::pow(point.pose.position.z, 2));
+      if (magnitude > workspace_radius) {
+        RCLCPP_ERROR(
+          this->get_logger(),
+          "Goal trajectory should be within the workspace radius.\n"
+          "Workspace radius: %f\n"
+          "Magnitude: %f\n"
+          , workspace_radius, magnitude);
+        return rclcpp_action::GoalResponse::REJECT;
+      }
+    }
   }
 
   // For each end-effector
