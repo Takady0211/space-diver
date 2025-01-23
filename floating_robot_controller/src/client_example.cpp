@@ -131,6 +131,8 @@ void EndEffectorTrajectoryClient::end_effector_traject_goal_response_callback(
   if (!goal_handle) {
     RCLCPP_ERROR(this->get_logger(),
                  "End effector traject goal was rejected by server");
+    // Shutdown the ROS client node if the goal is rejected
+    rclcpp::shutdown();
   } else {
     RCLCPP_INFO(
         this->get_logger(),
@@ -171,6 +173,8 @@ void EndEffectorTrajectoryClient::end_effector_traject_result_callback(
   std::stringstream ss;
   ss << "End effector traject goal achieved";
   RCLCPP_INFO(this->get_logger(), ss.str().c_str());
+  // Shutdown the ROS client node if the goal is achieved
+    rclcpp::shutdown();
 } // End Effector Trajectory CLient
 } // namespace floating_robot_controller
 
