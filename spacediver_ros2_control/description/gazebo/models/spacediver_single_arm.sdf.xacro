@@ -1,0 +1,333 @@
+<?xml version="1.0" ?>
+<sdf version="1.5" xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:include filename="$(find spacediver_ros2_control)/description/urdf/macros/properties.xacro"/>
+  <model name="spacediver_single_arm">
+    <!-- ros_control plugin -->
+    <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
+      <parameters>$(find spacediver_ros2_control)/bringup/config/spacediver_single_arm_controllers.yaml</parameters>
+    </plugin>
+
+    <!-- Model -->
+    <!-- parallel link is defined here but not in urdf -->
+    <!-- active joints hsould have the same name as those in urdf -->
+    <static>false</static>
+    <link name="base_link">
+      <!-- <pose>0 0 0 0 0 0</pose> -->
+      <collision name="collision">
+        <geometry>
+          <box>
+            <size>${BASE_X} ${BASE_Y} ${BASE_Z}</size>
+          </box>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>100</mu>
+              <mu2>50</mu2>
+            </ode>
+          </friction>
+        </surface>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>${BASE_X} ${BASE_Y} ${BASE_Z}</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/Grey</name>
+          </script>
+        </material>
+      </visual>
+    </link>
+
+    <!-- SHOULDER PLATES -->
+    <link name="left_shoulder_link">
+      <pose>
+        ${SHOULDER_POS_X} ${SHOULDER_POS_Y} ${SHOULDER_POS_Z}
+        0 0 ${L_SHOULDER_ROT_Z}
+      </pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://spacediver/meshes/shoulder_plate.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://spacediver/meshes/shoulder_plate.STL</uri>
+          </mesh>
+        </geometry>
+        <!-- <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/Grey</name>
+          </script>
+        </material> -->
+      </visual>
+    </link>
+
+    <!-- DYNAMIXELS -->
+    <link name="left_dynamixel_top">
+      <pose>
+        ${DYNAMIXEL_POS_X} ${DYNAMIXEL_POS_Y} ${DYNAMIXEL_TOP_POS_Z}
+      </pose>
+      <collision name="collision">
+        <geometry>
+          <box>
+            <size>${DYNAMIXEL_X} ${DYNAMIXEL_Y} ${DYNAMIXEL_Z}</size>
+          </box>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>100</mu>
+              <mu2>50</mu2>
+            </ode>
+          </friction>
+        </surface>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>${DYNAMIXEL_X} ${DYNAMIXEL_Y} ${DYNAMIXEL_Z}</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/Blue</name>
+          </script>
+        </material>
+      </visual>
+    </link>
+
+    <link name="left_dynamixel_bottom">
+      <pose>
+        ${DYNAMIXEL_POS_X} ${DYNAMIXEL_POS_Y} ${DYNAMIXEL_BOT_POS_Z}
+      </pose>
+      <collision name="collision">
+        <geometry>
+          <box>
+            <size>${DYNAMIXEL_X} ${DYNAMIXEL_Y} ${DYNAMIXEL_Z}</size>
+          </box>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>100</mu>
+              <mu2>50</mu2>
+            </ode>
+          </friction>
+        </surface>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>${DYNAMIXEL_X} ${DYNAMIXEL_Y} ${DYNAMIXEL_Z}</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/Blue</name>
+          </script>
+        </material>
+      </visual>
+    </link>
+
+    <!-- MISUMI LN (lower link) -->
+    <link name="left_misumi_ln">
+      <pose>
+        ${L_MISUMILN_POS_X} ${L_MISUMILN_POS_Y} ${MISUMILN_POS_Z}
+        0 0 ${L_MISUMILN_ROT_Z}
+      </pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://spacediver/meshes/Link_MISUMI_LNMS16-10-200.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://spacediver/meshes/Link_MISUMI_LNMS16-10-200.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/Red</name>
+          </script>
+        </material>
+      </visual>
+    </link>
+
+    <!-- DRIVING LINK -->
+    <link name="left_driving_link">
+      <pose>
+        ${L_DRIVING_POS_X} ${L_DRIVING_POS_Y} ${DRIVING_POS_Z}
+        0 0 ${L_DRIVING_ROT_Z}
+      </pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://spacediver/meshes/upper_arm_driving_link.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://spacediver/meshes/upper_arm_driving_link.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/Green</name>
+          </script>
+        </material>
+      </visual>
+    </link>
+
+    <!-- DRIVEN LINK -->
+    <link name="left_driven_link">
+      <pose>
+        ${L_DRIVEN_POS_X} ${L_DRIVEN_POS_Y} ${DRIVEN_POS_Z}
+        0 0 ${L_DRIVEN_ROT_Z}
+      </pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://spacediver/meshes/upper_arm_driven_link.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://spacediver/meshes/upper_arm_driven_link.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/Red</name>
+          </script>
+        </material>
+      </visual>
+    </link>
+
+    <!-- MISUMI FT (final link) -->
+    <link name="left_misumi_ft">
+      <pose>
+        ${L_MISUMIFT_POS_X} ${L_MISUMIFT_POS_Y} ${MISUMIFT_POS_Z}
+        0 0 ${L_MISUMIFT_ROT_Z}
+      </pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://spacediver/meshes/Misumi_LNFTS10-P10-V10-L200-S50-W18-T9.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://spacediver/meshes/Misumi_LNFTS10-P10-V10-L200-S50-W18-T9.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/Green</name>
+          </script>
+        </material>
+      </visual>
+    </link>
+
+    <!-- JOINTS -->
+    <joint name="base_to_leftshoulder_joint" type="revolute">
+      <parent>base_link</parent>
+      <child>left_shoulder_link</child>
+      <pose>
+        ${SHOULDER_JOINTA_X} ${SHOULDER_JOINTA_Y} ${SHOULDER_JOINTA_Z}
+      </pose>
+      <axis>
+        <xyz>0 1 0</xyz>
+      </axis>
+    </joint>
+
+    <joint name="leftshoulder_to_leftdynamixeltop_joint" type="fixed">
+      <parent>left_shoulder_link</parent>
+      <child>left_dynamixel_top</child>
+    </joint>
+
+    <joint name="leftshoulder_to_leftdynamixelbottom_joint" type="fixed">
+      <parent>left_shoulder_link</parent>
+      <child>left_dynamixel_bottom</child>
+    </joint>
+
+    <joint name="leftdynamixeltop_to_leftdriving_joint" type="revolute">
+      <parent>left_dynamixel_top</parent>
+      <child>left_driving_link</child>
+      <pose>
+        ${DRIVING_JOINTA_X} ${DRIVING_JOINTA_Y} ${DRIVING_JOINTA_Z}
+      </pose>
+      <axis>
+        <xyz>0 0 1</xyz>
+      </axis>
+    </joint>
+
+    <joint name="leftdynamixelbottom_to_leftmisumiln_joint" type="revolute">
+      <parent>left_dynamixel_bottom</parent>
+      <child>left_misumi_ln</child>
+      <pose>
+        ${MISUMILN_JOINTA_Y} ${MISUMILN_JOINTA_X} ${MISUMILN_JOINTA_Z}
+      </pose>
+      <axis>
+        <xyz>0 0 1</xyz>
+      </axis>
+    </joint>
+
+    <joint name="leftdriving_to_leftdriven_joint" type="revolute">
+      <parent>left_driving_link</parent>
+      <child>left_driven_link</child>
+      <pose>
+        ${DRIVEN_JOINTA_X} ${DRIVEN_JOINTA_Y} ${DRIVEN_JOINTA_Z}
+      </pose>
+      <axis>
+        <xyz>0 0 1</xyz>
+      </axis>
+    </joint>
+
+    <joint name="leftdriven_to_leftmisumift_joint" type="revolute">
+      <parent>left_driven_link</parent>
+      <child>left_misumi_ft</child>
+      <pose>
+        ${MISUMIFT_JOINTA_X} ${MISUMIFT_JOINTA_Y} ${MISUMIFT_JOINTA_Z}
+      </pose>
+      <axis>
+        <xyz>0 0 1</xyz>
+      </axis>
+    </joint>
+
+    <joint name="leftmisumiln_to_leftmisumift_joint" type="revolute">
+      <parent>left_misumi_ln</parent>
+      <child>left_misumi_ft</child>
+      <pose>
+        ${MISUMIFT_JOINTB_X} ${MISUMIFT_JOINTB_Y} ${MISUMIFT_JOINTB_Z}
+      </pose>
+      <axis>
+        <xyz>0 0 1</xyz>
+      </axis>
+    </joint>
+
+  </model>
+</sdf>

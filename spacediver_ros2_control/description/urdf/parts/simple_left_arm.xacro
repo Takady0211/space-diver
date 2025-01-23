@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<!-- import xacro reffering here
+https://gbiggs.github.io/rosjp_urdf_tutorial_text/manipulator_urdf.html -->
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+    <xacro:macro name="left_arm" params="base_name *origin">
+
+        <!-- Joint 1 -->
+        <joint name="${BASE_TO_LEFTSHOULDER_JOINT_NAME}" type="revolute">
+            <parent link="${BASE_LINK_NAME}" />
+            <child link="${L_SHOULDER_LINK_NAME}" />
+            <origin xyz="-0.10 0 0" rpy="0 1.57 0" />
+            <axis xyz="0 0 1" />
+            <limit lower="-1.57" upper="1.57" effort="10" velocity="1" />
+        </joint>
+
+        <!-- SHOULDER -->
+        <link name="${L_SHOULDER_LINK_NAME}">
+            <visual>
+                <origin xyz="0 0 -0.01" rpy="0 0 0" />
+                <geometry>
+                    <box size="0.2 0.1 0.02" />
+                </geometry>
+            </visual>
+            <inertial>
+                <origin xyz="0 0 0.25" rpy="0 0 0" />
+                <mass value="1.0" />
+                <inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.01" />
+            </inertial>
+        </link>
+
+        <!-- Joint 2 -->
+        <joint name="${LEFT_DYNAMIXELBOT_TO_LEFTMISUMILN_JOINT_NAME}" type="revolute">
+            <parent link="${L_SHOULDER_LINK_NAME}" />
+            <child link="${L_MISUMILN_LINK_NAME}" />
+            <origin xyz="0 0 -0.03" rpy="-1.57 0 1.57" />
+            <axis xyz="0 0 1" />
+            <limit lower="-1.57" upper="1.57" effort="10" velocity="1" />
+        </joint>
+
+        <!-- FIRST LINK -->
+        <link name="${L_MISUMILN_LINK_NAME}">
+            <visual>
+                <origin xyz="0.1 0 0" rpy="0 1.57 0" />
+                <geometry>
+                    <cylinder length="0.2" radius="0.005" />
+                </geometry>
+                <material name="green">
+                    <color rgba="0 1 0 1" />
+                </material>
+            </visual>
+            <inertial>
+                <origin xyz="0 0 0.1" rpy="0 0 0" />
+                <mass value="1.0" />
+                <inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.01" />
+            </inertial>
+        </link>
+
+        <!-- Joint 2 -->
+        <joint name="${LEFTDYNAMIXELTOP_TO_LEFTDRIVING_JOINT_NAME}" type="revolute">
+            <parent link="${L_MISUMILN_LINK_NAME}" />
+            <child link="${L_DRIVING_LINK_NAME}" />
+            <origin xyz="0.2 0 0" rpy="0 0 -1.57" />
+            <axis xyz="0 0 1" />
+            <limit lower="-1.57" upper="1.57" effort="10" velocity="1" />
+            <mimic joint="${LEFT_DYNAMIXELBOT_TO_LEFTMISUMILN_JOINT_NAME}" multiplier="1" offset="0" />
+        </joint>
+
+        <!-- SECOND LINK -->
+        <link name="${L_DRIVING_LINK_NAME}">
+            <visual>
+                <origin xyz="0.1 0 0" rpy="0 1.57 0" />
+                <geometry>
+                    <cylinder length="0.2" radius="0.005" />
+                </geometry>
+                <material name="red">
+                    <color rgba="1 0 0 1" />
+                </material>
+            </visual>
+            <inertial>
+                <origin xyz="0 0 0.1" rpy="0 0 0" />
+                <mass value="1.0" />
+                <inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.01" />
+            </inertial>
+        </link>
+
+    </xacro:macro>
+
+</robot>
