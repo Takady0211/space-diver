@@ -9,10 +9,13 @@ import xacro
 
 # User settings
 use_sim_time = LaunchConfiguration('use_sim_time', default='true')
+model = [
+    "example",
+    "example_3dof"][1]
 
 pkg_dir = get_package_share_directory("floating_robot_controller")
 example_urdf_path = os.path.join(
-    pkg_dir, "model", "example.urdf")
+    pkg_dir, "model", f"{model}.urdf")
 rviz_path = os.path.join(pkg_dir, "rviz", "simple_config.rviz")
 
 
