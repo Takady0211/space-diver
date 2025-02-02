@@ -57,7 +57,7 @@
   <xacro:property name="BASE_X" value="0.18"/>
   <xacro:property name="BASE_Y" value="0.0585"/>
   <xacro:property name="BASE_Z" value="0.0415"/>
-  <xacro:property name="BASE_MASS" value="50"/>
+  <xacro:property name="BASE_MASS" value="10000"/>
   <xacro:property name="BASE_INERTIA_Z" value="0.13526810"/>
   <!-- JOINT -->
   <xacro:property name="BASE_DYNAMIXEL_LOWER" value="-${PI}"/>
@@ -112,6 +112,7 @@
   <xacro:property name="MISUMILN_JOINTA_X" value="0.016"/>
   <xacro:property name="MISUMILN_JOINTA_Y" value="0.012"/>
   <xacro:property name="MISUMILN_JOINTA_Z" value="${MISUMILN_Z/2}"/>
+  <xacro:property name="MISUMILN_JOINTB_Y" value="0.2"/>
   <!-- LEFT -->
   <xacro:property name="L_MISUMILN_ROT_Z" value="${-PI/2+ROT}"/>
   <xacro:property name="L_MISUMILN_POS_X" value="${DYNAMIXEL_POS_X + math.cos(ROT)*(-MISUMILN_JOINTA_X) - math.sin(ROT)*(MISUMILN_JOINTA_Y)}"/>
