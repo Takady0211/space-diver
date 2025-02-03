@@ -15,26 +15,31 @@ controller_list = ['forward_position_controller',
                    'feedback_effort_controller',
                    'forward_position_controller_single_arm',
                    'forward_effort_controller_single_arm',
-                   'feedback_effort_controller_single_arm']
+                   'feedback_effort_controller_single_arm',
+                   'position_trajectory_controller',
+                   'forward_velocity_controller']
 
 # User settings
 use_sim_time = LaunchConfiguration('use_sim_time', default='true')
 use_gazebo = LaunchConfiguration('use_gazebo', default='false')  # TODO: Implement this feature
-controller_name = controller_list[5]  # Select controller from controller_list
+controller_name = controller_list[2]  # Select controller from controller_list
+use_floating_base = False
+single_arm = False
 
 # Path setting for xacro, urdf, rviz, and world files
 # Pay attention to the pkg_dir is
 # ".../spacediver_ws/install/spacediver_ros2_control/share/spacediver_ros2_control"
 # not under this repository.
 pkg_dir = get_package_share_directory("spacediver_ros2_control")
+file_name = "spacediver_single_arm" if single_arm else "spacediver"
 spacediver_urdf_xacro_path = os.path.join(
-    pkg_dir, "description", "urdf", "spacediver.urdf.xacro")
+    pkg_dir, "description", "urdf", file_name + ".urdf.xacro")
 spacediver_urdf_path = os.path.join(
-    pkg_dir, "description", "urdf", "spacediver.urdf")
+    pkg_dir, "description", "urdf", file_name + ".urdf")
 spacediver_sdf_xacro_path = os.path.join(
-    pkg_dir, "description", "gazebo", "models", "spacediver.sdf.xacro")
+    pkg_dir, "description", "gazebo", "models", file_name + ".sdf.xacro")
 spacediver_sdf_path = os.path.join(
-    pkg_dir, "description", "gazebo", "models", "spacediver.sdf")
+    pkg_dir, "description", "gazebo", "models", file_name + ".sdf")
 rviz_path = os.path.join(
     pkg_dir, "description", "rviz", "spacediver_config.rviz")
 world_path = os.path.join(
@@ -90,11 +95,16 @@ def generate_launch_description():
         arguments=[spacediver_urdf_path]
     )
 
+    if (use_floating_base):
+        end_eff_traj_controller_executable = 'end_effector_trajectory_controller'
+    else:
+        end_effector_trajectory_executable = 'fixed_base_end_eff_traj_controller'
+
     # End effector trajectory controller
     end_effector_trajectory_controller = Node(
         package='floating_robot_controller',
-        executable='end_effector_trajectory_controller',
-        name='end_effector_trajectory_controller',
+        executable=end_effector_trajectory_executable,
+        name=end_effector_trajectory_executable,
         output='screen',
         parameters=[{'use_sim_time': use_sim_time}],
         arguments=[spacediver_urdf_path]
