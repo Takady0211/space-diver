@@ -65,7 +65,7 @@ https://gbiggs.github.io/rosjp_urdf_tutorial_text/manipulator_urdf.html -->
       </inertial>
     </link>
 
-    <!-- Joint 2 -->
+    <!-- Joint 3 -->
     <joint name="${LEFTDYNAMIXELTOP_TO_LEFTDRIVING_JOINT_NAME}" type="revolute">
       <parent link="${L_MISUMILN_LINK_NAME}" />
       <child link="${L_DRIVING_LINK_NAME}" />

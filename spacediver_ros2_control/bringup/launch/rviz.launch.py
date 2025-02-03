@@ -12,9 +12,9 @@ use_sim_time = LaunchConfiguration('use_sim_time', default='true')
 
 pkg_dir = get_package_share_directory("spacediver_ros2_control")
 spacediver_urdf_xacro_path = os.path.join(
-    pkg_dir, "description", "urdf", "spacediver_dual_arm.urdf.xacro")
+    pkg_dir, "description", "urdf", "spacediver.urdf.xacro")
 spacediver_urdf_path = os.path.join(
-    pkg_dir, "description", "urdf", "spacediver_dual_arm.urdf")
+    pkg_dir, "description", "urdf", "spacediver.urdf")
 rviz_path = os.path.join(pkg_dir, "description", "rviz", "simple_config.rviz")
 
 
