@@ -1,4 +1,4 @@
-#include "floating_robot_controller/end_effector_trajectory_controller.hpp"
+#include "floating_robot_controller/fixed_base_end_eff_traj_controller.hpp"
 
 #include "floating_robot_controller/trajectory.hpp"
 #include "floating_robot_interfaces/action/follow_end_effector_trajectory.hpp"
@@ -61,7 +61,7 @@ EndEffectorTrajectoryController::EndEffectorTrajectoryController(
     "feedback_effort_controller/joint_trajectory", 10);
   joint_command_publisher_ = this->create_publisher<std_msgs::msg::Float64MultiArray>(
     "forward_velocity_controller/commands", 10);
-  end_effector_publisher_ = this->create_publisher<geometry_msgs::msg::Pose>(
+  end_effector_publisher_ = this->create_publisher<std_msgs::msg::Float64MultiArray>(
     "end_effector_pose", 10);
   // State
   joint_state_.effort.resize(joint_number_);
@@ -290,17 +290,33 @@ void EndEffectorTrajectoryController::execute(
 void EndEffectorTrajectoryController::timer_callback() {}
 
 geometry_msgs::msg::Pose
-EndEffectorTrajectoryController::compute_end_effector_position() {
-  double th1 = joint_state_.position[0];
-  double th2 = joint_state_.position[1];
-  double th3 = joint_state_.position[2];
+EndEffectorTrajectoryController::compute_end_effector_position(const int &id) {
+  double th1;
+  double th2;
+  double th3;
   double link1 = 0.2;
   double link2 = 0.2;
 
   geometry_msgs::msg::Pose pose;
-  pose.position.x = link1*cos(th2) + link2*cos(th2+th3);
-  pose.position.y = ( link1*sin(th2) + link2*sin(th2+th3) )*cos(th1);
-  pose.position.z = -( link1*sin(th2) + link2*sin(th2+th3) )*sin(th1);
+  
+  if (id == 0) // left arm
+  {
+    th1 = joint_state_.position[0];
+    th2 = joint_state_.position[1];
+    th3 = joint_state_.position[2];
+    pose.position.x = link1*cos(th2) + link2*cos(th2+th3);
+    pose.position.y = ( link1*sin(th2) + link2*sin(th2+th3) )*cos(th1);
+    pose.position.z = -( link1*sin(th2) + link2*sin(th2+th3) )*sin(th1);
+  }
+  else if (id == 1) // right arm
+  {
+    th1 = joint_state_.position[3];
+    th2 = joint_state_.position[4];
+    th3 = joint_state_.position[5];
+    pose.position.x = link1*cos(th2) + link2*cos(th2+th3);
+    pose.position.y = ( link1*sin(th2) + link2*sin(th2+th3) )*cos(th1);
+    pose.position.z = ( link1*sin(th2) + link2*sin(th2+th3) )*sin(th1);
+  }
   pose.orientation.x = 0;
   pose.orientation.y = 0;
   pose.orientation.z = 0;
@@ -441,8 +457,14 @@ void EndEffectorTrajectoryController::joint_state_callback(
 {
   // Update robot state information
   joint_state_ = *msg;
-  geometry_msgs::msg::Pose pose = compute_end_effector_position();
-  end_effector_publisher_->publish(pose);
+  std_msgs::msg::Float64MultiArray positions;
+  for (int e = 0; e < end_effector_number_; e++) {
+    geometry_msgs::msg::Pose pose = compute_end_effector_position(e);
+    positions.data.push_back(pose.position.x);
+    positions.data.push_back(pose.position.y);
+    positions.data.push_back(pose.position.z);
+  }
+  end_effector_publisher_->publish(positions);
 }
 
 void EndEffectorTrajectoryController::odm_base_callback(
@@ -480,7 +502,7 @@ EndEffectorTrajectoryController::get_current_end_effector_point(int id)
   floating_robot_interfaces::msg::EndEffectorTrajectoryPoint point;
   auto link_id = robot_.getEndEffector(id).getId();
   // point.pose = tf2::toMsg(robot_.getLinkPoseInWorldFrame(link_id).getPoseInWorldFrame());
-  point.pose = compute_end_effector_position();
+  point.pose = compute_end_effector_position(id);
   auto twist = robot_.getLinkState(link_id).getTwistInWorldFrame();
   point.twist.linear = tf2::toMsg2(twist.getLinearVelocity());
   point.twist.angular = tf2::toMsg2(twist.getAngularVelocity());
