@@ -44,35 +44,40 @@
 
     </joint>
 
-    <xacro:unless value="$(arg single_arm)">
-      <joint name="${BASE_TO_RIGHTSHOULDER_JOINT_NAME}">
+    <!-- BOTTOM DYNAMIXEL TO MISUMI LN -->
+    <joint name="${LEFT_DYNAMIXELBOT_TO_LEFTMISUMILN_JOINT_NAME}">
 
-        <param name="id">4</param>
+      <param name="id">2</param>
 
-        <command_interface name="position">
-          <param name="min">"${BASE_DYNAMIXEL_UPPER}"</param>
-          <param name="max">"${BASE_DYNAMIXEL_LOWER}"</param>
-        </command_interface>
+      <command_interface name="position">
+        <param name="min">${BOT_DYNAMIXEL_LOWER}</param>
+        <param name="max">${BOT_DYNAMIXEL_UPPER}</param>
+      </command_interface>
+
+      <xacro:if value="$(arg use_gazebo)">
         <command_interface name="velocity">
-          <param name="min">"-${BASE_DYNAMIXEL_VELOCITY}"</param>
-          <param name="max">" ${BASE_DYNAMIXEL_VELOCITY}"</param>
+          <param name="min">"-${BOT_DYNAMIXEL_VELOCITY}"</param>
+          <param name="max">" ${BOT_DYNAMIXEL_VELOCITY}"</param>
         </command_interface>
         <command_interface name="effort">
-          <param name="min">"-${BASE_DYNAMIXEL_EFFORT}"</param>
-          <param name="max">" ${BASE_DYNAMIXEL_EFFORT}"</param>
+          <param name="min">"-${BOT_DYNAMIXEL_EFFORT}"</param>
+          <param name="max">" ${BOT_DYNAMIXEL_EFFORT}"</param>
         </command_interface>
+      </xacro:if>
 
-        <state_interface name="position" />
-        <state_interface name="velocity" />
+      <state_interface name="position" />
+      <state_interface name="velocity" />
+
+      <xacro:if value="$(arg use_gazebo)">
         <state_interface name="effort" />
+      </xacro:if>
 
-      </joint>
-    </xacro:unless>
+    </joint>
 
     <!-- TOP DYNAMIXEL TO DRIVING LINK -->
     <joint name="${LEFTDYNAMIXELTOP_TO_LEFTDRIVING_JOINT_NAME}">
 
-      <param name="id">2</param>
+      <param name="id">3</param>
 
       <command_interface name="position">
         <param name="min">${TOP_DYNAMIXEL_LOWER}</param>
@@ -100,21 +105,22 @@
     </joint>
 
     <xacro:unless value="$(arg single_arm)">
-      <joint name="${RIGHTDYNAMIXELTOP_TO_RIGHTDRIVING_JOINT_NAME}">
 
-        <param name="id">5</param>
+      <joint name="${BASE_TO_RIGHTSHOULDER_JOINT_NAME}">
+
+        <param name="id">4</param>
 
         <command_interface name="position">
-          <param name="min">"${TOP_DYNAMIXEL_UPPER}"</param>
-          <param name="max">"${TOP_DYNAMIXEL_LOWER}"</param>
+          <param name="min">"${BASE_DYNAMIXEL_UPPER}"</param>
+          <param name="max">"${BASE_DYNAMIXEL_LOWER}"</param>
         </command_interface>
         <command_interface name="velocity">
-          <param name="min">"-${TOP_DYNAMIXEL_VELOCITY}"</param>
-          <param name="max">" ${TOP_DYNAMIXEL_VELOCITY}"</param>
+          <param name="min">"-${BASE_DYNAMIXEL_VELOCITY}"</param>
+          <param name="max">" ${BASE_DYNAMIXEL_VELOCITY}"</param>
         </command_interface>
         <command_interface name="effort">
-          <param name="min">"-${TOP_DYNAMIXEL_EFFORT}"</param>
-          <param name="max">" ${TOP_DYNAMIXEL_EFFORT}"</param>
+          <param name="min">"-${BASE_DYNAMIXEL_EFFORT}"</param>
+          <param name="max">" ${BASE_DYNAMIXEL_EFFORT}"</param>
         </command_interface>
 
         <state_interface name="position" />
@@ -122,42 +128,10 @@
         <state_interface name="effort" />
 
       </joint>
-    </xacro:unless>
 
-    <!-- BOTTOM DYNAMIXEL TO MISUMI LN -->
-    <joint name="${LEFT_DYNAMIXELBOT_TO_LEFTMISUMILN_JOINT_NAME}">
-
-      <param name="id">3</param>
-
-      <command_interface name="position">
-        <param name="min">${BOT_DYNAMIXEL_LOWER}</param>
-        <param name="max">${BOT_DYNAMIXEL_UPPER}</param>
-      </command_interface>
-
-      <xacro:if value="$(arg use_gazebo)">
-        <command_interface name="velocity">
-          <param name="min">"-${BOT_DYNAMIXEL_VELOCITY}"</param>
-          <param name="max">" ${BOT_DYNAMIXEL_VELOCITY}"</param>
-        </command_interface>
-        <command_interface name="effort">
-          <param name="min">"-${BOT_DYNAMIXEL_EFFORT}"</param>
-          <param name="max">" ${BOT_DYNAMIXEL_EFFORT}"</param>
-        </command_interface>
-      </xacro:if>
-
-      <state_interface name="position" />
-      <state_interface name="velocity" />
-
-      <xacro:if value="$(arg use_gazebo)">
-        <state_interface name="effort" />
-      </xacro:if>
-
-    </joint>
-
-    <xacro:unless value="$(arg single_arm)">
       <joint name="${RIGHT_DYNAMIXELBOT_TO_RIGHTMISUMILN_JOINT_NAME}">
 
-        <param name="id">6</param>
+        <param name="id">5</param>
 
         <command_interface name="position">
           <param name="min">"${BOT_DYNAMIXEL_UPPER}"</param>
@@ -170,6 +144,28 @@
         <command_interface name="effort">
           <param name="min">"-${BOT_DYNAMIXEL_EFFORT}"</param>
           <param name="max">" ${BOT_DYNAMIXEL_EFFORT}"</param>
+        </command_interface>
+
+        <state_interface name="position" />
+        <state_interface name="velocity" />
+        <state_interface name="effort" />
+
+      </joint>
+      <joint name="${RIGHTDYNAMIXELTOP_TO_RIGHTDRIVING_JOINT_NAME}">
+
+        <param name="id">6</param>
+
+        <command_interface name="position">
+          <param name="min">"${TOP_DYNAMIXEL_UPPER}"</param>
+          <param name="max">"${TOP_DYNAMIXEL_LOWER}"</param>
+        </command_interface>
+        <command_interface name="velocity">
+          <param name="min">"-${TOP_DYNAMIXEL_VELOCITY}"</param>
+          <param name="max">" ${TOP_DYNAMIXEL_VELOCITY}"</param>
+        </command_interface>
+        <command_interface name="effort">
+          <param name="min">"-${TOP_DYNAMIXEL_EFFORT}"</param>
+          <param name="max">" ${TOP_DYNAMIXEL_EFFORT}"</param>
         </command_interface>
 
         <state_interface name="position" />
