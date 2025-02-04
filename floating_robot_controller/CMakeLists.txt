@@ -45,18 +45,31 @@ if(BUILD_TESTING)
 endif()
 
 # Add executables
+add_executable(parallel_to_serial_joint_states
+  src/parallel_to_serial_joint_states.cpp)
 add_executable(end_effector_trajectory_controller
   src/trajectory.cpp
   src/end_effector_trajectory_controller.cpp)
+add_executable(fixed_base_end_eff_traj_controller
+  src/trajectory.cpp
+  src/fixed_base_end_eff_traj_controller.cpp)
 add_executable(client_example
   src/client_example.cpp)
 target_link_libraries(end_effector_trajectory_controller spacedyn_ros::spacedyn_ros)
+target_link_libraries(fixed_base_end_eff_traj_controller spacedyn_ros::spacedyn_ros)
 target_link_libraries(client_example yaml-cpp)
+ament_target_dependencies(parallel_to_serial_joint_states ${THIS_PACKAGE_INCLUDE_DEPENDS})
 ament_target_dependencies(end_effector_trajectory_controller ${THIS_PACKAGE_INCLUDE_DEPENDS})
+ament_target_dependencies(fixed_base_end_eff_traj_controller ${THIS_PACKAGE_INCLUDE_DEPENDS})
 ament_target_dependencies(client_example ${THIS_PACKAGE_INCLUDE_DEPENDS})
 
 #include directories
 target_include_directories(end_effector_trajectory_controller
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+)
+target_include_directories(fixed_base_end_eff_traj_controller
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
@@ -87,7 +100,9 @@ install(DIRECTORY
 
 # Install executables
 install(TARGETS
+  parallel_to_serial_joint_states
   end_effector_trajectory_controller
+  fixed_base_end_eff_traj_controller
   client_example
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib

@@ -95,6 +95,13 @@ def generate_launch_description():
         arguments=[spacediver_urdf_path]
     )
 
+    parallel_to_serial_joint_states = Node(
+        package='floating_robot_controller',
+        executable='parallel_to_serial_joint_states',
+        name='parallel_to_serial_joint_states',
+        output='screen',
+    )
+
     if (use_floating_base):
         end_eff_traj_controller_executable = 'end_effector_trajectory_controller'
     else:
@@ -139,6 +146,7 @@ def generate_launch_description():
     # Add controllers
     ld.add_action(joint_state_broadcaster_spawner)
     ld.add_action(controller_spawner)
+    ld.add_action(parallel_to_serial_joint_states)
     ld.add_action(end_effector_trajectory_controller)
 
     # Declare the launch arguments
