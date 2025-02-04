@@ -41,6 +41,17 @@
           </script>
         </material>
       </visual>
+      <inertial>
+        <mass>10000.0</mass> <!-- Set a very high mass value, e.g., 10,000 kg -->
+        <inertia>
+          <ixx>10000.0</ixx> <!-- Example inertia values (can adjust based on your model's dimensions) -->
+          <iyy>10000.0</iyy>
+          <izz>10000.0</izz>
+          <ixy>0.0</ixy>
+          <ixz>0.0</ixz>
+          <iyz>0.0</iyz>
+        </inertia>
+      </inertial>
     </link>
 
     <!-- SHOULDER PLATES -->
