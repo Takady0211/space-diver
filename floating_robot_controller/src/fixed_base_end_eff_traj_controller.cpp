@@ -67,6 +67,7 @@ EndEffectorTrajectoryController::EndEffectorTrajectoryController(
   joint_state_.effort.resize(joint_number_);
   joint_state_.position.resize(joint_number_);
   joint_state_.velocity.resize(joint_number_);
+  ROT_ = M_PI/6;
   joint_state_subscriber_ =
     this->create_subscription<sensor_msgs::msg::JointState>(
     "joint_states/serial", 10,
@@ -400,7 +401,7 @@ EndEffectorTrajectoryController::compute_joint_effort(
 
 std::vector<double>
 EndEffectorTrajectoryController::compute_next_position(
-  std::vector<double> vel)
+  std::vector<double> &vel)
 {
   std::vector<double> next_position;
   for (int i = 0; i < joint_number_; i++) {
@@ -416,10 +417,12 @@ void EndEffectorTrajectoryController::publish_command(
   trajectory_msgs::msg::JointTrajectory joint_trajectory;
   joint_trajectory.header.stamp = joint_state_.header.stamp;
   joint_trajectory.joint_names = joint_state_.name;
+
   trajectory_msgs::msg::JointTrajectoryPoint point;
   int32_t dt_sec = dt_millisec_ / 1000;
   int32_t dt_nsec = (dt_millisec_ % 1000) * 1000000;
   point.time_from_start = rclcpp::Duration(dt_sec, dt_nsec);
+
   point.positions = serial_to_parallel_joint_angles(compute_next_position(command.data));
   point.velocities = serial_to_parallel_joint_velocities(command.data);
   RCLCPP_INFO(this->get_logger(), "Joint positions: [%f, %f, %f]", point.positions[0], point.positions[1], point.positions[2]);
@@ -439,8 +442,20 @@ EndEffectorTrajectoryController::serial_to_parallel_joint_angles(
   
   // shift the joint angles by the starting position
   joint_angles[0] = joint_angles[0];
-  joint_angles[1] = joint_angles[1] - (M_PI/2 + M_PI/6);
+  joint_angles[1] = joint_angles[1] - (M_PI/2 + ROT_);
   joint_angles[2] = joint_angles[2];
+
+  if (joint_angles.size() == 6) {
+    // convert to parallel chain joint angles
+    joint_angles[3] = joint_angles[3];
+    joint_angles[4] = joint_angles[4];
+    joint_angles[5] = joint_angles[5] + joint_angles[4] - M_PI;
+    
+    // shift the joint angles by the starting position
+    joint_angles[3] = joint_angles[3];
+    joint_angles[4] = joint_angles[4] - (M_PI/2 - ROT_);
+    joint_angles[5] = joint_angles[5];
+  }
   
   return joint_angles;
 }
@@ -453,6 +468,13 @@ EndEffectorTrajectoryController::serial_to_parallel_joint_velocities(
   joint_velocities[0] = joint_velocities[0];
   joint_velocities[1] = joint_velocities[1];
   joint_velocities[2] = joint_velocities[2] + joint_velocities[1];
+
+  if (joint_velocities.size() == 6) {
+    // convert to parallel chain joint velocities
+    joint_velocities[3] = joint_velocities[3];
+    joint_velocities[4] = joint_velocities[4];
+    joint_velocities[5] = joint_velocities[5] + joint_velocities[4];
+  }
 
   return joint_velocities;
 }

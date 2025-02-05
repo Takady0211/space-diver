@@ -67,6 +67,7 @@ private:
     std::vector<double> joint_angles);
   std::vector<double> serial_to_parallel_joint_velocities(
     std::vector<double> joint_velocities);
+  double ROT_;
   rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr
     joint_state_subscriber_;
   void joint_state_callback(const sensor_msgs::msg::JointState::SharedPtr msg);
@@ -82,7 +83,7 @@ private:
   spacedyn_ros::Robot robot_; // SpaceDyn model
 
   std::vector<double> compute_next_position(
-    std::vector<double> vel);
+    std::vector<double> &vel);
 
   std_msgs::msg::Float64MultiArray
   compute_joint_effort(geometry_msgs::msg::Twist end_effector_velocity);
