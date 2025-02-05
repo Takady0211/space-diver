@@ -18,7 +18,7 @@ public:
 
 private:
 
-    const double ROT_ = M_PI/6;
+    const double ROT_ = M_PI/4;
 
     void subscription_callback(const sensor_msgs::msg::JointState& msg)
     {

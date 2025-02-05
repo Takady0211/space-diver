@@ -2,7 +2,7 @@
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
   <xacro:property name="PI" value="${math.pi}"/>
-  <xacro:property name="ROT" value="${PI/6}"/>
+  <xacro:property name="ROT" value="${PI/4}"/>
   <xacro:property name="RPM" value="30"/>
 
   <!-- LINK NAMES -->

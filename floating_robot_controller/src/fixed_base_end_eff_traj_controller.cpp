@@ -67,7 +67,7 @@ EndEffectorTrajectoryController::EndEffectorTrajectoryController(
   joint_state_.effort.resize(joint_number_);
   joint_state_.position.resize(joint_number_);
   joint_state_.velocity.resize(joint_number_);
-  ROT_ = M_PI/6;
+  ROT_ = M_PI/4;
   joint_state_subscriber_ =
     this->create_subscription<sensor_msgs::msg::JointState>(
     "joint_states/serial", 10,
