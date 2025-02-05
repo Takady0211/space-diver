@@ -347,7 +347,7 @@ EndEffectorTrajectoryController::compute_joint_velocity(
   std_msgs::msg::Float64MultiArray joint_velocity_msg; // output
 
   for (int e = 0; e < end_effector_number_; e++) {
-    gen_jacob_for.at(e) = robot_.computeGeneralizedJacobianForEndEffector(e);
+    // gen_jacob_for.at(e) = robot_.computeGeneralizedJacobianForEndEffector(e);
     th1 = joint_state_.position[e*3+0];
     th2 = joint_state_.position[e*3+1];
     th3 = joint_state_.position[e*3+2];
