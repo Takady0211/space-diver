@@ -335,49 +335,54 @@ EndEffectorTrajectoryController::compute_joint_velocity(
   Eigen::MatrixXd J = Eigen::MatrixXd::Zero(joint_number_, joint_number_);
   Eigen::VectorXd ve = Eigen::VectorXd::Zero(joint_number_);
 
-  double th1 = joint_state_.position[0];
-  double th2 = joint_state_.position[1];
-  double th3 = joint_state_.position[2];
+  double th1;
+  double th2;
+  double th3;
   double link1 = 0.2;
   double link2 = 0.2;
+  double flip = 1.0;
 
-  J(0, 0) = 0;
-  J(0, 1) = -link1 * sin(th2) - link2 * sin(th2 + th3);
-  J(0, 2) = -link2 * sin(th2 + th3);
-  J(1, 0) = -(link1 * sin(th2) + link2 * sin(th2 + th3)) * sin(th1);
-  J(1, 1) = (link1 * cos(th2) + link2 * cos(th2 + th3)) * cos(th1);
-  J(1, 2) = link2 * cos(th2 + th3) * cos(th1);
-  J(2, 0) = -(link1 * sin(th2) + link2 * sin(th2 + th3)) * cos(th1);
-  J(2, 1) = -(link1 * cos(th2) + link2 * cos(th2 + th3)) * sin(th1);
-  J(2, 2) = -(link2 * cos(th2 + th3) * sin(th1));
+  std_msgs::msg::Float64MultiArray joint_velocity_msg; // output
 
-  // RCLCPP_INFO(this->get_logger(), "Jacobian matrix: \n[%f, %f, %f]\n[%f, %f, %f]\n[%f, %f, %f]",
-  //       J(0, 0), J(0, 1), J(0, 2),
-  //       J(1, 0), J(1, 1), J(1, 2),
-  //       J(2, 0), J(2, 1), J(2, 2));
-
-  /* 
   for (int e = 0; e < end_effector_number_; e++) {
     gen_jacob_for.at(e) = robot_.computeGeneralizedJacobianForEndEffector(e);
+    th1 = joint_state_.position[e*3+0];
+    th2 = joint_state_.position[e*3+1];
+    th3 = joint_state_.position[e*3+2];
+    if (e == 1) {
+      flip = -1.0;
+    }
+
+    gen_jacob_for.at(e)(0, 0) = 0;
+    gen_jacob_for.at(e)(0, 1) = -link1 * sin(th2) - link2 * sin(th2 + th3);
+    gen_jacob_for.at(e)(0, 2) = -link2 * sin(th2 + th3);
+    gen_jacob_for.at(e)(1, 0) = -(link1 * sin(th2) + link2 * sin(th2 + th3)) * sin(th1);
+    gen_jacob_for.at(e)(1, 1) = (link1 * cos(th2) + link2 * cos(th2 + th3)) * cos(th1);
+    gen_jacob_for.at(e)(1, 2) = link2 * cos(th2 + th3) * cos(th1);
+    gen_jacob_for.at(e)(2, 0) = -(link1 * sin(th2) + link2 * sin(th2 + th3)) * cos(th1) * flip;
+    gen_jacob_for.at(e)(2, 1) = -(link1 * cos(th2) + link2 * cos(th2 + th3)) * sin(th1) * flip;
+    gen_jacob_for.at(e)(2, 2) = -(link2 * cos(th2 + th3) * sin(th1)) * flip;
+
+    // Select dimension to solve
+    // Set manually for now
+    J.row(0) = gen_jacob_for.at(e).row(0);
+    J.row(1) = gen_jacob_for.at(e).row(1);
+    J.row(2) = gen_jacob_for.at(e).row(2);
+    // RCLCPP_INFO(this->get_logger(), "Jacobian matrix: \n[%f, %f, %f]\n[%f, %f, %f]\n[%f, %f, %f]",
+    //       J(0, 0), J(0, 1), J(0, 2),
+    //       J(1, 0), J(1, 1), J(1, 2),
+    //       J(2, 0), J(2, 1), J(2, 2));
+
+    ve(0) = end_effector_velocities.at(e).linear.x;
+    ve(1) = end_effector_velocities.at(e).linear.y;
+    ve(2) = end_effector_velocities.at(e).linear.z;
+
+    Eigen::FullPivLU<Eigen::MatrixXd> LU(J);
+    Eigen::VectorXd joint_velocity = LU.solve(ve);
+    joint_velocity_msg.data.push_back(joint_velocity(0));
+    joint_velocity_msg.data.push_back(joint_velocity(1));
+    joint_velocity_msg.data.push_back(joint_velocity(2));
   }
-
-  // Select dimension to solve
-  // Set manually for now
-  J.row(0) = gen_jacob_for.at(0).row(0);
-  J.row(1) = gen_jacob_for.at(0).row(1);
-  J.row(2) = gen_jacob_for.at(0).row(2);
-   */
-
-  ve(0) = end_effector_velocities.at(0).linear.x;
-  ve(1) = end_effector_velocities.at(0).linear.y;
-  ve(2) = end_effector_velocities.at(0).linear.z;
-
-  Eigen::FullPivLU<Eigen::MatrixXd> LU(J);
-  Eigen::VectorXd joint_velocity = LU.solve(ve);
-  std_msgs::msg::Float64MultiArray joint_velocity_msg;
-  joint_velocity_msg.data.push_back(joint_velocity(0));
-  joint_velocity_msg.data.push_back(joint_velocity(1));
-  joint_velocity_msg.data.push_back(joint_velocity(2));
 
   return joint_velocity_msg;
 }
