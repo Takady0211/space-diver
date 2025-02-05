@@ -3,4 +3,4 @@
 BasedOnStyle: Google
 
 ; Overwrite access modifier like "private", "public" by ROS style
-AccessModifierOffset: -2 
+AccessModifierOffset: -2

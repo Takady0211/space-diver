@@ -19,14 +19,16 @@ cd spacediver_ws/src
 Clone this repository and SpaceDyn, which calculates robots' dynamics.
 
 ```bash
-# spacediver_ws/src
+# /spacediver_ws/src
 git clone --recursive git@github.com:Space-Robotics-Laboratory/space-diver.git
+cd space-diver
 git submodule update --init --recursive
 ```
 
 Install required packages using rosdep.
 
 ```bash
+# /spacediver_ws
 rosdep install -i -y --from-path src
 ```
 
@@ -52,7 +54,7 @@ After you built the project, you can launch gazebo simulation. Before that, you 
 
 ```bash
 # At spacediver_ws
-. src/spacediver_ros2_control/description/gazebo/models/copy_meshes_to_gazebo.sh
+. src/space-diver/spacediver_ros2_control/description/gazebo/models/copy_meshes_to_gazebo.sh
 ```
 
 Then, launch it!
