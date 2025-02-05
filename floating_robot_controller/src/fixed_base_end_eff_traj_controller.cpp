@@ -334,8 +334,8 @@ EndEffectorTrajectoryController::compute_joint_velocity(
   gen_jacob_for(end_effector_number_);
 
   // Solve constrained least squares TODO: Currently, just use inverse jacobian
-  Eigen::MatrixXd J = Eigen::MatrixXd::Zero(joint_number_, joint_number_);
-  Eigen::VectorXd ve = Eigen::VectorXd::Zero(joint_number_);
+  Eigen::MatrixXd J;
+  Eigen::VectorXd ve;
 
   double th1;
   double th2;
@@ -348,13 +348,16 @@ EndEffectorTrajectoryController::compute_joint_velocity(
 
   for (int e = 0; e < end_effector_number_; e++) {
     // gen_jacob_for.at(e) = robot_.computeGeneralizedJacobianForEndEffector(e);
+    gen_jacob_for.at(e) = Eigen::MatrixXd::Zero(3, 3);
+    J = Eigen::MatrixXd::Zero(3, 3);
+    ve = Eigen::VectorXd::Zero(3);
+
     th1 = joint_state_.position[e*3+0];
     th2 = joint_state_.position[e*3+1];
     th3 = joint_state_.position[e*3+2];
     if (e == 1) {
       flip = -1.0;
     }
-
     gen_jacob_for.at(e)(0, 0) = 0;
     gen_jacob_for.at(e)(0, 1) = -link1 * sin(th2) - link2 * sin(th2 + th3);
     gen_jacob_for.at(e)(0, 2) = -link2 * sin(th2 + th3);
@@ -423,8 +426,8 @@ void EndEffectorTrajectoryController::publish_command(
   int32_t dt_sec = dt_millisec_ / 1000;
   int32_t dt_nsec = (dt_millisec_ % 1000) * 1000000;
   point.time_from_start = rclcpp::Duration(dt_sec, dt_nsec);
-
-  point.positions = serial_to_parallel_joint_angles(compute_next_position(command.data));
+  std::vector<double> serial_joint_positions = compute_next_position(command.data);
+  point.positions = serial_to_parallel_joint_angles(serial_joint_positions);
   point.velocities = serial_to_parallel_joint_velocities(command.data);
   RCLCPP_INFO(this->get_logger(), "Joint positions: [%f, %f, %f]", point.positions[0], point.positions[1], point.positions[2]);
   RCLCPP_INFO(this->get_logger(), "Joint velocities: [%f, %f, %f]", point.velocities[0], point.velocities[1], point.velocities[2]);
@@ -434,47 +437,35 @@ void EndEffectorTrajectoryController::publish_command(
 
 std::vector<double>
 EndEffectorTrajectoryController::serial_to_parallel_joint_angles(
-  std::vector<double> joint_angles)
+  std::vector<double> &joint_angles)
 {
-  // convert to parallel chain joint angles
-  joint_angles[0] = joint_angles[0];
-  joint_angles[1] = joint_angles[1];
-  joint_angles[2] = joint_angles[2] + joint_angles[1];
-  
-  // shift the joint angles by the starting position
-  joint_angles[0] = joint_angles[0];
-  joint_angles[1] = joint_angles[1] - (M_PI/2 + ROT_);
-  joint_angles[2] = joint_angles[2];
+  std::vector<double> parallel_joint_angles;
+  parallel_joint_angles.push_back(joint_angles[0]);
+  parallel_joint_angles.push_back(joint_angles[1] - (M_PI/2 + ROT_));
+  parallel_joint_angles.push_back(joint_angles[2] + joint_angles[1]);
 
   if (joint_angles.size() == 6) {
-    // convert to parallel chain joint angles
-    joint_angles[3] = joint_angles[3];
-    joint_angles[4] = joint_angles[4];
-    joint_angles[5] = joint_angles[5] + joint_angles[4] - M_PI;
-    
-    // shift the joint angles by the starting position
-    joint_angles[3] = joint_angles[3];
-    joint_angles[4] = joint_angles[4] - (M_PI/2 - ROT_);
-    joint_angles[5] = joint_angles[5];
+    parallel_joint_angles.push_back(joint_angles[3]);
+    parallel_joint_angles.push_back(joint_angles[4] - (M_PI/2 - ROT_));
+    parallel_joint_angles.push_back(joint_angles[5] + joint_angles[4] - M_PI);
   }
   
-  return joint_angles;
+  return parallel_joint_angles;
 }
 
 std::vector<double>
 EndEffectorTrajectoryController::serial_to_parallel_joint_velocities(
-  std::vector<double> joint_velocities)
+  std::vector<double> &joint_velocities)
 {
-  // convert to parallel chain joint velocities
-  joint_velocities[0] = joint_velocities[0];
-  joint_velocities[1] = joint_velocities[1];
-  joint_velocities[2] = joint_velocities[2] + joint_velocities[1];
+  std::vector<double> parallel_joint_velocities;
+  parallel_joint_velocities.push_back(joint_velocities[0]);
+  parallel_joint_velocities.push_back(joint_velocities[1]);
+  parallel_joint_velocities.push_back(joint_velocities[2] + joint_velocities[1]);
 
   if (joint_velocities.size() == 6) {
-    // convert to parallel chain joint velocities
-    joint_velocities[3] = joint_velocities[3];
-    joint_velocities[4] = joint_velocities[4];
-    joint_velocities[5] = joint_velocities[5] + joint_velocities[4];
+    parallel_joint_velocities.push_back(joint_velocities[3]);
+    parallel_joint_velocities.push_back(joint_velocities[4]);
+    parallel_joint_velocities.push_back(joint_velocities[5] + joint_velocities[4]);
   }
 
   return joint_velocities;

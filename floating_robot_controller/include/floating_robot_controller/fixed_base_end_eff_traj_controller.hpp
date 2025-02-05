@@ -64,9 +64,9 @@ private:
   // // // Joint state
   sensor_msgs::msg::JointState joint_state_;
   std::vector<double> serial_to_parallel_joint_angles(
-    std::vector<double> joint_angles);
+    std::vector<double> &joint_angles);
   std::vector<double> serial_to_parallel_joint_velocities(
-    std::vector<double> joint_velocities);
+    std::vector<double> &joint_velocities);
   double ROT_;
   rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr
     joint_state_subscriber_;
