@@ -33,6 +33,10 @@ protected:
   floating_robot_interfaces::action::FollowEndEffectorTrajectory::Goal
     end_effec_trj_goal_msg_ = FollowEndEffecTraject::Goal();
 
+  rclcpp::TimerBase::SharedPtr cancel_timer_;
+  rclcpp_action::Client<FollowEndEffecTraject>::GoalHandle::SharedPtr goal_handle_;
+  void cancel_goal_timeout();
+
   // End effector trajectory controller client
   rclcpp_action::Client<FollowEndEffecTraject>::SharedPtr
     end_effec_trj_ctrl_clnt_ptr_;

@@ -62,7 +62,7 @@ void EndEffectorTrajectoryClient::end_effector_traject_set_goal(const std::strin
     point.pose.orientation.y = goal["pose"]["orientation"]["y"].as<double>();
     point.pose.orientation.z = goal["pose"]["orientation"]["z"].as<double>();
     point.pose.orientation.w = goal["pose"]["orientation"]["w"].as<double>();
-    point.time_from_start.sec = goal["time_from_start"].as<int>();
+    point.time_from_start.sec = goal["time_from_start"].as<double>();
     point.path_generation_id = Point::STRAIGHT_LINE_PATH;
     point.time_scaling_id = Point::POLY3_TIME_SCALING;
     trajectory.points.push_back(point);
@@ -124,6 +124,20 @@ void EndEffectorTrajectoryClient::end_effector_traject_send_goal() {
       _1);
   this->end_effec_trj_ctrl_clnt_ptr_->async_send_goal(end_effec_trj_goal_msg_,
                                                       send_goal_options);
+
+  // Set up a timer to cancel the goal after a timeout (e.g., 10 seconds)
+  // cancel_timer_ = create_wall_timer(
+  //     std::chrono::milliseconds(200), std::bind(&EndEffectorTrajectoryClient::cancel_goal_timeout, this));
+}
+
+void EndEffectorTrajectoryClient::cancel_goal_timeout() {
+  // Check if the goal handle is valid and if the goal is not completed yet
+  if (goal_handle_ && goal_handle_->get_status() != action_msgs::msg::GoalStatus::STATUS_SUCCEEDED &&
+            goal_handle_->get_status() != action_msgs::msg::GoalStatus::STATUS_CANCELED &&
+            goal_handle_->get_status() != action_msgs::msg::GoalStatus::STATUS_ABORTED) {
+    RCLCPP_INFO(this->get_logger(), "Goal timed out. Canceling the goal...");
+    this->end_effec_trj_ctrl_clnt_ptr_->async_cancel_goal(goal_handle_);
+  }
 }
 
 void EndEffectorTrajectoryClient::end_effector_traject_goal_response_callback(
@@ -137,6 +151,7 @@ void EndEffectorTrajectoryClient::end_effector_traject_goal_response_callback(
     RCLCPP_INFO(
         this->get_logger(),
         "End effector traject goal accepted by server, waiting for result");
+    goal_handle_ = goal_handle;
   }
 }
 
@@ -163,6 +178,7 @@ void EndEffectorTrajectoryClient::end_effector_traject_result_callback(
     return;
   case rclcpp_action::ResultCode::CANCELED:
     RCLCPP_ERROR(this->get_logger(), "End effector traject goal was canceled");
+    rclcpp::shutdown();
     return;
   default:
     RCLCPP_ERROR(this->get_logger(),
@@ -237,7 +253,7 @@ int validate_goal(const std::string &yaml_goal) {
         // int id = point["id"].as<int>();
         auto position = point["pose"]["position"];
         auto orientation = point["pose"]["orientation"];
-        int time_from_start = point["time_from_start"].as<int>();
+        double time_from_start = point["time_from_start"].as<double>();
         std::string path_generation_id =
             point["path_generation_id"].as<std::string>();
         std::string time_scaling_id =
@@ -247,7 +263,7 @@ int validate_goal(const std::string &yaml_goal) {
               "\n\nEnd Effector: %zu\n"
               "Position: [%.2f, %.2f, %.2f]\n"
               "Orientation: [%.2f, %.2f, %.2f, %.2f]\n"
-              "Time from start: %d\n"
+              "Time from start: %.2f\n"
               "Path generation ID: %s\n"
               "Time scaling ID: %s\n\n",
               i+1, position["x"].as<double>(), position["y"].as<double>(),
