@@ -50,22 +50,30 @@ void EndEffectorTrajectoryClient::end_effector_traject_set_goal(const std::strin
   Traject trajectory;
   Point point;
   trajectory.header.stamp = now();
-  trajectory.header.stamp = now();
 
   YAML::Node parsed_yaml_goal = YAML::Load(yaml_goal);
 
   for (const auto &goal : parsed_yaml_goal["goal"]) {
-    point.pose.position.x = goal["pose"]["position"]["x"].as<double>();
-    point.pose.position.y = goal["pose"]["position"]["y"].as<double>();
-    point.pose.position.z = goal["pose"]["position"]["z"].as<double>();
-    point.pose.orientation.x = goal["pose"]["orientation"]["x"].as<double>();
-    point.pose.orientation.y = goal["pose"]["orientation"]["y"].as<double>();
-    point.pose.orientation.z = goal["pose"]["orientation"]["z"].as<double>();
-    point.pose.orientation.w = goal["pose"]["orientation"]["w"].as<double>();
-    point.time_from_start.sec = goal["time_from_start"].as<double>();
-    point.path_generation_id = Point::STRAIGHT_LINE_PATH;
-    point.time_scaling_id = Point::POLY3_TIME_SCALING;
-    trajectory.points.push_back(point);
+    trajectory.points.clear();
+    for (const auto &traj : goal["trajectory"]) {
+      point = Point();
+      point.pose.position.x = traj["pose"]["position"]["x"].as<double>();
+      point.pose.position.y = traj["pose"]["position"]["y"].as<double>();
+      point.pose.position.z = traj["pose"]["position"]["z"].as<double>();
+      point.pose.orientation.x = traj["pose"]["orientation"]["x"].as<double>();
+      point.pose.orientation.y = traj["pose"]["orientation"]["y"].as<double>();
+      point.pose.orientation.z = traj["pose"]["orientation"]["z"].as<double>();
+      point.pose.orientation.w = traj["pose"]["orientation"]["w"].as<double>();
+      point.time_from_start.sec = traj["time_from_start"].as<double>();
+      point.path_generation_id = Point::STRAIGHT_LINE_PATH;
+      point.time_scaling_id = Point::POLY3_TIME_SCALING;
+      trajectory.points.push_back(point);
+    }
+    end_effec_trj_goal_msg_.trajectories.push_back(trajectory);
+  }
+  RCLCPP_INFO(this->get_logger(), "Number of trajectories: %zu", end_effec_trj_goal_msg_.trajectories.size());
+  for (size_t i = 0; i < end_effec_trj_goal_msg_.trajectories.size(); i++) {
+    RCLCPP_INFO(this->get_logger(), "Number of points in trajectory %zu: %zu", i+1, end_effec_trj_goal_msg_.trajectories[i].points.size());
   }
   /*
   // point 1
@@ -213,66 +221,78 @@ int validate_goal(const std::string &yaml_goal) {
       const size_t goal_size = goal.size();
 
       if (goal_size == 0) {
-        RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Array of points missing in YAML input");
+        RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Array of trajectories missing in YAML input");
         return 1;
       }
 
       for (size_t i = 0; i < goal_size; i++) {
 
-        const auto &point = goal[i];
-
         RCLCPP_INFO(rclcpp::get_logger("rclcpp"),
-              "Checking goal of end effector %zu", i+1);
+              "Checking points of end effector %zu", i+1);
+        
+        const auto &traj = goal[i]["trajectory"];
 
-        if (!point["pose"]["position"]["x"] ||
-            !point["pose"]["position"]["y"] ||
-            !point["pose"]["position"]["z"]) {
-          RCLCPP_ERROR(rclcpp::get_logger("rclcpp"),
-                       "Missing pose position { x, y, z } in YAML input");
-          return 1;
-        }
-        if (!point["pose"]["orientation"]["x"] ||
-            !point["pose"]["orientation"]["y"] ||
-            !point["pose"]["orientation"]["z"] ||
-            !point["pose"]["orientation"]["w"]) {
-          RCLCPP_ERROR(rclcpp::get_logger("rclcpp"),
-                       "Missing pose orientation { x, y, z, w } in YAML input");
-          return 1;
-        }
-        if (!point["time_from_start"]) {
-          RCLCPP_ERROR(rclcpp::get_logger("rclcpp"),
-                       "Missing time_from_start in YAML input");
-          return 1;
-        }
-        if (!point["path_generation_id"] || !point["time_scaling_id"]) {
-          RCLCPP_ERROR(
-              rclcpp::get_logger("rclcpp"),
-              "Missing path_generation_id or time_scaling_id in YAML input");
-          return 1;
-        }
-        // int id = point["id"].as<int>();
-        auto position = point["pose"]["position"];
-        auto orientation = point["pose"]["orientation"];
-        double time_from_start = point["time_from_start"].as<double>();
-        std::string path_generation_id =
-            point["path_generation_id"].as<std::string>();
-        std::string time_scaling_id =
-            point["time_scaling_id"].as<std::string>();
+        const size_t traj_size = traj.size();
 
-        RCLCPP_INFO(rclcpp::get_logger("rclcpp"),
-              "\n\nEnd Effector: %zu\n"
-              "Position: [%.2f, %.2f, %.2f]\n"
-              "Orientation: [%.2f, %.2f, %.2f, %.2f]\n"
-              "Time from start: %.2f\n"
-              "Path generation ID: %s\n"
-              "Time scaling ID: %s\n\n",
-              i+1, position["x"].as<double>(), position["y"].as<double>(),
-              position["z"].as<double>(), orientation["x"].as<double>(),
-              orientation["y"].as<double>(),
-              orientation["z"].as<double>(),
-              orientation["w"].as<double>(), time_from_start,
-              path_generation_id.c_str(), time_scaling_id.c_str());
-      }
+        for (size_t j = 0; j < traj_size; j++) {
+          RCLCPP_INFO(rclcpp::get_logger("rclcpp"),
+              "Checking point %zu", j+1);
+          
+          const auto &point = traj[j];
+
+          if (!point["pose"]["position"]["x"] ||
+              !point["pose"]["position"]["y"] ||
+              !point["pose"]["position"]["z"]) {
+            RCLCPP_ERROR(rclcpp::get_logger("rclcpp"),
+                        "Missing pose position { x, y, z } in YAML input");
+            return 1;
+          }
+          if (!point["pose"]["orientation"]["x"] ||
+              !point["pose"]["orientation"]["y"] ||
+              !point["pose"]["orientation"]["z"] ||
+              !point["pose"]["orientation"]["w"]) {
+            RCLCPP_ERROR(rclcpp::get_logger("rclcpp"),
+                        "Missing pose orientation { x, y, z, w } in YAML input");
+            return 1;
+          }
+          if (!point["time_from_start"]) {
+            RCLCPP_ERROR(rclcpp::get_logger("rclcpp"),
+                        "Missing time_from_start in YAML input");
+            return 1;
+          }
+          if (!point["path_generation_id"] || !point["time_scaling_id"]) {
+            RCLCPP_ERROR(
+                rclcpp::get_logger("rclcpp"),
+                "Missing path_generation_id or time_scaling_id in YAML input");
+            return 1;
+          }
+          // int id = point["id"].as<int>();
+          auto position = point["pose"]["position"];
+          auto orientation = point["pose"]["orientation"];
+          double time_from_start = point["time_from_start"].as<double>();
+          std::string path_generation_id =
+              point["path_generation_id"].as<std::string>();
+          std::string time_scaling_id =
+              point["time_scaling_id"].as<std::string>();
+
+          RCLCPP_INFO(rclcpp::get_logger("rclcpp"),
+                "\n\nEnd Effector: %zu\n"
+                "Point: %zu"
+                "Position: [%.2f, %.2f, %.2f]\n"
+                "Orientation: [%.2f, %.2f, %.2f, %.2f]\n"
+                "Time from start: %.2f\n"
+                "Path generation ID: %s\n"
+                "Time scaling ID: %s\n\n",
+                i+1, j+1, position["x"].as<double>(), position["y"].as<double>(),
+                position["z"].as<double>(), orientation["x"].as<double>(),
+                orientation["y"].as<double>(),
+                orientation["z"].as<double>(),
+                orientation["w"].as<double>(), time_from_start,
+                path_generation_id.c_str(), time_scaling_id.c_str());
+          }
+        }
+
+
     } catch (const YAML::TypedBadConversion<YAML::Node> &e) {
       RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "YAML Parsing Error: %s",
                    e.what());
