@@ -146,9 +146,10 @@ rclcpp_action::GoalResponse EndEffectorTrajectoryController::handle_goal(
         RCLCPP_ERROR(
           this->get_logger(),
           "Goal trajectory should be within the workspace radius.\n"
+          "Verify end effector %zu, point %zu\n"
           "Workspace radius: %f\n"
           "Magnitude: %f\n"
-          , workspace_radius, magnitude);
+          , i+1, j+1, workspace_radius, magnitude);
         return rclcpp_action::GoalResponse::REJECT;
       }
     }
