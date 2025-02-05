@@ -102,7 +102,7 @@ void EndEffectorTrajectoryClient::end_effector_traject_set_goal(const std::strin
   point.time_scaling_id = Point::POLY3_TIME_SCALING;
   trajectory.points.push_back(point);
   */
-  end_effec_trj_goal_msg_.trajectories.push_back(trajectory);
+  // end_effec_trj_goal_msg_.trajectories.push_back(trajectory);
 }
 
 void EndEffectorTrajectoryClient::end_effector_traject_send_goal() {
