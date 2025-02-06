@@ -114,18 +114,22 @@
           <param name="min">"${BASE_DYNAMIXEL_UPPER}"</param>
           <param name="max">"${BASE_DYNAMIXEL_LOWER}"</param>
         </command_interface>
-        <command_interface name="velocity">
-          <param name="min">"-${BASE_DYNAMIXEL_VELOCITY}"</param>
-          <param name="max">" ${BASE_DYNAMIXEL_VELOCITY}"</param>
-        </command_interface>
-        <command_interface name="effort">
-          <param name="min">"-${BASE_DYNAMIXEL_EFFORT}"</param>
-          <param name="max">" ${BASE_DYNAMIXEL_EFFORT}"</param>
-        </command_interface>
+        <xacro:if value="$(arg use_gazebo)">
+          <command_interface name="velocity">
+            <param name="min">"-${BASE_DYNAMIXEL_VELOCITY}"</param>
+            <param name="max">" ${BASE_DYNAMIXEL_VELOCITY}"</param>
+          </command_interface>
+          <command_interface name="effort">
+            <param name="min">"-${BASE_DYNAMIXEL_EFFORT}"</param>
+            <param name="max">" ${BASE_DYNAMIXEL_EFFORT}"</param>
+          </command_interface>
+        </xacro:if>
 
         <state_interface name="position" />
         <state_interface name="velocity" />
-        <state_interface name="effort" />
+        <xacro:if value="$(arg use_gazebo)">
+          <state_interface name="effort" />
+        </xacro:if>
 
       </joint>
 
@@ -137,18 +141,22 @@
           <param name="min">"${BOT_DYNAMIXEL_UPPER}"</param>
           <param name="max">"${BOT_DYNAMIXEL_LOWER}"</param>
         </command_interface>
-        <command_interface name="velocity">
-          <param name="min">"-${BOT_DYNAMIXEL_VELOCITY}"</param>
-          <param name="max">" ${BOT_DYNAMIXEL_VELOCITY}"</param>
-        </command_interface>
-        <command_interface name="effort">
-          <param name="min">"-${BOT_DYNAMIXEL_EFFORT}"</param>
-          <param name="max">" ${BOT_DYNAMIXEL_EFFORT}"</param>
-        </command_interface>
+        <xacro:if value="$(arg use_gazebo)">
+          <command_interface name="velocity">
+            <param name="min">"-${BOT_DYNAMIXEL_VELOCITY}"</param>
+            <param name="max">" ${BOT_DYNAMIXEL_VELOCITY}"</param>
+          </command_interface>
+          <command_interface name="effort">
+            <param name="min">"-${BOT_DYNAMIXEL_EFFORT}"</param>
+            <param name="max">" ${BOT_DYNAMIXEL_EFFORT}"</param>
+          </command_interface>
+        </xacro:if>
 
         <state_interface name="position" />
         <state_interface name="velocity" />
-        <state_interface name="effort" />
+        <xacro:if value="$(arg use_gazebo)">
+          <state_interface name="effort" />
+        </xacro:if>
 
       </joint>
       <joint name="${RIGHTDYNAMIXELTOP_TO_RIGHTDRIVING_JOINT_NAME}">
@@ -159,18 +167,22 @@
           <param name="min">"${TOP_DYNAMIXEL_UPPER}"</param>
           <param name="max">"${TOP_DYNAMIXEL_LOWER}"</param>
         </command_interface>
-        <command_interface name="velocity">
-          <param name="min">"-${TOP_DYNAMIXEL_VELOCITY}"</param>
-          <param name="max">" ${TOP_DYNAMIXEL_VELOCITY}"</param>
-        </command_interface>
-        <command_interface name="effort">
-          <param name="min">"-${TOP_DYNAMIXEL_EFFORT}"</param>
-          <param name="max">" ${TOP_DYNAMIXEL_EFFORT}"</param>
-        </command_interface>
+        <xacro:if value="$(arg use_gazebo)">
+          <command_interface name="velocity">
+            <param name="min">"-${TOP_DYNAMIXEL_VELOCITY}"</param>
+            <param name="max">" ${TOP_DYNAMIXEL_VELOCITY}"</param>
+          </command_interface>
+          <command_interface name="effort">
+            <param name="min">"-${TOP_DYNAMIXEL_EFFORT}"</param>
+            <param name="max">" ${TOP_DYNAMIXEL_EFFORT}"</param>
+          </command_interface>
+        </xacro:if>
 
         <state_interface name="position" />
         <state_interface name="velocity" />
-        <state_interface name="effort" />
+        <xacro:if value="$(arg use_gazebo)">
+          <state_interface name="effort" />
+        </xacro:if>
 
       </joint>
     </xacro:unless>
