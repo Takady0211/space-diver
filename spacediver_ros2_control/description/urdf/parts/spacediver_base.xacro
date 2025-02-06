@@ -9,18 +9,11 @@
       </geometry>
       <material name="black"/>
     </visual>
-    <collision>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <geometry>
-        <box size="${BASE_X} ${BASE_Y} ${BASE_Z}"/>
-      </geometry>
-    </collision>
-
-    <xacro:if value="$(arg use_gazebo)">
-      <xacro:inertial_box mass="${BASE_MASS}" x="${BASE_X/2}" y="${BASE_Y/2}" z="${BASE_Z/2}">
-        <origin xyz="0 0 0" rpy="0 0 0"/>
-      </xacro:inertial_box>
-    </xacro:if>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="${BASE_MASS}" />
+      <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0" />
+    </inertial>
 
   </link>
 </robot>
