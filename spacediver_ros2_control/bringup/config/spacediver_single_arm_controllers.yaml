@@ -13,6 +13,12 @@ controller_manager:
     position_trajectory_controller:
       type: joint_trajectory_controller/JointTrajectoryController
 
+    forward_position_controller:
+      type: forward_command_controller/ForwardCommandController
+    
+    forward_velocity_controller:
+      type: forward_command_controller/ForwardCommandController
+
     # Controller used for single arm control
     # Select the joint to control by yourself. Default is left arm
     feedback_effort_controller_single_arm:
@@ -116,6 +122,14 @@ position_trajectory_controller:
         p: 100.0
         i: 10.0
         d: 3600.0
+
+forward_velocity_controller:
+  ros__parameters:
+    joints:
+      - base_to_leftshoulder_joint
+      - leftdynamixeltop_to_leftdriving_joint
+      - leftdynamixelbottom_to_leftmisumiln_joint
+    interface_name: velocity
 
 # Single arm controllers
 feedback_effort_controller_single_arm:
