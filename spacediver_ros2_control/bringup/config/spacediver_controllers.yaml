@@ -137,9 +137,9 @@ position_trajectory_controller:
       - base_to_leftshoulder_joint
       - leftdynamixeltop_to_leftdriving_joint
       - leftdynamixelbottom_to_leftmisumiln_joint
-      # - base_to_rightshoulder_joint
-      # - rightdynamixeltop_to_rightdriving_joint
-      # - rightdynamixelbottom_to_rightmisumiln_joint
+      - base_to_rightshoulder_joint
+      - rightdynamixeltop_to_rightdriving_joint
+      - rightdynamixelbottom_to_rightmisumiln_joint
 
     command_interfaces:
       - position
@@ -175,20 +175,20 @@ position_trajectory_controller:
         i: 10.0
         d: 3600.0
 
-      # base_to_rightshoulder_joint:
-      #   p: 100.0
-      #   i: 10.0
-      #   d: 3600.0
+      base_to_rightshoulder_joint:
+        p: 100.0
+        i: 10.0
+        d: 3600.0
       
-      # rightdynamixeltop_to_rightdriving_joint:
-      #   p: 100.0
-      #   i: 10.0
-      #   d: 3600.0
+      rightdynamixeltop_to_rightdriving_joint:
+        p: 100.0
+        i: 10.0
+        d: 3600.0
       
-      # rightdynamixelbottom_to_rightmisumiln_joint:
-      #   p: 100.0
-      #   i: 10.0
-      #   d: 3600.0
+      rightdynamixelbottom_to_rightmisumiln_joint:
+        p: 100.0
+        i: 10.0
+        d: 3600.0
 
 # Single arm controllers
 forward_effort_controller_single_arm:
