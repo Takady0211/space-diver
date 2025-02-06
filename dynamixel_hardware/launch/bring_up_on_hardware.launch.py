@@ -4,10 +4,13 @@ from ament_index_python.packages import get_package_share_directory
 
 from launch import LaunchDescription
 from launch_ros.actions import Node
+from launch.substitutions import LaunchConfiguration
 
 import xacro
 
 # User settings
+use_gazebo = "false"
+single_arm = "false"
 controller_name = (
     "position_trajectory_controller"  # Select controller from controller_list
 )
@@ -17,7 +20,7 @@ spacediver_ros2_control_pkg_dir = get_package_share_directory(
     "spacediver_ros2_control")
 spacediver_urdf_xacro_path = os.path.join(
     spacediver_ros2_control_pkg_dir,
-    "description", "urdf", "spacediver_dual_arm.urdf.xacro"
+    "description", "urdf", "spacediver.urdf.xacro"
 )
 rviz_path = os.path.join(
     spacediver_ros2_control_pkg_dir,
@@ -32,7 +35,9 @@ controller_config = os.path.join(
 def generate_launch_description():
     # Parse xacro file to urdf
     robot_description_config = xacro.process_file(
-        spacediver_urdf_xacro_path, mappings={"use_gazebo": "false"})
+        spacediver_urdf_xacro_path, mappings={
+            "use_gazebo": use_gazebo,
+            "single_arm": single_arm,})
 
     return LaunchDescription(
         [
