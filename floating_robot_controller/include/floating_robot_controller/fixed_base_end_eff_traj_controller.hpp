@@ -33,7 +33,8 @@ public:
   EndEffectorTrajectoryController(
     const char * node_name,
     const char * action_name,
-    const char * path_to_robot_model);
+    const char * path_to_robot_model,
+    const std::string &controller_name);
 
 private:
   // -------------------------- Basic functions --------------------------

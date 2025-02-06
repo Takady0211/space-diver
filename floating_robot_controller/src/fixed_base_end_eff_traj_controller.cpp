@@ -26,7 +26,8 @@ EndEffectorTrajectoryController::EndEffectorTrajectoryController(
   const char * node_name = "end_effector_trajectory_controller",
   const char * action_name = "end_effector_trajectory_control",
   const char * path_to_robot_model =
-  (package_share_directory + "/model/example.urdf").c_str())
+  (package_share_directory + "/model/example.urdf").c_str(),
+  const std::string &controller_name = "feedback_effort_controller")
 : Node(node_name), ros_clock_(RCL_ROS_TIME), robot_(path_to_robot_model)
 {
   using namespace std::placeholders;
@@ -58,7 +59,7 @@ EndEffectorTrajectoryController::EndEffectorTrajectoryController(
   pids_vector_.resize(end_effector_number_);
   joint_trajectory_publisher_ =
     this->create_publisher<trajectory_msgs::msg::JointTrajectory>(
-    "feedback_effort_controller/joint_trajectory", 10);
+    controller_name + "/joint_trajectory", 10);
   joint_command_publisher_ = this->create_publisher<std_msgs::msg::Float64MultiArray>(
     "forward_velocity_controller/commands", 10);
   end_effector_publisher_ = this->create_publisher<std_msgs::msg::Float64MultiArray>(
@@ -592,9 +593,17 @@ EndEffectorTrajectoryController::compute_pids_command(
 
 int main(int argc, char * argv[])
 {
+  // you have to be careful because when launching the node from python,
+  // there are more arguments than just the ones you passed
 
   rclcpp::init(argc, argv);
-  if (argc > 1) {
+  if (argc > 2) {
+    rclcpp::spin(
+      std::make_shared<
+        floating_robot_controller::EndEffectorTrajectoryController>(
+        "end_effector_trajectory_controller", "follow_end_effector_trajectory",
+        argv[1], argv[2]));
+  } else if (argc > 1) {
     rclcpp::spin(
       std::make_shared<
         floating_robot_controller::EndEffectorTrajectoryController>(

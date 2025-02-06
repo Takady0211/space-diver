@@ -120,7 +120,7 @@ def generate_launch_description():
         name=end_effector_trajectory_executable,
         output='screen',
         parameters=[{'use_sim_time': use_sim_time}],
-        arguments=[spacediver_urdf_path]
+        arguments=[spacediver_urdf_path, controller_name]
     )
 
     rviz2 = Node(
