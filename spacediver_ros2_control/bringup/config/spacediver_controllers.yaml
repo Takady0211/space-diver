@@ -1,0 +1,249 @@
+---
+controller_manager:
+  ros__parameters:
+    update_rate: 1000  # Hz
+
+    # List of controllers to start
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    forward_position_controller:
+      type: forward_command_controller/ForwardCommandController
+
+    forward_effort_controller:
+      type: forward_command_controller/ForwardCommandController
+
+    feedback_effort_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+    
+    position_trajectory_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+    # Controller used for single arm control
+    # Select the joint to control by yourself. Default is left arm
+    forward_position_controller_single_arm:
+      type: forward_command_controller/ForwardCommandController
+
+    forward_effort_controller_single_arm:
+      type: forward_command_controller/ForwardCommandController
+
+    feedback_effort_controller_single_arm:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+
+### Controllers setup
+# Full body controllers
+joint_state_broadcaster:
+  ros__parameters:
+    joints:
+      - base_to_leftshoulder_joint
+      - base_to_rightshoulder_joint
+      - leftdynamixeltop_to_leftdriving_joint
+      - rightdynamixeltop_to_rightdriving_joint
+      - leftdynamixelbottom_to_leftmisumiln_joint
+      - rightdynamixelbottom_to_rightmisumiln_joint
+    interface_name:
+      - position
+      - velocity
+      - effort
+
+forward_effort_controller:
+  ros__parameters:
+    joints:
+      - base_to_leftshoulder_joint
+      - base_to_rightshoulder_joint
+      - leftdynamixeltop_to_leftdriving_joint
+      - rightdynamixeltop_to_rightdriving_joint
+      - leftdynamixelbottom_to_leftmisumiln_joint
+      - rightdynamixelbottom_to_rightmisumiln_joint
+    interface_name: effort
+
+forward_position_controller:
+  ros__parameters:
+    joints:
+      - base_to_leftshoulder_joint
+      - base_to_rightshoulder_joint
+      - leftdynamixeltop_to_leftdriving_joint
+      - rightdynamixeltop_to_rightdriving_joint
+      - leftdynamixelbottom_to_leftmisumiln_joint
+      - rightdynamixelbottom_to_rightmisumiln_joint
+    interface_name: position
+
+feedback_effort_controller:
+  ros__parameters:
+    joints:
+      - base_to_leftshoulder_joint
+      - base_to_rightshoulder_joint
+      - leftdynamixeltop_to_leftdriving_joint
+      - rightdynamixeltop_to_rightdriving_joint
+      - leftdynamixelbottom_to_leftmisumiln_joint
+      - rightdynamixelbottom_to_rightmisumiln_joint
+    command_interfaces:
+      - effort
+
+    state_interfaces:
+      - position
+      - velocity
+
+    action_monitor_rate: 20.0  # Defaults to 20
+
+    allow_partial_joints_goal: false  # Defaults to false
+    open_loop_control: true
+    allow_integration_in_goal_trajectories: true
+    constraints:
+      stopped_velocity_tolerance: 0.001  # Defaults to 0.01
+      goal_time: 0.0  # Defaults to 0.0 (start immediately)
+
+    gains:
+      base_to_leftshoulder_joint:
+        p: 1.0
+        i: 0.0
+        d: 1.0
+        i_clamp: 1e+3
+
+      base_to_rightshoulder_joint:
+        p: 1.0
+        i: 0.0
+        d: 1.0
+        i_clamp: 1e+3
+
+      leftdynamixeltop_to_leftdriving_joint:
+        p: 1.0
+        i: 0.0
+        d: 1.0
+        i_clamp: 1e+3
+
+      rightdynamixeltop_to_rightdriving_joint:
+        p: 1.0
+        i: 0.0
+        d: 1.0
+        i_clamp: 1e+3
+
+      leftdynamixelbottom_to_leftmisumiln_joint:
+        p: 1.0
+        i: 0.0
+        d: 1.0
+        i_clamp: 1e+3
+
+      rightdynamixelbottom_to_rightmisumiln_joint:
+        p: 1.0
+        i: 0.0
+        d: 1.0
+        i_clamp: 1e+3
+
+position_trajectory_controller:
+  ros__parameters:
+    joints:
+      - base_to_leftshoulder_joint
+      - leftdynamixeltop_to_leftdriving_joint
+      - leftdynamixelbottom_to_leftmisumiln_joint
+      # - base_to_rightshoulder_joint
+      # - rightdynamixeltop_to_rightdriving_joint
+      # - rightdynamixelbottom_to_rightmisumiln_joint
+
+    command_interfaces:
+      - position
+
+    state_interfaces:
+      - position
+      - velocity
+      
+
+    state_publish_rate: 50.0 # Hz, Defaults to 50
+    action_monitor_rate: 20.0 # Hz, Defaults to 20
+
+    allow_partial_joints_goal: false # Defaults to false
+    open_loop_control: false
+    allow_integration_in_goal_trajectories: true
+    constraints:
+      stopped_velocity_tolerance: 0.01 # Defaults to 0.01
+      goal_time: 0.0 # Defaults to 0.0 (start immediately)
+
+    gain:
+      base_to_leftshoulder_joint:
+        p: 100.0
+        i: 10.0
+        d: 3600.0
+
+      leftdynamixeltop_to_leftdriving_joint:
+        p: 100.0
+        i: 10.0
+        d: 3600.0
+      
+      leftdynamixelbottom_to_leftmisumiln_joint:
+        p: 100.0
+        i: 10.0
+        d: 3600.0
+
+      # base_to_rightshoulder_joint:
+      #   p: 100.0
+      #   i: 10.0
+      #   d: 3600.0
+      
+      # rightdynamixeltop_to_rightdriving_joint:
+      #   p: 100.0
+      #   i: 10.0
+      #   d: 3600.0
+      
+      # rightdynamixelbottom_to_rightmisumiln_joint:
+      #   p: 100.0
+      #   i: 10.0
+      #   d: 3600.0
+
+# Single arm controllers
+forward_effort_controller_single_arm:
+  ros__parameters:
+    joints:
+      - base_to_leftshoulder_joint
+      - leftdynamixeltop_to_leftdriving_joint
+      - leftdynamixelbottom_to_leftmisumiln_joint
+    interface_name: effort
+
+forward_position_controller_single_arm:
+  ros__parameters:
+    joints:
+      - base_to_leftshoulder_joint
+      - leftdynamixeltop_to_leftdriving_joint
+      - leftdynamixelbottom_to_leftmisumiln_joint
+    interface_name: position
+
+feedback_effort_controller_single_arm:
+  ros__parameters:
+    joints:
+      - base_to_leftshoulder_joint
+      - leftdynamixeltop_to_leftdriving_joint
+      - leftdynamixelbottom_to_leftmisumiln_joint
+    command_interfaces:
+      - effort
+
+    state_interfaces:
+      - position
+      - velocity
+
+    action_monitor_rate: 20.0  # Defaults to 20
+
+    allow_partial_joints_goal: false  # Defaults to false
+    open_loop_control: true
+    allow_integration_in_goal_trajectories: true
+    constraints:
+      stopped_velocity_tolerance: 0.001  # Defaults to 0.01
+      goal_time: 0.0  # Defaults to 0.0 (start immediately)
+
+    gains:
+      base_to_leftshoulder_joint:
+        p: 1.0
+        i: 0.0
+        d: 1.0
+        i_clamp: 1e+3
+
+      leftdynamixeltop_to_leftdriving_joint:
+        p: 1.0
+        i: 0.0
+        d: 1.0
+        i_clamp: 1e+3
+
+      leftdynamixelbottom_to_leftmisumiln_joint:
+        p: 1.0
+        i: 0.0
+        d: 1.0
+        i_clamp: 1e+3
